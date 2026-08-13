@@ -61,6 +61,54 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 .ms-fleuron::after{background:linear-gradient(270deg,transparent,var(--oro-claro))}
 .ms-fleuron span{font-size:13px; letter-spacing:.2em}
 
+/* ---------- ocasiones ------------------------------------ */
+.ms-ocasiones{
+  display:grid; gap:1px; background:var(--linea);
+  border:1px solid var(--linea); grid-template-columns:repeat(4,1fr);
+}
+.ms-ocasiones a{
+  background:var(--papel); padding:38px 26px 32px; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  transition:background .35s ease, transform .35s ease;
+}
+.ms-ocasiones a:hover{background:var(--campo)}
+.ms-ocasion-icono{
+  font-size:26px; color:var(--oro); line-height:1;
+  display:grid; place-items:center; width:58px; height:58px;
+  border:1px solid var(--oro-claro); border-radius:50%; margin-bottom:6px;
+}
+.ms-ocasiones h3{font-size:20px; letter-spacing:.02em}
+.ms-ocasiones p{
+  margin:0; font-size:13px; line-height:1.6; color:var(--tinta-suave);
+  max-width:30ch;
+}
+.ms-ocasiones small{
+  font-size:10px; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--oro); margin-top:4px;
+}
+@media (max-width:900px){ .ms-ocasiones{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:520px){
+  .ms-ocasiones a{padding:26px 16px 22px}
+  .ms-ocasiones h3{font-size:17px}
+  .ms-ocasiones p{font-size:12px}
+  .ms-ocasion-icono{width:46px; height:46px; font-size:21px}
+}
+
+/* ---------- descuento por cantidad ------------------------ */
+.ms-empuje{
+  background:var(--campo); border:1px solid var(--oro-claro);
+  padding:12px 14px; margin-bottom:16px; font-size:12.5px; line-height:1.6;
+  color:var(--tinta-suave); text-align:center;
+}
+.ms-empuje b{color:var(--oro); font-weight:500}
+.ms-empuje--tope{border-color:var(--linea)}
+.ms-total--ahorro span:last-child{color:var(--oro)}
+.ms-aviso-descuento{
+  margin:-14px 0 24px; font-size:11.5px; line-height:1.7;
+  letter-spacing:.02em; color:var(--tinta-suave);
+  border-top:1px solid var(--linea); padding-top:12px;
+}
+
 /* ====================== CABECERA ========================= */
 .ms-cabecera{position:sticky; top:0; z-index:60; background:var(--papel); border-bottom:1px solid var(--linea)}
 .ms-cabecera-fila{
@@ -572,6 +620,10 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
           <li><a href="#/coleccion?genero=Hombre">Hombre</a></li>
           <li><a href="#/coleccion?genero=Mujer">Mujer</a></li>
           <li><a href="#/coleccion?genero=Unisex">Unisex</a></li>
+          <li><a href="#/coleccion?ocasion=Para%20el%20d%C3%ADa">Para el día</a></li>
+          <li><a href="#/coleccion?ocasion=Para%20la%20noche">Para la noche</a></li>
+          <li><a href="#/coleccion?ocasion=Para%20seducir">Para seducir</a></li>
+          <li><a href="#/coleccion?ocasion=Para%20regalar">Para regalar</a></li>
         </ul>
       </div>
       <div>
@@ -648,6 +700,22 @@ const CASA = {
   moneda: "RD$",                    // cámbialo por "US$" si prefieres
   decimales: 0
 };
+
+/* ---------- 1b. DESCUENTO POR CANTIDAD --------------------------
+   El descuento se guarda en PORCENTAJE, no en pesos, para que se
+   ajuste solo a cada precio (5% de 1500 = 75; 5% de 1150 = 58).
+   Se aplica sobre el total de frascos del carrito, sin importar
+   cuáles sean, así también se premia a quien mezcla.
+   Para cambiar la escala sólo hay que tocar esta tabla.          */
+const ESCALA_DESCUENTO = [
+  {desde:2, pct:5},
+  {desde:3, pct:7},
+  {desde:4, pct:9},
+  {desde:5, pct:11},
+  {desde:6, pct:13},
+  {desde:7, pct:14},
+  {desde:8, pct:15}    // tope de la casa
+];
 
 /* ---------- 2. IMÁGENES DE MARCA -------------------------------- */
 /* REGLA DE ORO: FLACON es el frasco oficial y universal de la casa.
@@ -1012,6 +1080,73 @@ const PRODUCTOS = [
 /* ---------- 4. TAXONOMÍAS --------------------------------------- */
 const GENEROS = ["Mujer","Hombre","Unisex"];
 const FAMILIAS = ["Floral","Fresco","Gourmand","Amaderado","Ámbar","Frutal","Oud","Especiado","Acuático","Aromático","Cítrico","Limpio"];
+/* ---------- OCASIONES -------------------------------------------
+   Cada fragancia se clasifica sola a partir de su familia y sus
+   notas. No hay que etiquetar producto por producto.            */
+const OCASIONES = ["Para el día","Para la noche","Para seducir","Para regalar"];
+const TEXTOS_OCASION = {
+  "Para el día":   "Cítricos, notas verdes y flores claras. Fragancias que acompañan la oficina, el sol y las horas largas sin pesar.",
+  "Para la noche": "Ámbar, maderas y especias cálidas. Estelas que se quedan en el saco y en la memoria.",
+  "Para seducir":  "Vainilla, almizcle, rosa y cuero. La selección más cercana a la piel de toda la casa.",
+  "Para regalar":  "Las fragancias más reconocibles de la colección. Difícil equivocarse con cualquiera de ellas."
+};
+const ICONOS_OCASION = {
+  "Para el día":"&#9788;", "Para la noche":"&#9789;",
+  "Para seducir":"&#10084;", "Para regalar":"&#10022;"
+};
+
+const FAM_CLARAS  = ["Cítrico","Fresco","Acuático","Limpio","Aromático","Frutal","Floral"];
+const FAM_OSCURAS = ["Gourmand","Ámbar","Oud","Especiado","Amaderado"];
+
+const CASAS_ICONICAS = new Set([
+  "Chanel","Dior","Versace","Carolina Herrera","Paco Rabanne","Yves Saint Laurent",
+  "Giorgio Armani","Emporio Armani","Dolce & Gabbana","Valentino","Gucci","Lancôme",
+  "Jean Paul Gaultier","Hugo Boss","Calvin Klein","Tom Ford","Creed","Montblanc",
+  "Lattafa","Victoria's Secret","Bvlgari","Givenchy","Prada","Ralph Lauren",
+  "Tommy Hilfiger","Moschino","Thierry Mugler","Maison Francis Kurkdjian",
+  "Parfums de Marly","Sol de Janeiro","Ariana Grande","Burberry","Kenzo","Lacoste",
+  "Hermès","Xerjoff","Le Labo","Louis Vuitton","Viktor & Rolf","Bond No 9",
+  "Armaf","Afnan","Clinique","Elizabeth Arden","Issey Miyake","Nautica","Azzaro"
+]);
+
+/* materias densas: si están en el fondo, la fragancia es de noche */
+const RX_PESADA  = /oud|cuero|tabaco|incienso|castóreo|benjuí|mirra|opoponaco|resina|chocolate|café|cacao|pachulí|whisky|humo|dátil/;
+/* notas inequívocamente frescas en la apertura */
+const RX_FRESCA  = /ozónic|acuátic|marin|sal marina|menta|pomelo|gálbano|hojas verdes|bambú|loto|notas frescas|manzana verde|limón verde|yuzu|cidra|nenúfar/;
+/* notas de piel: las que acercan */
+const RX_PIEL    = /oud|cuero|vainilla|ámbar|haba tonka|caramelo|miel|praliné|cacao|azafrán|dátil|benjuí|nardos/;
+
+function textoFondo(p){ return p.notasFondo.join(" ").toLowerCase(); }
+function textoSalida(p){ return p.notasSalida.join(" ").toLowerCase(); }
+
+function ocasionesDe(p){
+  if(p._ocasiones) return p._ocasiones;
+  const f = p.familiaOlfativa, fondo = textoFondo(p), oc = [];
+
+  const esClara  = FAM_CLARAS.includes(f);
+  const esOscura = FAM_OSCURAS.includes(f);
+  const pesada   = RX_PESADA.test(fondo);
+
+  /* DÍA: familia clara o apertura fresca, siempre que el fondo no pese */
+  if((esClara || RX_FRESCA.test(textoSalida(p))) && !esOscura && !pesada) oc.push("Para el día");
+
+  /* NOCHE: familia densa o fondo con materias oscuras */
+  if(esOscura || pesada) oc.push("Para la noche");
+
+  /* SEDUCIR: las cálidas de siempre, y las flores o frutas con fondo de piel */
+  if(RX_PIEL.test(fondo) && (esOscura || f === "Floral" || f === "Frutal")) oc.push("Para seducir");
+
+  /* REGALAR: las más reconocibles, disponibles y de gama alta */
+  if(p.disponible && (p.destacado ||
+     (CASAS_ICONICAS.has(p.marcaInspiracion) && p.precio >= 1350))) oc.push("Para regalar");
+
+  if(!oc.length) oc.push(esClara ? "Para el día" : "Para la noche");
+  p._ocasiones = oc;
+  return oc;
+}
+
+function contarOcasion(o){ return PRODUCTOS.filter(p=>ocasionesDe(p).includes(o)).length; }
+
 const RUTAS = [
   {href:"#/", texto:"Inicio"},
   {href:"#/coleccion", texto:"Colección"},
@@ -1035,7 +1170,7 @@ const frascoDe = p => p.imagenFrasco || FLACON;   // el frasco nunca cambia
 
 const estado = {
   carrito: [],
-  filtros: {genero:[], familia:[], marca:[], precioMax:null},
+  filtros: {genero:[], familia:[], marca:[], ocasion:[], precioMax:null},
   orden: "destacados",
   limite: 24
 };
@@ -1122,6 +1257,7 @@ function filtrar(){
     (!f.genero.length  || f.genero.includes(p.genero)) &&
     (!f.familia.length || f.familia.includes(p.familiaOlfativa)) &&
     (!f.marca.length   || f.marca.includes(p.marcaInspiracion)) &&
+    (!f.ocasion.length || ocasionesDe(p).some(o=>f.ocasion.includes(o))) &&
     (f.precioMax == null || p.precio <= f.precioMax)
   );
   const o = estado.orden;
@@ -1182,6 +1318,24 @@ function vistaInicio(){
     <div class="ms-contenedor">
       <div class="ms-seccion-cab">
         <p class="ms-eyebrow">Descubre</p>
+        <h2>Por ocasión</h2>
+        <p>Dinos cuándo la vas a usar y la casa te propone.</p>
+      </div>
+      <div class="ms-ocasiones">
+        ${OCASIONES.map(o=>`<a href="#/coleccion?ocasion=${encodeURIComponent(o)}">
+          <span class="ms-ocasion-icono">${ICONOS_OCASION[o]}</span>
+          <h3>${esc(o)}</h3>
+          <p>${esc(TEXTOS_OCASION[o])}</p>
+          <small>${contarOcasion(o)} fragancias</small>
+        </a>`).join("")}
+      </div>
+    </div>
+  </section>
+
+  <section class="ms-seccion ms-seccion--campo">
+    <div class="ms-contenedor">
+      <div class="ms-seccion-cab">
+        <p class="ms-eyebrow">Descubre</p>
         <h2>Por género</h2>
       </div>
       <div class="ms-mosaico">
@@ -1192,7 +1346,7 @@ function vistaInicio(){
     </div>
   </section>
 
-  <section class="ms-seccion ms-seccion--campo">
+  <section class="ms-seccion">
     <div class="ms-contenedor">
       <div class="ms-seccion-cab">
         <p class="ms-eyebrow">Descubre</p>
@@ -1272,6 +1426,7 @@ function vistaColeccion(titulo, subtitulo){
       <aside class="ms-panel" id="panelFiltros" data-abierto="false">
         <button class="ms-panel-btn" data-accion="filtros">Filtros <span>+</span></button>
         <div class="ms-panel-cuerpo">
+          ${grupo("Ocasión","ocasion",OCASIONES)}
           ${grupo("Género","genero",GENEROS)}
           ${grupo("Familia olfativa","familia",familiasUsadas())}
           ${grupo("Inspiración","marca",marcasInspiracion(),"ms-grupo--largo")}
@@ -1330,12 +1485,18 @@ function vistaProducto(slug){
           <div class="ms-nivel"><dt>Notas de fondo</dt><dd>${p.notasFondo.map(esc).join(" · ")}</dd></div>
         </dl>
         <dl class="ms-datos">
+          <div><dt>Ideal para</dt><dd>${ocasionesDe(p).map(o=>esc(o.replace("Para ",""))).join(" · ")}</dd></div>
           <div><dt>Familia olfativa</dt><dd>${esc(p.familiaOlfativa)}</dd></div>
           <div><dt>Género</dt><dd>${esc(p.genero)}</dd></div>
           <div><dt>Concentración</dt><dd>${esc(p.concentracion)}</dd></div>
           <div><dt>Tamaño</dt><dd>${esc(p.tamano)}</dd></div>
         </dl>
         <p class="ms-precio-grande">${dinero(p.precio)}</p>
+        <p class="ms-aviso-descuento">
+          Lleva 2 y ahorras ${dinero(Math.round(p.precio*2*0.05))} · 
+          Lleva 4 y ahorras ${dinero(Math.round(p.precio*4*0.09))} · 
+          hasta ${topeDescuento().pct}% desde ${topeDescuento().desde} frascos
+        </p>
         ${p.disponible ? `
           <p class="ms-eyebrow" style="margin-bottom:8px">Cantidad</p>
           <div class="ms-cantidad">
@@ -1452,14 +1613,17 @@ function enrutar(){
   if(raiz === ""){
     html = vistaInicio();
   } else if(raiz === "coleccion"){
-    const g = params.get("genero"), f = params.get("familia"), m = params.get("marca");
-    estado.filtros = {genero: g?[g]:[], familia: f?[f]:[], marca: m?[m]:[], precioMax:null};
+    const g = params.get("genero"), f = params.get("familia"),
+          m = params.get("marca"),  o = params.get("ocasion");
+    estado.filtros = {genero: g?[g]:[], familia: f?[f]:[], marca: m?[m]:[],
+                      ocasion: o?[o]:[], precioMax:null};
     estado.limite = 24;
     let t = "Collection d'Inspirations",
         s = "Todas las fragancias de la casa, presentadas junto al perfume que las inspira.";
     if(g){ t = g; s = `Fragancias Maison Saldana para ${g.toLowerCase()}.`; }
     if(f){ t = f; s = `Fragancias de familia ${f.toLowerCase()}.`; }
     if(m){ t = m; s = `Nuestra lectura de las fragancias de ${m}.`; }
+    if(o){ t = o; s = TEXTOS_OCASION[o] || `Fragancias ${o.toLowerCase()}.`; }
     html = vistaColeccion(t, s); titulo = t + " — Maison Saldana";
   } else if(raiz === "perfume"){
     const p = PRODUCTOS.find(x=>x.slug===partes[1]);
@@ -1568,6 +1732,36 @@ function subtotal(){
 }
 function unidades(){ return estado.carrito.reduce((s,l)=>s+l.cantidad,0); }
 
+/* ---------- descuento por cantidad ------------------------------ */
+function porcentajePorUnidades(n){
+  let pct = 0;
+  for(const t of ESCALA_DESCUENTO){ if(n >= t.desde) pct = t.pct; }
+  return pct;
+}
+function topeDescuento(){ return ESCALA_DESCUENTO[ESCALA_DESCUENTO.length-1]; }
+
+/* Devuelve todo lo que el carrito necesita saber sobre el precio.  */
+function cuentas(){
+  const sub = subtotal(), n = unidades();
+  const pct = porcentajePorUnidades(n);
+  const descuento = Math.round(sub * pct / 100);
+  const total = sub - descuento;
+
+  /* ¿cuánto ahorraría si agrega un frasco más? */
+  const siguiente = ESCALA_DESCUENTO.find(t => t.desde > n);
+  let empuje = null;
+  if(siguiente && n > 0){
+    const faltan = siguiente.desde - n;
+    const promedio = sub / n;                       // precio medio del carrito
+    const subFuturo = sub + promedio * faltan;
+    const ahorroFuturo = Math.round(subFuturo * siguiente.pct / 100);
+    if(ahorroFuturo > descuento){
+      empuje = {faltan, pct: siguiente.pct, ahorro: ahorroFuturo};
+    }
+  }
+  return {sub, n, pct, descuento, total, empuje};
+}
+
 function pintarCarrito(){
   const n = unidades(), c = $("#contadorCarrito");
   c.textContent = n; c.hidden = n===0;
@@ -1602,11 +1796,20 @@ function pintarCarrito(){
     </div>`;
   }).join("");
 
-  const sub = subtotal();
+  const ct = cuentas();
   pie.innerHTML = `
-    <div class="ms-total ms-total--sub"><span>Subtotal</span><span>${dinero(sub)}</span></div>
+    ${ct.empuje ? `<div class="ms-empuje">
+      Agrega ${ct.empuje.faltan} fragancia${ct.empuje.faltan===1?"":"s"} más y tu descuento
+      sube a <b>${ct.empuje.pct}%</b> — ahorrarías ${dinero(ct.empuje.ahorro)}.
+    </div>` : (ct.pct === topeDescuento().pct ? `<div class="ms-empuje ms-empuje--tope">
+      Has alcanzado el descuento máximo de la casa: <b>${ct.pct}%</b>.
+    </div>` : "")}
+    <div class="ms-total ms-total--sub"><span>Subtotal</span><span>${dinero(ct.sub)}</span></div>
+    ${ct.descuento > 0 ? `<div class="ms-total ms-total--sub ms-total--ahorro">
+      <span>Descuento por ${ct.n} frascos (${ct.pct}%)</span><span>&minus; ${dinero(ct.descuento)}</span>
+    </div>` : ""}
     <div class="ms-total ms-total--sub"><span>Envío</span><span>Se coordina al confirmar</span></div>
-    <div class="ms-total"><span class="ms-eyebrow" style="margin:0">Total</span><span>${dinero(sub)}</span></div>
+    <div class="ms-total"><span class="ms-eyebrow" style="margin:0">Total</span><span>${dinero(ct.total)}</span></div>
     <div style="display:grid;gap:10px;margin-top:18px">
       <button class="ms-btn ms-btn--ancho" data-accion="pagar">Finalizar pedido</button>
       <button class="ms-btn ms-btn--sutil ms-btn--ancho" data-accion="cerrar-carrito">Seguir comprando</button>
@@ -1628,7 +1831,11 @@ function finalizarPedido(){
     const p = PRODUCTOS.find(x=>x.id===l.id);
     return `• ${l.cantidad} × ${p.nombre} (inspirado en ${p.inspiradoEn}) — ${dinero(p.precio*l.cantidad)}`;
   }).join("\n");
-  const texto = `Hola Maison Saldana, quiero hacer este pedido:\n\n${lineas}\n\nTotal: ${dinero(subtotal())}\n\n¿Me confirman disponibilidad y entrega?`;
+  const c = cuentas();
+  const resumen = c.descuento > 0
+    ? `Subtotal: ${dinero(c.sub)}\nDescuento por ${c.n} frascos (${c.pct}%): -${dinero(c.descuento)}\nTotal: ${dinero(c.total)}`
+    : `Total: ${dinero(c.total)}`;
+  const texto = `Hola Maison Saldana, quiero hacer este pedido:\n\n${lineas}\n\n${resumen}\n\n¿Me confirman disponibilidad y entrega?`;
   window.open(enlaceWhatsApp(texto), "_blank", "noopener");
 }
 
@@ -1768,7 +1975,7 @@ document.addEventListener("click", (e)=>{
       break;
     }
     case "limpiar":
-      estado.filtros = {genero:[],familia:[],marca:[],precioMax:null};
+      estado.filtros = {genero:[],familia:[],marca:[],ocasion:[],precioMax:null};
       estado.limite = 24; redibujarColeccion();
       break;
     case "mas": estado.limite += 24; redibujarColeccion(); break;
