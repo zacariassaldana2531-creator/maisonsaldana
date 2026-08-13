@@ -247,10 +247,14 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 .ms-tarjeta .ms-escena{border:1px solid rgba(226,216,200,.7)}
 .ms-tarjeta:hover .ms-flacon{transform:translateY(-8px) scale(1.02)}
 .ms-tarjeta:hover .ms-orig{transform:translateX(6px)}
-.ms-tarjeta-info{padding-top:18px; text-align:center; display:flex; flex-direction:column; flex:1}
+.ms-tarjeta-info{
+  padding-top:18px; text-align:center; display:flex; flex-direction:column; flex:1;
+  min-height:280px;
+}
+.ms-tarjeta-info h3 + p + p{margin-bottom:auto}
 @media (max-width:820px){
   .ms-tarjeta .ms-escena{aspect-ratio:4/5}
-  .ms-tarjeta-info{padding-top:14px}
+  .ms-tarjeta-info{padding-top:14px; min-height:auto}
   .ms-tarjeta-info h3{font-size:clamp(16px,4.4vw,21px); margin-bottom:6px; line-height:1.2}
   .ms-inspirado{font-size:10px; letter-spacing:.08em; line-height:1.5}
   .ms-meta{margin:9px 0 10px; font-size:9px; letter-spacing:.16em}
