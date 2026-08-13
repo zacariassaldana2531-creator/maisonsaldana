@@ -707,15 +707,25 @@ const CASA = {
    Se aplica sobre el total de frascos del carrito, sin importar
    cuáles sean, así también se premia a quien mezcla.
    Para cambiar la escala sólo hay que tocar esta tabla.          */
-const ESCALA_DESCUENTO = [
-  {desde:2, pct:5},
-  {desde:3, pct:7},
-  {desde:4, pct:9},
-  {desde:5, pct:11},
-  {desde:6, pct:13},
-  {desde:7, pct:14},
-  {desde:8, pct:15}    // tope de la casa
-];
+/* Modelo de precio por cantidad
+   ------------------------------------------------------------------
+   Cada frasco del carrito se cobra según su POSICIÓN: el más caro va
+   completo y los siguientes van bajando por una rampa, hasta que en
+   el frasco 12 todos aterrizan en PRECIO_MAYOR.
+
+   La rampa se aplica sobre la distancia entre el precio de lista y
+   los 800, así cada fragancia baja a su propio ritmo pero todas
+   terminan igual:
+
+     de 1,500 → 1,346 · 1,206 · 1,122 …  hasta 800
+     de 1,150 → 1,073 · 1,003 ·   961 …  hasta 800              */
+const PRECIO_MAYOR = 800;   // precio del frasco a partir de la docena
+
+/* Factor según CUÁNTOS frascos lleve el carrito en total.
+   1 = precio de lista, 0 = precio de mayorista.
+   El índice es la cantidad: RAMPA[0] es para 1 frasco, RAMPA[11]
+   para 12. De 12 en adelante, todo el carrito va a 800.        */
+const RAMPA = [1, 0.78, 0.58, 0.46, 0.36, 0.29, 0.22, 0.16, 0.12, 0.08, 0.04, 0];
 
 /* ---------- 2. IMÁGENES DE MARCA -------------------------------- */
 /* REGLA DE ORO: FLACON es el frasco oficial y universal de la casa.
@@ -1493,9 +1503,9 @@ function vistaProducto(slug){
         </dl>
         <p class="ms-precio-grande">${dinero(p.precio)}</p>
         <p class="ms-aviso-descuento">
-          Lleva 2 y ahorras ${dinero(Math.round(p.precio*2*0.05))} · 
-          Lleva 4 y ahorras ${dinero(Math.round(p.precio*4*0.09))} · 
-          hasta ${topeDescuento().pct}% desde ${topeDescuento().desde} frascos
+          Lleva 2 y ahorras ${dinero(descuentoDe([p.precio,p.precio]))} · 
+          Lleva 6 y ahorras ${dinero(descuentoDe(Array(6).fill(p.precio)))} · 
+          La docena a ${dinero(PRECIO_MAYOR)} el frasco
         </p>
         ${p.disponible ? `
           <p class="ms-eyebrow" style="margin-bottom:8px">Cantidad</p>
@@ -1733,33 +1743,57 @@ function subtotal(){
 function unidades(){ return estado.carrito.reduce((s,l)=>s+l.cantidad,0); }
 
 /* ---------- descuento por cantidad ------------------------------ */
-function porcentajePorUnidades(n){
-  let pct = 0;
-  for(const t of ESCALA_DESCUENTO){ if(n >= t.desde) pct = t.pct; }
-  return pct;
+
+/* Lista con el precio de cada frasco del carrito, uno por unidad. */
+function preciosSueltos(){
+  const out = [];
+  estado.carrito.forEach(l=>{
+    const p = PRODUCTOS.find(x=>x.id===l.id);
+    if(p) for(let i=0;i<l.cantidad;i++) out.push(p.precio);
+  });
+  return out;
 }
-function topeDescuento(){ return ESCALA_DESCUENTO[ESCALA_DESCUENTO.length-1]; }
 
-/* Devuelve todo lo que el carrito necesita saber sobre el precio.  */
+/* Precio de un frasco cuando el carrito lleva "cantidad" frascos. */
+function precioPorCantidad(precio, cantidad){
+  if(precio <= PRECIO_MAYOR || cantidad < 1) return precio;
+  const f = cantidad <= RAMPA.length ? RAMPA[cantidad-1] : 0;
+  return Math.round(PRECIO_MAYOR + (precio - PRECIO_MAYOR) * f);
+}
+
+/* Total ya rebajado de una lista de precios (uno por frasco). */
+function totalDe(precios){
+  const n = precios.length;
+  return precios.reduce((suma, precio)=> suma + precioPorCantidad(precio, n), 0);
+}
+
+/* Descuento en pesos para una lista de precios. */
+function descuentoDe(precios){
+  if(precios.length < 2) return 0;
+  const sub = precios.reduce((x,y)=>x+y, 0);
+  return sub - totalDe(precios);
+}
+
+/* Todo lo que el carrito necesita saber sobre el precio. */
 function cuentas(){
-  const sub = subtotal(), n = unidades();
-  const pct = porcentajePorUnidades(n);
-  const descuento = Math.round(sub * pct / 100);
+  const precios = preciosSueltos();
+  const sub = precios.reduce((x,y)=>x+y, 0);
+  const n = precios.length;
+  const descuento = descuentoDe(precios);
   const total = sub - descuento;
+  const pct = sub ? Math.round(descuento * 100 / sub) : 0;
+  const enTope = n >= RAMPA.length;
 
-  /* ¿cuánto ahorraría si agrega un frasco más? */
-  const siguiente = ESCALA_DESCUENTO.find(t => t.desde > n);
+  /* ¿cuánto ahorraría con un frasco más? Se calcula con el frasco
+     más barato del carrito, para no prometer de más.            */
   let empuje = null;
-  if(siguiente && n > 0){
-    const faltan = siguiente.desde - n;
-    const promedio = sub / n;                       // precio medio del carrito
-    const subFuturo = sub + promedio * faltan;
-    const ahorroFuturo = Math.round(subFuturo * siguiente.pct / 100);
-    if(ahorroFuturo > descuento){
-      empuje = {faltan, pct: siguiente.pct, ahorro: ahorroFuturo};
-    }
+  if(n > 0 && !enTope){
+    const barato = Math.min(...precios);
+    const ahorro = descuentoDe([...precios, barato]);
+    const extra  = (sub + barato) - totalDe([...precios, barato]) - descuento;
+    if(extra > 0) empuje = {ahorro, extra};
   }
-  return {sub, n, pct, descuento, total, empuje};
+  return {sub, n, pct, descuento, total, empuje, enTope};
 }
 
 function pintarCarrito(){
@@ -1799,10 +1833,9 @@ function pintarCarrito(){
   const ct = cuentas();
   pie.innerHTML = `
     ${ct.empuje ? `<div class="ms-empuje">
-      Agrega ${ct.empuje.faltan} fragancia${ct.empuje.faltan===1?"":"s"} más y tu descuento
-      sube a <b>${ct.empuje.pct}%</b> — ahorrarías ${dinero(ct.empuje.ahorro)}.
-    </div>` : (ct.pct === topeDescuento().pct ? `<div class="ms-empuje ms-empuje--tope">
-      Has alcanzado el descuento máximo de la casa: <b>${ct.pct}%</b>.
+      Agrega una fragancia más y ahorras <b>${dinero(ct.empuje.extra)}</b> adicionales.
+    </div>` : (ct.enTope ? `<div class="ms-empuje ms-empuje--tope">
+      Has alcanzado el precio de mayorista: <b>${dinero(PRECIO_MAYOR)}</b> por frasco.
     </div>` : "")}
     <div class="ms-total ms-total--sub"><span>Subtotal</span><span>${dinero(ct.sub)}</span></div>
     ${ct.descuento > 0 ? `<div class="ms-total ms-total--sub ms-total--ahorro">
