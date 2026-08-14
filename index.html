@@ -572,6 +572,34 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   *,*::before,*::after{animation-duration:.001ms !important; transition-duration:.001ms !important}
   .ms-aparece{opacity:1; transform:none}
 }
+/* ---- auditoría de imágenes (ruta interna #/auditoria) ---- */
+.ms-aud-barra{
+  position:sticky; top:0; z-index:20; background:var(--papel);
+  border-bottom:1px solid var(--linea); padding:12px 0;
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+}
+.ms-aud-barra button{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  border:1px solid var(--linea); padding:7px 12px; border-radius:2px;
+}
+.ms-aud-barra button[data-on="1"]{ border-color:var(--tinta); background:var(--tinta); color:var(--papel) }
+.ms-aud-cuenta{ font-size:12px; color:var(--tinta-suave); margin-left:auto }
+.ms-aud-rejilla{
+  display:grid; gap:10px; margin:18px 0 40px;
+  grid-template-columns:repeat(auto-fill, minmax(132px,1fr));
+}
+.ms-aud-item{ background:var(--campo); border:1px solid var(--linea); border-radius:2px; padding:8px; text-align:center }
+.ms-aud-item[data-estado="no"]{ background:#FBEDED; border-color:#E4B9B9 }
+.ms-aud-caja{ height:112px; display:flex; align-items:center; justify-content:center; overflow:hidden }
+.ms-aud-caja img{ max-height:112px; width:auto; object-fit:contain }
+.ms-aud-vacio{ font-size:10px; letter-spacing:.2em; color:#B4726F; text-transform:uppercase }
+.ms-aud-cod{ font-family:var(--display); font-size:15px; margin-top:6px; display:block }
+.ms-aud-nom{ font-size:11px; line-height:1.3; display:block }
+.ms-aud-ref{ font-size:10px; color:var(--tinta-suave); line-height:1.3; display:block; margin-top:2px }
+.ms-aud-lista{
+  width:100%; min-height:120px; font-family:ui-monospace,Menlo,monospace; font-size:12px;
+  border:1px solid var(--linea); background:var(--campo); padding:10px; border-radius:2px;
+}
 </style>
 </head>
 <body>
@@ -1647,6 +1675,98 @@ function vistaNoEncontrado(){
 }
 
 /* ================================================================
+   AUDITORÍA DE IMÁGENES  —  ruta interna #/auditoria
+   Muestra cada producto con la foto que le corresponde según su
+   código (originales/<codigo>.webp). Sirve para detectar fotos
+   cambiadas de perfume y fotos que todavía faltan.
+   No aparece en el menú: solo se llega escribiendo la dirección.
+   ================================================================ */
+const audEstado = { genero:"", soloSin:false };
+
+window.audOk = function(img){
+  const it = img.closest(".ms-aud-item");
+  if(it){ it.dataset.estado = "ok"; audContar(); }
+};
+window.audNo = function(img){
+  const it = img.closest(".ms-aud-item");
+  if(!it) return;
+  it.dataset.estado = "no";
+  const caja = it.querySelector(".ms-aud-caja");
+  if(caja) caja.innerHTML = '<span class="ms-aud-vacio">Falta</span>';
+  audContar();
+};
+
+function audContar(){
+  const items = $$(".ms-aud-item");
+  const sin = items.filter(i => i.dataset.estado === "no");
+  const con = items.filter(i => i.dataset.estado === "ok");
+  const c = $("#audCuenta");
+  if(c) c.textContent = `${con.length} con foto · ${sin.length} sin foto · ${items.length} en pantalla`;
+  const lista = $("#audFaltan");
+  if(lista) lista.value = sin.map(i => i.dataset.cod.toLowerCase() + ".webp").join("\n");
+  if(audEstado.soloSin){
+    items.forEach(i => { i.style.display = i.dataset.estado === "no" ? "" : "none"; });
+  }
+}
+
+window.audFiltro = function(genero){
+  audEstado.genero = genero;
+  $("#contenido").innerHTML = vistaAuditoria();
+  window.scrollTo(0,0);
+};
+window.audSoloSin = function(){
+  audEstado.soloSin = !audEstado.soloSin;
+  $("#contenido").innerHTML = vistaAuditoria();
+  window.scrollTo(0,0);
+};
+
+function vistaAuditoria(){
+  const lista = PRODUCTOS
+    .filter(p => !audEstado.genero || p.genero === audEstado.genero)
+    .slice()
+    .sort((a,b) => a.codigo.localeCompare(b.codigo, "en", {numeric:true}));
+
+  const on = v => v ? ' data-on="1"' : "";
+
+  const celdas = lista.map(p => `
+    <div class="ms-aud-item" data-cod="${esc(p.codigo)}" data-estado="cargando">
+      <div class="ms-aud-caja">
+        <img src="${esc(rutaOriginal(p))}" alt="${esc(p.codigo)}"
+             loading="lazy" decoding="async" onload="audOk(this)" onerror="audNo(this)">
+      </div>
+      <b class="ms-aud-cod">${esc(p.codigo)}</b>
+      <span class="ms-aud-nom">${esc(p.nombre)}</span>
+      <span class="ms-aud-ref">${esc(p.inspiradoEn)}<br>${esc(p.marcaInspiracion)}</span>
+    </div>`).join("");
+
+  return `<div class="ms-contenedor" style="padding-block:24px">
+    <p class="ms-eyebrow" style="margin-bottom:6px">Uso interno</p>
+    <h1 style="font-size:clamp(26px,5vw,40px)">Auditoría de imágenes</h1>
+    <p style="color:var(--tinta-suave); font-size:14px; max-width:60ch; margin-top:10px">
+      Cada casilla muestra la foto que el sitio busca en
+      <b>originales/&lt;código&gt;.webp</b>. Si la foto no corresponde al perfume
+      indicado debajo, el archivo está mal nombrado. Las casillas rojas son las que faltan.
+    </p>
+
+    <div class="ms-aud-barra">
+      <button onclick="audFiltro('')"${on(!audEstado.genero)}>Todas</button>
+      <button onclick="audFiltro('Hombre')"${on(audEstado.genero==="Hombre")}>Hombre</button>
+      <button onclick="audFiltro('Mujer')"${on(audEstado.genero==="Mujer")}>Mujer</button>
+      <button onclick="audSoloSin()"${on(audEstado.soloSin)}>Solo las que faltan</button>
+      <span class="ms-aud-cuenta" id="audCuenta">contando…</span>
+    </div>
+
+    <div class="ms-aud-rejilla">${celdas}</div>
+
+    <h2 style="font-size:20px">Archivos que faltan</h2>
+    <p style="color:var(--tinta-suave); font-size:13px; margin:6px 0 10px">
+      Nombres de archivo pendientes de subir a la carpeta <b>originales/</b>.
+    </p>
+    <textarea class="ms-aud-lista" id="audFaltan" readonly rows="10"></textarea>
+  </div>`;
+}
+
+/* ================================================================
    ENRUTADOR
    ================================================================ */
 function leerRuta(){
@@ -1686,6 +1806,8 @@ function enrutar(){
     html = vistaNotas(); titulo = "Notas olfativas — Maison Saldana";
   } else if(raiz === "casa"){
     html = vistaCasa(); titulo = "Sobre la casa — Maison Saldana";
+  } else if(raiz === "auditoria"){
+    html = vistaAuditoria(); titulo = "Auditoría de imágenes — Maison Saldana";
   } else {
     html = vistaNoEncontrado(); titulo = "Página no encontrada — Maison Saldana";
   }
