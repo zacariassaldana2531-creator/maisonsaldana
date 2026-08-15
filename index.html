@@ -596,54 +596,6 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 /* ====================== ENTRADA ========================== */
 .ms-aparece{opacity:0; transform:translateY(26px)}
 
-
-/* ============ PLIEGOS EDITORIALES ============
-   La casa cuenta antes de vender. Foto de campaña a sangre, texto
-   al lado; en el teléfono se apilan, foto arriba. */
-.ms-pliego{
-  display:grid; grid-template-columns:1fr 1fr; align-items:stretch;
-  background:var(--campo); overflow:hidden;
-}
-.ms-pliego--invertido .ms-pliego-foto{order:2}
-.ms-pliego-foto{position:relative; min-height:min(78vh,620px); overflow:hidden; background:var(--noche)}
-.ms-pliego-foto img{
-  width:100%; height:100%; object-fit:cover; display:block;
-  /* Las portadas llevan el nombre de la casa pintado en la mitad derecha.
-     Encuadramos por la izquierda: entra la pareja, nunca un rótulo partido.
-     El nombre ya lo dice la cabecera; aquí manda la imagen. */
-  object-position:left center;
-  transition:transform 1.4s cubic-bezier(.16,.84,.44,1);
-}
-.ms-pliego:hover .ms-pliego-foto img{transform:scale(1.03)}
-.ms-pliego-texto{
-  display:flex; flex-direction:column; justify-content:center;
-  padding:clamp(34px,6vw,90px) clamp(24px,5vw,74px);
-}
-.ms-pliego-texto h2{font-size:clamp(28px,4.4vw,54px); margin-bottom:8px}
-.ms-pliego-texto p{
-  color:var(--tinta-suave); font-size:clamp(14.5px,1.6vw,17px);
-  line-height:1.9; margin:20px 0 0; max-width:44ch;
-}
-.ms-pliego-texto .ms-btn{margin-top:32px; align-self:flex-start}
-.ms-pliego-cifra{
-  display:flex; gap:clamp(24px,4vw,52px); margin-top:34px;
-  padding-top:26px; border-top:1px solid var(--linea);
-}
-.ms-pliego-cifra div b{
-  display:block; font-family:var(--display); font-size:clamp(26px,3.4vw,40px);
-  font-weight:400; line-height:1; color:var(--tinta);
-}
-.ms-pliego-cifra div span{
-  display:block; margin-top:8px; font-size:10.5px;
-  letter-spacing:.22em; text-transform:uppercase; color:var(--tinta-suave);
-}
-@media (max-width:860px){
-  .ms-pliego{grid-template-columns:1fr}
-  .ms-pliego--invertido .ms-pliego-foto{order:0}
-  .ms-pliego-foto{min-height:0; aspect-ratio:4/3}
-  .ms-pliego-foto img{object-position:22% center}
-}
-
 /* Paso de una página a otra */
 #contenido{
   opacity:1; transform:none;
@@ -1436,23 +1388,6 @@ function vistaInicio(){
     </div>
   </section>
 
-  <section class="ms-pliego ms-aparece">
-    <div class="ms-pliego-foto">
-      <img src="originales/portada-4.webp" alt="Campaña Maison Saldana" loading="lazy" decoding="async">
-    </div>
-    <div class="ms-pliego-texto">
-      <p class="ms-eyebrow">La casa</p>
-      <h2>Una esencia,<br>innumerables historias</h2>
-      <p>Las grandes fragancias del mundo se escribieron para muy pocos. Nosotros las leemos de nuevo, las servimos en un solo frasco de autor y las ponemos al alcance de quien quiera contarlas. Mismo lenguaje olfativo, otra medida.</p>
-      <div class="ms-pliego-cifra">
-        <div><b>${PRODUCTOS.length}</b><span>Fragancias</span></div>
-        <div><b>${marcasInspiracion().length}</b><span>Inspiraciones</span></div>
-        <div><b>50<small style="font-size:.5em"> ml</small></b><span>Eau de parfum</span></div>
-      </div>
-      <a class="ms-btn ms-btn--linea" href="#/casa">Conocer la casa</a>
-    </div>
-  </section>
-
   <section class="ms-seccion ms-seccion--campo">
     <div class="ms-contenedor">
       <div class="ms-seccion-cab">
@@ -1478,18 +1413,6 @@ function vistaInicio(){
           <small>${contarOcasion(o)} fragancias</small>
         </a>`).join("")}
       </div>
-    </div>
-  </section>
-
-  <section class="ms-pliego ms-pliego--invertido ms-aparece">
-    <div class="ms-pliego-foto">
-      <img src="originales/portada-3.webp" alt="Pour elle et pour lui — Maison Saldana" loading="lazy" decoding="async">
-    </div>
-    <div class="ms-pliego-texto">
-      <p class="ms-eyebrow">Pour elle · Pour lui</p>
-      <h2>El mismo frasco,<br>dos maneras de usarlo</h2>
-      <p>No creemos en fragancias que pertenezcan a un solo lado. Cada eau de parfum de la casa está construida para sostenerse sobre cualquier piel — la diferencia la pone quien la lleva, no la etiqueta.</p>
-      <a class="ms-btn ms-btn--linea" href="#/coleccion?genero=Unisex">Ver las unisex</a>
     </div>
   </section>
 
