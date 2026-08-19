@@ -1252,8 +1252,13 @@ const ICONOS_OCASION = {
   "Para seducir":"&#10084;", "Para regalar":"&#10022;"
 };
 
-const FAM_CLARAS  = ["Cítrico","Fresco","Acuático","Limpio","Aromático","Frutal","Floral"];
-const FAM_OSCURAS = ["Gourmand","Ámbar","Oud","Especiado","Amaderado"];
+/* La familia olfativa manda. Un perfume se clasifica por lo que más pesa en
+   su carácter, no por lo que aparezca en el fondo: un cítrico sigue siendo
+   de día aunque lleve cedro o pachulí abajo. Sólo floral y frutal, que van
+   para los dos lados, miran el fondo para decidirse. */
+const FAM_DIA   = ["Cítrico","Fresco","Acuático","Limpio","Aromático"];
+const FAM_NOCHE = ["Gourmand","Ámbar","Oud","Especiado","Amaderado"];
+const FAM_MIXTA = ["Floral","Frutal"];
 
 const CASAS_ICONICAS = new Set([
   "Chanel","Dior","Versace","Carolina Herrera","Paco Rabanne","Yves Saint Laurent",
@@ -1280,24 +1285,20 @@ function ocasionesDe(p){
   if(p._ocasiones) return p._ocasiones;
   const f = p.familiaOlfativa, fondo = textoFondo(p), oc = [];
 
-  const esClara  = FAM_CLARAS.includes(f);
-  const esOscura = FAM_OSCURAS.includes(f);
-  const pesada   = RX_PESADA.test(fondo);
+  /* DÍA y NOCHE son excluyentes y los decide la familia dominante. */
+  if(FAM_DIA.includes(f))        oc.push("Para el día");
+  else if(FAM_NOCHE.includes(f)) oc.push("Para la noche");
+  else oc.push(RX_PESADA.test(fondo) ? "Para la noche" : "Para el día");
 
-  /* DÍA: familia clara o apertura fresca, siempre que el fondo no pese */
-  if((esClara || RX_FRESCA.test(textoSalida(p))) && !esOscura && !pesada) oc.push("Para el día");
-
-  /* NOCHE: familia densa o fondo con materias oscuras */
-  if(esOscura || pesada) oc.push("Para la noche");
-
-  /* SEDUCIR: las cálidas de siempre, y las flores o frutas con fondo de piel */
-  if(RX_PIEL.test(fondo) && (esOscura || f === "Floral" || f === "Frutal")) oc.push("Para seducir");
+  /* SEDUCIR: fondo de piel, en las familias cálidas, florales o frutales */
+  if(RX_PIEL.test(fondo) && (FAM_NOCHE.includes(f) || FAM_MIXTA.includes(f)))
+    oc.push("Para seducir");
 
   /* REGALAR: las más reconocibles, disponibles y de gama alta */
   if(p.disponible && (p.destacado ||
-     (CASAS_ICONICAS.has(p.marcaInspiracion) && p.precio >= 1350))) oc.push("Para regalar");
+     (CASAS_ICONICAS.has(p.marcaInspiracion) && p.precio >= 1350)))
+    oc.push("Para regalar");
 
-  if(!oc.length) oc.push(esClara ? "Para el día" : "Para la noche");
   p._ocasiones = oc;
   return oc;
 }
