@@ -673,6 +673,25 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   *,*::before,*::after{animation-duration:.001ms !important; transition-duration:.001ms !important}
   .ms-aparece{opacity:1; transform:none}
 }
+
+/* ================= WHATSAPP FLOTANTE ====================== */
+.ms-wa-flotante{
+  position:fixed; z-index:70; right:18px; bottom:18px;
+  width:56px; height:56px; border-radius:50%;
+  background:var(--noche); border:1px solid var(--oro-hondo);
+  display:grid; place-items:center; color:var(--oro-claro);
+  box-shadow:var(--sombra-suave);
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+.ms-wa-flotante svg{width:26px; height:26px; fill:currentColor}
+@media (hover:hover){
+  .ms-wa-flotante:hover{transform:translateY(-3px) scale(1.05); box-shadow:var(--sombra)}
+}
+.ms-wa-flotante{ padding-bottom:env(safe-area-inset-bottom) }
+@media (max-width:600px){
+  .ms-wa-flotante{right:14px; bottom:calc(14px + env(safe-area-inset-bottom)); width:52px; height:52px}
+  .ms-wa-flotante svg{width:24px; height:24px}
+}
 </style>
 </head>
 <body>
@@ -793,6 +812,11 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
     <button class="ms-btn ms-btn--ancho" data-accion="cerrar-modal">Entendido</button>
   </div>
 </div>
+
+<!-- WhatsApp flotante -->
+<a class="ms-wa-flotante" href="https://wa.me/18094394509?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20sobre%20las%20fragancias%20de%20Maison%20Saldana" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.5.1-1.5-.7-2.4-1.3-3.4-2.9-.3-.4.3-.4.7-1.3.1-.2 0-.4 0-.5C11 9.7 10.6 8.5 10.3 8c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.2-.2-.5-.4z"/><path d="M12 2C6.5 2 2 6.4 2 12c0 1.9.5 3.6 1.5 5.2L2 22l4.9-1.4C8.5 21.5 10.2 22 12 22c5.5 0 10-4.4 10-10S17.5 2 12 2zm0 18.2c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3 .9.9-2.9-.2-.3C4.2 15 3.7 13.5 3.7 12c0-4.6 3.7-8.3 8.3-8.3s8.3 3.7 8.3 8.3-3.7 8.2-8.3 8.2z"/></svg>
+</a>
 
 <div class="ms-velo" id="velo" data-abierto="false"></div>
 <div class="ms-brindis" id="brindis" role="status" aria-live="polite"></div>
