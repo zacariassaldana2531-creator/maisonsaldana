@@ -817,7 +817,7 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
     </div>
     <div class="ms-pie-legal">
       <span>© <span id="anio"></span> Maison Saldana · Santo Domingo, República Dominicana</span>
-      <span>Maison Saldana no está afiliada a las marcas mencionadas. Los nombres y marcas citados pertenecen a sus respectivos titulares y se emplean únicamente como referencia olfativa.</span>
+      <span>Cada fragancia de la casa declara su referencia olfativa a la vista. Maison Saldana no est&aacute; afiliada a las marcas citadas; sus nombres pertenecen a sus respectivos titulares y se emplean &uacute;nicamente como referencia.</span>
     </div>
   </div>
 </footer>
@@ -1513,7 +1513,7 @@ function vistaInicio(){
     </div>
     <div class="ms-hero-pie">
       <div class="ms-fleuron"><span>&#10022;</span></div>
-      <p>Un solo frasco. Muchas historias. Cada fragancia de la casa reinterpreta un gran perfume del mundo y lo devuelve con nuestro nombre, nuestra luz y nuestra medida.</p>
+      <p>Casa de autor independiente, fundada en Santo Domingo. Perfumería de acorde complejo &mdash;maderas nobles, resinas, c&iacute;tricos de alta definici&oacute;n&mdash; construida para el clima del tr&oacute;pico y sin el peaje del intermediario.</p>
       <a class="ms-btn" href="#/coleccion">Ver la colección</a>
     </div>
   </section>
@@ -1781,21 +1781,53 @@ function vistaNotas(){
 function vistaCasa(){
   return `<div class="ms-contenedor" style="max-width:820px">
     <div class="ms-portada-int">
-      <p class="ms-eyebrow">Maison Saldana</p>
-      <h1>Sobre la casa</h1>
+      <p class="ms-eyebrow">Fundada en 2026 &middot; Santo Domingo</p>
+      <h1>La casa</h1>
     </div>
     <div style="color:var(--tinta-suave);font-size:16px;display:grid;gap:22px">
-      <p>Maison Saldana trabaja desde Santo Domingo con una convicción sencilla: un buen perfume no debería
-      medirse por el precio de su envase. Por eso la casa tiene un solo frasco —el mismo para toda la colección—
-      y toda la atención puesta en el jugo.</p>
-      <p>Cada fragancia se presenta con su referencia a la vista. No imitamos etiquetas ni presentaciones:
-      declaramos en qué nos inspiramos y dejamos que la nariz decida. Es una forma más honesta de hacer
-      perfumería accesible, y también más respetuosa con las casas que admiramos.</p>
-      <p>Trabajamos con concentración Eau de Parfum en formato de 50 ml, pensada para el clima del Caribe:
-      buena fijación, proyección medida y una estela que dura la jornada.</p>
+
+      <p style="font-family:var(--display);font-size:22px;line-height:1.5;color:var(--tinta)">
+      La sofisticaci&oacute;n olfativa de nivel internacional no tiene por qu&eacute; llegar al Caribe
+      con el precio inflado de tres intermediarios.</p>
+
+      <p>Maison Saldana nace en 2026 en Rep&uacute;blica Dominicana como una casa de autor independiente.
+      No heredamos un apellido europeo ni un archivo de cien a&ntilde;os. Lo que tenemos es criterio,
+      exigencia t&eacute;cnica y una idea precisa de lo que debe oler un perfume serio en un pa&iacute;s
+      donde hace treinta y dos grados a la sombra.</p>
+
+      <div class="ms-fleuron" style="margin:6px 0"><span>&#10022;</span></div>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">El acorde antes que la tendencia</h2>
+      <p>La curadur&iacute;a no persigue el &eacute;xito masivo de temporada. Se construye sobre acordes de car&aacute;cter:
+      maderas nobles, resinas, c&iacute;tricos de alta definici&oacute;n, notas ambaradas y florales oscuras.
+      Perfiles que ocupan espacio en una habitaci&oacute;n y que resisten una segunda olida sin aburrir.</p>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">Construido para el tr&oacute;pico</h2>
+      <p>El calor y la humedad castigan la perfumer&iacute;a. Abren la salida de golpe, queman los c&iacute;tricos
+      y acortan la vida de lo fresco. Cada f&oacute;rmula de la casa se trabaja con eso por delante:
+      concentraci&oacute;n alta, fijadores de calibre y una proyecci&oacute;n medida que acompa&ntilde;a la jornada
+      completa en lugar de gritar durante dos horas y desaparecer.</p>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">Un solo frasco</h2>
+      <p>Toda la colecci&oacute;n comparte el mismo envase: vidrio estriado, tap&oacute;n sobrio, etiqueta
+      sin ruido. No es una limitaci&oacute;n de presupuesto, es una postura. El dinero del cliente entra
+      en el jugo, no en un empaque que se descarta a la semana. El resultado es un objeto de dise&ntilde;o
+      que se sostiene solo en una repisa, sin disfrazarse de nada.</p>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">Lujo transparente</h2>
+      <p>Cada fragancia muestra su referencia olfativa a la vista, sin letra chica. No imitamos
+      etiquetas, presentaciones ni nombres: declaramos de d&oacute;nde viene el acorde y dejamos que
+      la nariz juzgue. Nos parece la forma m&aacute;s limpia de trabajar &mdash;y la m&aacute;s respetuosa
+      con las casas que admiramos&mdash;. La exclusividad de Maison Saldana est&aacute; en el producto
+      y en el trato, no en una narrativa que nadie puede verificar.</p>
+
       <div class="ms-fleuron" style="margin:12px 0"><span>&#10022;</span></div>
+
       <p style="text-align:center">
-        <a class="ms-btn" href="${enlaceWhatsApp("Hola, quisiera información sobre Maison Saldana.")}" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+        <a class="ms-btn" href="#/coleccion">Ver la colecci&oacute;n</a>
+      </p>
+      <p style="text-align:center;font-size:14px">
+        <a href="${enlaceWhatsApp("Hola, quisiera orientación para elegir una fragancia de Maison Saldana.")}" target="_blank" rel="noopener" style="color:var(--oro-hondo)">O escr&iacute;banos y le orientamos por WhatsApp</a>
       </p>
     </div>
   </div>`;
