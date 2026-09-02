@@ -20,6 +20,12 @@
 <meta name="twitter:title" content="Maison Saldana — Collection d'Inspirations">
 <meta name="twitter:description" content="Eaux de parfum inspiradas en las grandes fragancias del mundo.">
 <meta name="twitter:image" content="https://maisonsaldana.vercel.app/originales/portada-4.webp">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://maisonsaldana.vercel.app/#organizacion","name":"Maison Saldana","url":"https://maisonsaldana.vercel.app/","logo":"https://maisonsaldana.vercel.app/originales/frasco-maison-saldana.webp","slogan":"Collection d'Inspirations","areaServed":"DO","address":{"@type":"PostalAddress","addressLocality":"Santo Domingo","addressCountry":"DO"},"contactPoint":{"@type":"ContactPoint","contactType":"sales","telephone":"+1-809-439-4509","availableLanguage":"Spanish"}},
+{"@type":"WebSite","@id":"https://maisonsaldana.vercel.app/#sitio","url":"https://maisonsaldana.vercel.app/","name":"Maison Saldana","inLanguage":"es","publisher":{"@id":"https://maisonsaldana.vercel.app/#organizacion"}}
+]}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -754,9 +760,10 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   background:var(--noche); border:1px solid var(--oro-hondo);
   display:grid; place-items:center; color:var(--oro-claro);
   box-shadow:var(--sombra-suave);
-  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease), opacity .3s ease;
 }
 .ms-wa-flotante svg{width:26px; height:26px; fill:currentColor}
+.ms-wa-flotante--oculto{transform:translateY(160%); opacity:0; pointer-events:none}
 @media (hover:hover){
   .ms-wa-flotante:hover{transform:translateY(-3px) scale(1.05); box-shadow:var(--sombra)}
 }
@@ -1956,11 +1963,49 @@ function leerRuta(){
   return {partes: camino.split("/").filter(Boolean), params: new URLSearchParams(consulta || "")};
 }
 
+/* ---------- datos estructurados de producto (SEO) ------------- */
+const SITIO = "https://maisonsaldana.vercel.app/";
+function imagenAbsoluta(p){
+  const rel = p.imagenComposicion || p.imagenOriginal || FLACON;
+  return SITIO + String(rel).replace(/^\/+/, "");
+}
+function sincronizarDatosProducto(p){
+  let el = document.getElementById("ld-producto");
+  if(!p){ if(el) el.remove(); return; }
+  if(!el){
+    el = document.createElement("script");
+    el.type = "application/ld+json";
+    el.id = "ld-producto";
+    document.head.appendChild(el);
+  }
+  el.textContent = JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"Product",
+    "name": p.nombre,
+    "description": p.descripcion,
+    "sku": p.codigo,
+    "image": imagenAbsoluta(p),
+    "brand": {"@type":"Brand","name":"Maison Saldana"},
+    "category": p.familiaOlfativa + " · " + p.genero,
+    "audience": {"@type":"PeopleAudience","suggestedGender":
+      p.genero === "Hombre" ? "male" : p.genero === "Mujer" ? "female" : "unisex"},
+    "offers": {
+      "@type":"Offer",
+      "url": SITIO + "#/perfume/" + p.slug,
+      "priceCurrency":"DOP",
+      "price": p.precio,
+      "availability": p.disponible ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "itemCondition":"https://schema.org/NewCondition",
+      "seller": {"@id": SITIO + "#organizacion"}
+    }
+  });
+}
+
 function enrutar(){
   const {partes, params} = leerRuta();
   const raiz = partes[0] || "";
   const app = $("#contenido");
-  let html = "", titulo = "Maison Saldana — Collection d'Inspirations";
+  let html = "", titulo = "Maison Saldana — Collection d'Inspirations", prodLd = null;
 
   if(raiz === ""){
     html = vistaInicio();
@@ -1980,7 +2025,7 @@ function enrutar(){
   } else if(raiz === "perfume"){
     const p = PRODUCTOS.find(x=>x.slug===partes[1]);
     html = vistaProducto(partes[1]);
-    if(p) titulo = p.nombre + " — Maison Saldana";
+    if(p){ titulo = p.nombre + " — Maison Saldana"; prodLd = p; }
   } else if(raiz === "inspiraciones"){
     html = vistaInspiraciones(); titulo = "Inspiraciones — Maison Saldana";
   } else if(raiz === "notas"){
@@ -1996,6 +2041,7 @@ function enrutar(){
   app.classList.add("ms-saliendo");
   app.innerHTML = html;
   document.title = titulo;
+  sincronizarDatosProducto(prodLd);
   window.scrollTo(0,0);
   requestAnimationFrame(()=>requestAnimationFrame(()=>app.classList.remove("ms-saliendo")));
   marcarNav();
@@ -2402,6 +2448,24 @@ document.addEventListener("click", e=>{
   if(a) cerrarTodo();
 });
 window.addEventListener("hashchange", enrutar);
+
+/* El WhatsApp flotante se aparta al bajar (para no tapar el texto)
+   y vuelve al subir o al detenerse. */
+(function(){
+  const wa = $(".ms-wa-flotante");
+  if(!wa) return;
+  let ultimoY = window.scrollY, quieto;
+  const mostrar = ()=>wa.classList.remove("ms-wa-flotante--oculto");
+  window.addEventListener("scroll", ()=>{
+    const y = window.scrollY, dif = y - ultimoY;
+    if(Math.abs(dif) < 6) return;            // ignora micro-movimientos
+    if(dif > 0 && y > 240) wa.classList.add("ms-wa-flotante--oculto");
+    else mostrar();
+    ultimoY = y;
+    clearTimeout(quieto);
+    quieto = setTimeout(mostrar, 700);       // al detenerse, vuelve
+  }, {passive:true});
+})();
 
 pintarNavegacion();
 $("#sugerencias").innerHTML = ["Creed","Dior","Chanel","Ámbar","Vainilla","Unisex"]
