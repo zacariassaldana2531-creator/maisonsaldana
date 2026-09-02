@@ -84,6 +84,15 @@ html[data-tema="oscuro"]{
   --sombra-suave:0 18px 34px -22px rgba(0,0,0,.6);
   color-scheme:dark;
 }
+/* En oscuro la foto no puede quedarse blanca: se atenúa la imagen
+   JUNTO con su recuadro, con un filtro sobre el contenedor. Así bajan
+   los dos a la vez y no aparece costura entre el fondo horneado de la
+   fotografía y el fondo de la caja. Sube --foto-luz para aclarar. */
+html[data-tema="oscuro"]{ --foto-luz:.84; }
+html[data-tema="oscuro"] .ms-escena,
+html[data-tema="oscuro"] .ms-mini{
+  filter:brightness(var(--foto-luz)) contrast(1.03) saturate(.97);
+}
 html[data-tema="oscuro"] .ms-pie{background:#0B0A08}
 html[data-tema="oscuro"] .ms-agotado{color:#C98268}
 html[data-tema="oscuro"] .ms-quitar:hover{color:#C98268; border-color:#C98268}
