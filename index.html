@@ -1791,7 +1791,16 @@ function vistaColeccion(titulo, subtitulo){
 function vistaProducto(slug){
   const p = PRODUCTOS.find(x=>x.slug===slug);
   if(!p) return vistaNoEncontrado();
-  const afines = PRODUCTOS.filter(x=>x.familiaOlfativa===p.familiaOlfativa && x.id!==p.id).slice(0,3);
+  /* Las sugerencias respetan el género: quien mira un perfume de mujer no
+     debe ver uno de hombre debajo. Primero el mismo género; sólo si no hay
+     suficientes en esa familia se completa con unisex. */
+  const ordenGenero = p.genero === "Unisex"
+    ? ["Unisex", "Mujer", "Hombre"]
+    : [p.genero, "Unisex"];
+  const mismaFamilia = PRODUCTOS.filter(x=>x.familiaOlfativa===p.familiaOlfativa && x.id!==p.id);
+  const afines = ordenGenero
+    .flatMap(g => mismaFamilia.filter(x=>x.genero===g))
+    .slice(0,3);
   return `
   <div class="ms-contenedor">
     <p class="ms-migas"><a href="#/">Inicio</a> / <a href="#/coleccion">Colección</a> / ${esc(p.nombre)}</p>
