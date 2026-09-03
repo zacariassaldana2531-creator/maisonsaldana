@@ -192,72 +192,6 @@ module.exports = async function handler(req, res){
     return;
   }
 
-  /* Auto-test: /api/asistente?prueba=1
-     Manda a Google la petición más simple que existe. Si ésta pasa,
-     la clave y el modelo están bien y el problema está en algo que
-     pide la petición completa; si falla, el problema es de raíz.
-     Devuelve el error tal cual lo dice Google, que nunca incluye
-     la clave. */
-  if(req.method === "GET" && /[?&]prueba=1/.test(req.url || "")){
-    const k = leerClave();
-    if(!k){ res.status(503).json({ paso: "clave", detalle: "no hay clave" }); return; }
-    try{
-      const r = await fetch(`${API}/${MODELO}:generateContent`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": k },
-        body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: "Di: listo" }] }] })
-      });
-      const cuerpo = await r.text();
-      res.status(200).json({
-        paso: "google",
-        estado: r.status,
-        respuesta: cuerpo.slice(0, 700)
-      });
-    }catch(e){
-      res.status(200).json({ paso: "red", detalle: String(e && e.message).slice(0, 300) });
-    }
-    return;
-  }
-
-  /* Batería de pruebas: /api/asistente?prueba=2
-     Manda la misma pregunta mínima con distintas combinaciones de
-     opciones y dice cuáles pasan. Cuando Google contesta "argumento
-     inválido" sin decir cuál, esta es la forma de encontrarlo sin ir
-     a tientas. */
-  if(req.method === "GET" && /[?&]prueba=2/.test(req.url || "")){
-    const k = leerClave();
-    if(!k){ res.status(503).json({ paso: "clave" }); return; }
-    const base = { contents: [{ role: "user", parts: [{ text: "Responde solo: listo" }] }] };
-    const casos = {
-      "1-pelado":       {},
-      "2-sinRazonar":   { generationConfig: { thinkingConfig: { thinkingBudget: 0 } } },
-      "3-jsonConEsquema": { generationConfig: { responseMimeType: "application/json", responseSchema: ESQUEMA } },
-      "4-filtros":      { safetySettings: FILTROS },
-      "5-completo":     { safetySettings: FILTROS, generationConfig: {
-                            temperature: 0.75, topP: 0.95, maxOutputTokens: 600,
-                            responseMimeType: "application/json", responseSchema: ESQUEMA,
-                            thinkingConfig: { thinkingBudget: 0 } } }
-    };
-    const resultado = {};
-    for(const nombre of Object.keys(casos)){
-      try{
-        const r = await fetch(`${API}/${MODELO}:generateContent`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-goog-api-key": k },
-          body: JSON.stringify(Object.assign({}, base, casos[nombre]))
-        });
-        const t = await r.text();
-        let motivo = t;
-        try{ motivo = JSON.parse(t)?.error?.message || t; }catch(e){}
-        resultado[nombre] = r.ok ? "OK" : `${r.status} · ${String(motivo).slice(0, 200)}`;
-      }catch(e){
-        resultado[nombre] = "red · " + String(e && e.message).slice(0, 120);
-      }
-    }
-    res.status(200).json({ modelo: MODELO, casos: resultado });
-    return;
-  }
-
   if(req.method !== "POST"){
     res.status(405).json({ error: "metodo", mensaje: "Solo POST." });
     return;
@@ -318,12 +252,13 @@ module.exports = async function handler(req, res){
   const corte = new AbortController();
   const reloj = setTimeout(() => corte.abort(), 20000);
 
-  /* Una llamada a Google. "ahorro" apaga el razonamiento interno:
-     en una tienda pesa más la rapidez que la deliberación. No todos
-     los modelos aceptan esa opción, así que se pide primero y, si la
-     rechaza, se repite sin ella en vez de dejar al cliente sin
-     respuesta por un detalle de configuración. */
-  async function llamarAGoogle(ahorro){
+  /* Una llamada a Google.
+     Nota: aquí se pedía apagar el razonamiento interno del modelo
+     (thinkingConfig), porque en una tienda pesa más la rapidez que la
+     deliberación. gemini-3.6-flash rechaza esa opción con un escueto
+     "argumento inválido", así que ya no se manda. Si algún día vuelve
+     a admitirse, este es el sitio. */
+  async function llamarAGoogle(){
     const generationConfig = {
       temperature: 0.75,
       topP: 0.95,
@@ -331,7 +266,6 @@ module.exports = async function handler(req, res){
       responseMimeType: "application/json",
       responseSchema: ESQUEMA
     };
-    if(ahorro) generationConfig.thinkingConfig = { thinkingBudget: 0 };
 
     const r = await fetch(`${API}/${MODELO}:generateContent`, {
       method: "POST",
@@ -348,22 +282,23 @@ module.exports = async function handler(req, res){
   }
 
   try{
-    let r = await llamarAGoogle(true);
-    /* Google devuelve "invalid argument" a secas, sin decir cuál. Si
-       la única opción prescindible que mandamos es la del ahorro de
-       razonamiento, ante cualquier 400 vale la pena reintentar sin
-       ella antes de darse por vencido. */
-    if(!r.ok && r.estado === 400){
-      r = await llamarAGoogle(false);
+    let r = await llamarAGoogle();
+    /* El modelo gratuito se satura a ratos y devuelve 503 con un
+       "vuelve más tarde". Casi siempre pasa al segundo intento, así
+       que se reintenta una vez antes de mandar al cliente a WhatsApp
+       por una congestión de medio segundo. */
+    if(r.estado === 503){
+      await new Promise(listo => setTimeout(listo, 900));
+      r = await llamarAGoogle();
     }
 
     if(!r.ok){
       const detalle = r.texto;
       console.error("Gemini respondió", r.estado, detalle.slice(0, 600));
-      const cuota = r.estado === 429;
-      res.status(cuota ? 429 : 502).json({
-        error: cuota ? "cuota" : "modelo",
-        mensaje: cuota
+      const lleno = r.estado === 429 || r.estado === 503;
+      res.status(lleno ? 429 : 502).json({
+        error: lleno ? "cuota" : "modelo",
+        mensaje: lleno
           ? "El asesor está atendiendo a mucha gente ahora mismo. Prueba en un minuto o escríbenos por WhatsApp."
           : "El asesor no pudo responder. Escríbenos por WhatsApp y te atendemos enseguida.",
         /* Sólo para la consola de quien administra la tienda: el
