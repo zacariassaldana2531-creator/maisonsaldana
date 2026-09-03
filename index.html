@@ -310,7 +310,9 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   margin:0 auto; overflow:hidden; background:var(--noche);
 }
 /* cover, no contain: si algún día entra una portada que no sea 16:9,
-   preferimos un recorte discreto antes que una franja negra. */
+   preferimos un recorte discreto antes que una franja negra.
+   La regla vale igual para <img> y para <video>: una portada puede ser
+   cualquiera de los dos y ocupa el mismo hueco. */
 .ms-lamina{
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
   opacity:0; transition:opacity 1.8s ease;
@@ -1244,7 +1246,22 @@ const PORTADAS = [
   /* Las dos siguientes son del Caribe y hablan de los c\u00edtricos. Se
      declaran aunque el archivo todav\u00eda no est\u00e9 subido: si falta, la
      l\u00e1mina se retira sola y el carrusel sigue con las que haya. El
-     d\u00eda que se suban a originales/ aparecen sin tocar nada. */
+     d\u00eda que se suban a originales/ aparecen sin tocar nada.
+
+     UNA PORTADA TAMBI\u00c9N PUEDE SER UN VIDEO. Se le a\u00f1ade el campo
+     "video" y la "img" pasa a ser su foto de respaldo:
+
+       {video:"/originales/portada-7.mp4",
+        img:"/originales/portada-7.webp",
+        alt:"..."}
+
+     El video va mudo, en bucle y sin descargarse hasta que le toca su
+     turno; mientras tanto se ve la foto. Si el archivo falta o el
+     navegador no puede con \u00e9l, se queda la foto y nadie lo nota.
+
+     Con uno basta. Cada video de seis segundos pesa entre 2 y 4 MB
+     \u2014el sitio entero pesa 355 KB\u2014 y quien entra desde el tel\u00e9fono lo
+     paga en datos y en espera. */
   {img:"/originales/portada-5.webp", alt:"Maison Saldana \u2014 Notas c\u00edtricas del Caribe, Pour Elle"},
   {img:"/originales/portada-6.webp", alt:"Maison Saldana \u2014 Notas c\u00edtricas del Caribe, Pour Lui"},
 ];
@@ -1907,9 +1924,14 @@ function vistaInicio(){
   return `
   <section class="ms-hero">
     <div class="ms-carrusel" id="carrusel">
-      ${PORTADAS.map((p,i)=>`<img class="ms-lamina" src="${p.img}" alt="${esc(p.alt)}"
-        data-activa="${i===0}" ${i===0?'fetchpriority="high"':'loading="lazy"'} decoding="async"
-        onerror="portadaAusente(this)">`).join("")}
+      ${PORTADAS.map((p,i)=> p.video
+        ? `<video class="ms-lamina" data-activa="${i===0}" poster="${esc(p.img)}"
+            muted loop playsinline preload="none" aria-label="${esc(p.alt)}">
+             <source src="${esc(p.video)}" type="video/mp4">
+           </video>`
+        : `<img class="ms-lamina" src="${p.img}" alt="${esc(p.alt)}"
+            data-activa="${i===0}" ${i===0?'fetchpriority="high"':'loading="lazy"'} decoding="async"
+            onerror="portadaAusente(this)">`).join("")}
       <div class="ms-puntos" role="tablist" aria-label="Portadas">
         ${PORTADAS.map((p,i)=>`<button role="tab" data-punto="${i}" aria-label="Portada ${i+1}" aria-selected="${i===0}"></button>`).join("")}
       </div>
@@ -2729,7 +2751,22 @@ function mostrarLamina(i){
   const cont = $("#carrusel"); if(!cont) return;
   const laminas = $$(".ms-lamina", cont), puntos = $$("[data-punto]", cont);
   laminaActual = (i + laminas.length) % laminas.length;
-  laminas.forEach((l,n)=> l.dataset.activa = (n === laminaActual));
+  laminas.forEach((l,n)=>{
+    const activa = n === laminaActual;
+    l.dataset.activa = activa;
+    /* Un video que no se ve no debe gastar datos ni batería: sólo corre
+       el de turno, y al salir vuelve a su primer fotograma para que la
+       próxima vez empiece desde el principio. */
+    if(l.tagName === "VIDEO"){
+      if(activa){
+        if(l.preload === "none") l.preload = "auto";
+        l.play().catch(()=>{});   // si el navegador lo bloquea, queda el póster
+      }else{
+        l.pause();
+        try{ l.currentTime = 0; }catch(e){}
+      }
+    }
+  });
   puntos.forEach((p,n)=> p.setAttribute("aria-selected", n === laminaActual));
 }
 function arrancarCarrusel(){
