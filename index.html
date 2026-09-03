@@ -291,25 +291,28 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   pointer-events:none;
   background:linear-gradient(180deg, rgba(11,10,8,0) 0%, rgba(246,241,233,.08) 55%, var(--papel) 100%);
 }
-/* La caja se limita por el ANCHO, nunca por la altura.
-   Antes llevaba max-height:88vh: al chocar con ese tope la altura se
-   quedaba corta mientras el ancho seguía al 100%, la caja dejaba de
-   ser 16:9 y la lámina —que sí lo es— tenía que agrandarse para
-   cubrirla, perdiendo un 12% de la campaña en un portátil y un 34% en
-   una pantalla ancha. En el teléfono nunca se notó porque ahí ese tope
-   no llegaba a activarse.
-   Limitando el ancho, la caja es 16:9 siempre y la campaña entra
-   entera. Lo que sobra a los lados es el negro de la sala, que es el
-   mismo fondo: se lee como pantalla de cine, no como hueco. */
+/* La caja no lleva tope de altura NI de ancho: solo proporción.
+   Así es 16:9 exacta en cualquier pantalla, y como las cuatro portadas
+   también lo son, entran completas y a sangre, sin recorte y sin
+   franjas negras a los lados.
+
+   Antes había un max-height:88vh. Al chocar con ese tope la altura se
+   quedaba corta mientras el ancho seguía al 100%: la caja dejaba de
+   ser 16:9 y la lámina tenía que agrandarse para cubrirla. Se perdía
+   el 12% de la campaña en un portátil y el 34% en una pantalla ancha.
+   En el teléfono no se notaba porque ahí el tope no se activaba.
+
+   El precio de quitarlo es que la portada es más alta: su altura es
+   siempre el ancho dividido entre 1,78. Es el trato — a sangre y
+   entera, o contenida y recortada. Aquí se eligió entera. */
 .ms-carrusel{
   position:relative; width:100%; aspect-ratio:16/9;
-  max-width:calc(88vh * 16 / 9);
   margin:0 auto; overflow:hidden; background:var(--noche);
 }
-/* contain, no cover: si algún día entra una portada que no sea 16:9,
-   preferimos verla entera con un filo de negro antes que recortarla. */
+/* cover, no contain: si algún día entra una portada que no sea 16:9,
+   preferimos un recorte discreto antes que una franja negra. */
 .ms-lamina{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center;
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
   opacity:0; transition:opacity 1.8s ease;
 }
 .ms-lamina[data-activa="true"]{opacity:1}
