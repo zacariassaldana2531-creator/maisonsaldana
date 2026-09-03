@@ -188,6 +188,33 @@ module.exports = async function handler(req, res){
     return;
   }
 
+  /* Auto-test: /api/asistente?prueba=1
+     Manda a Google la petición más simple que existe. Si ésta pasa,
+     la clave y el modelo están bien y el problema está en algo que
+     pide la petición completa; si falla, el problema es de raíz.
+     Devuelve el error tal cual lo dice Google, que nunca incluye
+     la clave. */
+  if(req.method === "GET" && /[?&]prueba=1/.test(req.url || "")){
+    const k = leerClave();
+    if(!k){ res.status(503).json({ paso: "clave", detalle: "no hay clave" }); return; }
+    try{
+      const r = await fetch(`${API}/${MODELO}:generateContent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": k },
+        body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: "Di: listo" }] }] })
+      });
+      const cuerpo = await r.text();
+      res.status(200).json({
+        paso: "google",
+        estado: r.status,
+        respuesta: cuerpo.slice(0, 700)
+      });
+    }catch(e){
+      res.status(200).json({ paso: "red", detalle: String(e && e.message).slice(0, 300) });
+    }
+    return;
+  }
+
   if(req.method !== "POST"){
     res.status(405).json({ error: "metodo", mensaje: "Solo POST." });
     return;
@@ -278,7 +305,11 @@ module.exports = async function handler(req, res){
         error: cuota ? "cuota" : "modelo",
         mensaje: cuota
           ? "El asesor está atendiendo a mucha gente ahora mismo. Prueba en un minuto o escríbenos por WhatsApp."
-          : "El asesor no pudo responder. Escríbenos por WhatsApp y te atendemos enseguida."
+          : "El asesor no pudo responder. Escríbenos por WhatsApp y te atendemos enseguida.",
+        /* Sólo para la consola de quien administra la tienda: el
+           cliente ve "mensaje", nunca esto. Google no incluye la
+           clave en sus errores. */
+        pista: `Google respondió ${r.status}: ${detalle.slice(0, 400)}`
       });
       return;
     }
