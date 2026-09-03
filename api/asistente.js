@@ -219,6 +219,45 @@ module.exports = async function handler(req, res){
     return;
   }
 
+  /* Batería de pruebas: /api/asistente?prueba=2
+     Manda la misma pregunta mínima con distintas combinaciones de
+     opciones y dice cuáles pasan. Cuando Google contesta "argumento
+     inválido" sin decir cuál, esta es la forma de encontrarlo sin ir
+     a tientas. */
+  if(req.method === "GET" && /[?&]prueba=2/.test(req.url || "")){
+    const k = leerClave();
+    if(!k){ res.status(503).json({ paso: "clave" }); return; }
+    const base = { contents: [{ role: "user", parts: [{ text: "Responde solo: listo" }] }] };
+    const casos = {
+      "1-pelado":       {},
+      "2-sinRazonar":   { generationConfig: { thinkingConfig: { thinkingBudget: 0 } } },
+      "3-jsonConEsquema": { generationConfig: { responseMimeType: "application/json", responseSchema: ESQUEMA } },
+      "4-filtros":      { safetySettings: FILTROS },
+      "5-completo":     { safetySettings: FILTROS, generationConfig: {
+                            temperature: 0.75, topP: 0.95, maxOutputTokens: 600,
+                            responseMimeType: "application/json", responseSchema: ESQUEMA,
+                            thinkingConfig: { thinkingBudget: 0 } } }
+    };
+    const resultado = {};
+    for(const nombre of Object.keys(casos)){
+      try{
+        const r = await fetch(`${API}/${MODELO}:generateContent`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": k },
+          body: JSON.stringify(Object.assign({}, base, casos[nombre]))
+        });
+        const t = await r.text();
+        let motivo = t;
+        try{ motivo = JSON.parse(t)?.error?.message || t; }catch(e){}
+        resultado[nombre] = r.ok ? "OK" : `${r.status} · ${String(motivo).slice(0, 200)}`;
+      }catch(e){
+        resultado[nombre] = "red · " + String(e && e.message).slice(0, 120);
+      }
+    }
+    res.status(200).json({ modelo: MODELO, casos: resultado });
+    return;
+  }
+
   if(req.method !== "POST"){
     res.status(405).json({ error: "metodo", mensaje: "Solo POST." });
     return;
@@ -310,7 +349,11 @@ module.exports = async function handler(req, res){
 
   try{
     let r = await llamarAGoogle(true);
-    if(!r.ok && r.estado === 400 && /thinking/i.test(r.texto)){
+    /* Google devuelve "invalid argument" a secas, sin decir cuál. Si
+       la única opción prescindible que mandamos es la del ahorro de
+       razonamiento, ante cualquier 400 vale la pena reintentar sin
+       ella antes de darse por vencido. */
+    if(!r.ok && r.estado === 400){
       r = await llamarAGoogle(false);
     }
 
