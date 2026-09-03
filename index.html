@@ -764,6 +764,13 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 }
 .ms-wa-flotante svg{width:26px; height:26px; fill:currentColor}
 .ms-wa-flotante--oculto{transform:translateY(160%); opacity:0; pointer-events:none}
+
+/* El h1 de la portada existe para buscadores y lectores de pantalla; la
+   jerarquía visual ya la lleva el nombre de la marca en la cabecera. */
+.ms-h1-oculto{
+  position:absolute; width:1px; height:1px; margin:-1px; padding:0;
+  overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0;
+}
 @media (hover:hover){
   .ms-wa-flotante:hover{transform:translateY(-3px) scale(1.05); box-shadow:var(--sombra)}
 }
@@ -788,7 +795,7 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
       </button>
     </div>
-    <a class="ms-marca" href="#/" aria-label="Maison Saldana, inicio">
+    <a class="ms-marca" href="/" aria-label="Maison Saldana, inicio">
       <strong>Maison Saldana</strong>
       <em>Collection d'Inspirations</em>
     </a>
@@ -833,22 +840,22 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
       <div class="ms-pie-col-larga">
         <h4>Colección</h4>
         <ul>
-          <li><a href="#/coleccion">Todas las fragancias</a></li>
-          <li><a href="#/coleccion?genero=Hombre">Hombre</a></li>
-          <li><a href="#/coleccion?genero=Mujer">Mujer</a></li>
-          <li><a href="#/coleccion?genero=Unisex">Unisex</a></li>
-          <li><a href="#/coleccion?ocasion=Para%20el%20d%C3%ADa">Para el día</a></li>
-          <li><a href="#/coleccion?ocasion=Para%20la%20noche">Para la noche</a></li>
-          <li><a href="#/coleccion?ocasion=Para%20seducir">Para seducir</a></li>
-          <li><a href="#/coleccion?ocasion=Para%20regalar">Para regalar</a></li>
+          <li><a href="/coleccion">Todas las fragancias</a></li>
+          <li><a href="/coleccion?genero=Hombre">Hombre</a></li>
+          <li><a href="/coleccion?genero=Mujer">Mujer</a></li>
+          <li><a href="/coleccion?genero=Unisex">Unisex</a></li>
+          <li><a href="/coleccion?ocasion=Para%20el%20d%C3%ADa">Para el día</a></li>
+          <li><a href="/coleccion?ocasion=Para%20la%20noche">Para la noche</a></li>
+          <li><a href="/coleccion?ocasion=Para%20seducir">Para seducir</a></li>
+          <li><a href="/coleccion?ocasion=Para%20regalar">Para regalar</a></li>
         </ul>
       </div>
       <div>
         <h4>Explorar</h4>
         <ul>
-          <li><a href="#/inspiraciones">Inspiraciones</a></li>
-          <li><a href="#/notas">Notas olfativas</a></li>
-          <li><a href="#/casa">La casa</a></li>
+          <li><a href="/inspiraciones">Inspiraciones</a></li>
+          <li><a href="/notas">Notas olfativas</a></li>
+          <li><a href="/casa">La casa</a></li>
         </ul>
       </div>
       <div>
@@ -1389,14 +1396,14 @@ function ocasionesDe(p){
 function contarOcasion(o){ return PRODUCTOS.filter(p=>ocasionesDe(p).includes(o)).length; }
 
 const RUTAS = [
-  {href:"#/", texto:"Inicio"},
-  {href:"#/coleccion", texto:"Colección"},
-  {href:"#/coleccion?genero=Hombre", texto:"Hombre"},
-  {href:"#/coleccion?genero=Mujer", texto:"Mujer"},
-  {href:"#/coleccion?genero=Unisex", texto:"Unisex"},
-  {href:"#/inspiraciones", texto:"Inspiraciones"},
-  {href:"#/notas", texto:"Notas olfativas"},
-  {href:"#/casa", texto:"La casa"}
+  {href:"/", texto:"Inicio"},
+  {href:"/coleccion", texto:"Colección"},
+  {href:"/coleccion?genero=Hombre", texto:"Hombre"},
+  {href:"/coleccion?genero=Mujer", texto:"Mujer"},
+  {href:"/coleccion?genero=Unisex", texto:"Unisex"},
+  {href:"/inspiraciones", texto:"Inspiraciones"},
+  {href:"/notas", texto:"Notas olfativas"},
+  {href:"/casa", texto:"La casa"}
 ];
 
 /* ================================================================
@@ -1476,18 +1483,18 @@ function composicion(p, clase=""){
 /* ---------- tarjeta --------------------------------------------- */
 function tarjeta(p){
   return `<article class="ms-tarjeta ms-aparece">
-    <a href="#/perfume/${esc(p.slug)}" aria-label="Ver ${esc(p.nombre)}" style="position:relative;display:block">
+    <a href="/perfume/${esc(p.slug)}" aria-label="Ver ${esc(p.nombre)}" style="position:relative;display:block">
       ${composicion(p)}
       <span class="ms-genero-chip">${esc(p.genero)}</span>
       ${p.nuevo ? '<span class="ms-nuevo">Nuevo</span>' : ""}
     </a>
     <div class="ms-tarjeta-info">
-      <h3><a href="#/perfume/${esc(p.slug)}">${esc(p.nombre)}</a></h3>
+      <h3><a href="/perfume/${esc(p.slug)}">${esc(p.nombre)}</a></h3>
       <p class="ms-inspirado">Inspirado en <b>${esc(p.inspiradoEn)}</b><span class="ms-marca-orig"> · ${esc(p.marcaInspiracion)}</span></p>
       <p class="ms-meta"><span>${esc(p.familiaOlfativa)}</span></p>
       <p class="ms-precio">${dinero(p.precio)}</p>
       <div class="ms-tarjeta-botones">
-        <a class="ms-btn ms-btn--linea" href="#/perfume/${esc(p.slug)}">Ver perfume</a>
+        <a class="ms-btn ms-btn--linea" href="/perfume/${esc(p.slug)}">Ver perfume</a>
         ${p.disponible
           ? `<button class="ms-btn ms-btn--sutil" data-agregar="${esc(p.id)}"><span class="ms-txt-largo">Agregar al carrito</span><span class="ms-txt-corto">Agregar</span></button>`
           : `<span class="ms-agotado">Agotado</span>`}
@@ -1626,8 +1633,9 @@ function vistaInicio(){
     </div>
     <div class="ms-hero-pie">
       <div class="ms-fleuron"><span>&#10022;</span></div>
+      <h1 class="ms-h1-oculto">Maison Saldana — perfumes inspirados en las grandes fragancias, en Santo Domingo</h1>
       <p>Casa de autor independiente, fundada en Santo Domingo. Perfumería de acorde complejo &mdash;maderas nobles, resinas, c&iacute;tricos de alta definici&oacute;n&mdash; construida para el clima del tr&oacute;pico y sin el peaje del intermediario.</p>
-      <a class="ms-btn" href="#/coleccion">Ver la colección</a>
+      <a class="ms-btn" href="/coleccion">Ver la colección</a>
     </div>
   </section>
 
@@ -1649,7 +1657,7 @@ function vistaInicio(){
         <p>Dinos cuándo la vas a usar y la casa te propone.</p>
       </div>
       <div class="ms-ocasiones">
-        ${OCASIONES.map(o=>`<a href="#/coleccion?ocasion=${encodeURIComponent(o)}">
+        ${OCASIONES.map(o=>`<a href="/coleccion?ocasion=${encodeURIComponent(o)}">
           <span class="ms-ocasion-icono">${ICONOS_OCASION[o]}</span>
           <h3>${esc(o)}</h3>
           <p>${esc(TEXTOS_OCASION[o])}</p>
@@ -1666,7 +1674,7 @@ function vistaInicio(){
         <h2>Por género</h2>
       </div>
       <div class="ms-mosaico">
-        ${GENEROS.map(g=>`<a href="#/coleccion?genero=${encodeURIComponent(g)}">
+        ${GENEROS.map(g=>`<a href="/coleccion?genero=${encodeURIComponent(g)}">
           <div><h3>${g}</h3><small>${PRODUCTOS.filter(p=>p.genero===g).length} fragancias</small></div>
         </a>`).join("")}
       </div>
@@ -1681,12 +1689,12 @@ function vistaInicio(){
         <p>Busca la casa que te gusta y encuentra nuestra lectura de sus fragancias.</p>
       </div>
       <div class="ms-listado">
-        ${marcas.map(m=>`<a href="#/coleccion?marca=${encodeURIComponent(m)}">
+        ${marcas.map(m=>`<a href="/coleccion?marca=${encodeURIComponent(m)}">
           <strong>${esc(m)}</strong>
           <small>${PRODUCTOS.filter(p=>p.marcaInspiracion===m).length} inspiración(es)</small>
         </a>`).join("")}
       </div>
-      <p style="text-align:center;margin-top:34px"><a class="ms-enlace" href="#/inspiraciones">Ver todas las inspiraciones</a></p>
+      <p style="text-align:center;margin-top:34px"><a class="ms-enlace" href="/inspiraciones">Ver todas las inspiraciones</a></p>
     </div>
   </section>
 
@@ -1697,7 +1705,7 @@ function vistaInicio(){
         <h2>Por notas olfativas</h2>
       </div>
       <div class="ms-fichas">
-        ${familiasUsadas().map(f=>`<a class="ms-ficha" href="#/coleccion?familia=${encodeURIComponent(f)}">${f}</a>`).join("")}
+        ${familiasUsadas().map(f=>`<a class="ms-ficha" href="/coleccion?familia=${encodeURIComponent(f)}">${f}</a>`).join("")}
       </div>
     </div>
   </section>
@@ -1709,7 +1717,7 @@ function vistaInicio(){
         <h2>La colección Maison Saldana</h2>
       </div>
       <div class="ms-rejilla">${coleccion.map(tarjeta).join("")}</div>
-      <p style="text-align:center;margin-top:48px"><a class="ms-btn ms-btn--linea" href="#/coleccion">Ver las ${PRODUCTOS.length} fragancias</a></p>
+      <p style="text-align:center;margin-top:48px"><a class="ms-btn ms-btn--linea" href="/coleccion">Ver las ${PRODUCTOS.length} fragancias</a></p>
     </div>
   </section>
 
@@ -1723,7 +1731,7 @@ function vistaInicio(){
         Cada fragancia declara abiertamente en qué se inspira, porque no pretendemos ser otra casa: pretendemos
         que puedas llevar lo que te gusta, todos los días, sin pedir permiso.
       </p>
-      <a class="ms-enlace" href="#/casa">Conocer la casa</a>
+      <a class="ms-enlace" href="/casa">Conocer la casa</a>
     </div>
   </section>`;
 }
@@ -1803,7 +1811,7 @@ function vistaProducto(slug){
     .slice(0,3);
   return `
   <div class="ms-contenedor">
-    <p class="ms-migas"><a href="#/">Inicio</a> / <a href="#/coleccion">Colección</a> / ${esc(p.nombre)}</p>
+    <p class="ms-migas"><a href="/">Inicio</a> / <a href="/coleccion">Colección</a> / ${esc(p.nombre)}</p>
     <div class="ms-producto">
       <div>${composicion(p,"ms-escena--grande")}</div>
       <div>
@@ -1874,7 +1882,7 @@ function vistaInspiraciones(){
       <p>Las ${marcas.length} casas que admiramos y nuestra lectura de sus fragancias. Cada perfume de Maison Saldana declara abiertamente su referencia.</p>
     </div>
     <div class="ms-listado">
-      ${marcas.map(({m,n})=>`<a href="#/coleccion?marca=${encodeURIComponent(m)}">
+      ${marcas.map(({m,n})=>`<a href="/coleccion?marca=${encodeURIComponent(m)}">
         <strong>${esc(m)}</strong>
         <small>${n} inspiración${n===1?"":"es"}</small>
       </a>`).join("")}
@@ -1892,7 +1900,7 @@ function vistaNotas(){
     <div class="ms-mosaico" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">
       ${FAMILIAS.map(f=>{
         const n = PRODUCTOS.filter(p=>p.familiaOlfativa===f).length;
-        return `<a href="#/coleccion?familia=${encodeURIComponent(f)}" style="min-height:170px">
+        return `<a href="/coleccion?familia=${encodeURIComponent(f)}" style="min-height:170px">
           <div><h3 style="font-size:clamp(21px,2.6vw,27px)">${f}</h3><small>${n} fragancia${n===1?"":"s"}</small></div>
         </a>`;
       }).join("")}
@@ -1946,7 +1954,7 @@ function vistaCasa(){
       <div class="ms-fleuron" style="margin:12px 0"><span>&#10022;</span></div>
 
       <p style="text-align:center">
-        <a class="ms-btn" href="#/coleccion">Ver la colecci&oacute;n</a>
+        <a class="ms-btn" href="/coleccion">Ver la colecci&oacute;n</a>
       </p>
       <p style="text-align:center;font-size:14px">
         <a href="${enlaceWhatsApp("Hola, quisiera orientación para elegir una fragancia de Maison Saldana.")}" target="_blank" rel="noopener" style="color:var(--oro-hondo)">O escr&iacute;banos y le orientamos por WhatsApp</a>
@@ -1959,17 +1967,30 @@ function vistaNoEncontrado(){
   return `<div class="ms-contenedor"><div class="ms-vacio" style="padding:120px 20px">
     <h3>No encontramos esa página</h3>
     <p>Puede que el enlace haya cambiado.</p>
-    <p style="margin-top:26px"><a class="ms-btn ms-btn--linea" href="#/coleccion">Ir a la colección</a></p>
+    <p style="margin-top:26px"><a class="ms-btn ms-btn--linea" href="/coleccion">Ir a la colección</a></p>
   </div></div>`;
 }
 
 /* ================================================================
    ENRUTADOR
    ================================================================ */
+/* URLs reales (/perfume/azur-noble) en vez de con almohadilla. Google ignora
+   todo lo que va después del "#", así que con hash el catálogo entero era
+   invisible para el buscador. vercel.json redirige cualquier ruta al
+   index.html y aquí decidimos qué pintar. */
 function leerRuta(){
-  const bruto = location.hash.replace(/^#\/?/, "");
-  const [camino, consulta] = bruto.split("?");
-  return {partes: camino.split("/").filter(Boolean), params: new URLSearchParams(consulta || "")};
+  const bruto = decodeURIComponent(location.pathname).replace(/^\/+/, "");
+  return {
+    partes: bruto.split("/").filter(Boolean),
+    params: new URLSearchParams(location.search || "")
+  };
+}
+
+function irA(url, reemplazar){
+  const destino = new URL(url, location.origin);
+  if(destino.pathname + destino.search === location.pathname + location.search) return;
+  history[reemplazar ? "replaceState" : "pushState"]({}, "", destino.pathname + destino.search);
+  enrutar();
 }
 
 /* ---------- datos estructurados de producto (SEO) ------------- */
@@ -2000,7 +2021,7 @@ function sincronizarDatosProducto(p){
       p.genero === "Hombre" ? "male" : p.genero === "Mujer" ? "female" : "unisex"},
     "offers": {
       "@type":"Offer",
-      "url": SITIO + "#/perfume/" + p.slug,
+      "url": SITIO + "perfume/" + p.slug,
       "priceCurrency":"DOP",
       "price": p.precio,
       "availability": p.disponible ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
@@ -2010,11 +2031,45 @@ function sincronizarDatosProducto(p){
   });
 }
 
+function fijarMeta(sel, attr, valor){
+  let el = document.head.querySelector(sel);
+  if(!el){
+    el = document.createElement(sel.startsWith("link") ? "link" : "meta");
+    if(sel.includes("canonical")) el.rel = "canonical";
+    else if(sel.includes("property")) el.setAttribute("property", sel.match(/"([^"]+)"/)[1]);
+    else el.setAttribute("name", sel.match(/"([^"]+)"/)[1]);
+    document.head.appendChild(el);
+  }
+  el.setAttribute(attr, valor);
+}
+
+/* Cada ruta declara su propia URL canónica y su descripción: sin esto las
+   337 fichas compartían la misma y Google las veía como la misma página. */
+function sincronizarSEO(titulo, descripcion){
+  /* En la canónica solo entran los parámetros que cambian el contenido.
+     Los de campaña (fbclid, utm_*) crearían URLs duplicadas ante Google. */
+  const utiles = new URLSearchParams();
+  for(const k of ["genero","familia","marca","ocasion"]){
+    const v = new URLSearchParams(location.search).get(k);
+    if(v) utiles.set(k, v);
+  }
+  const cola = utiles.toString();
+  const url = SITIO.replace(/\/$/, "") + location.pathname + (cola ? "?" + cola : "");
+  fijarMeta('link[rel="canonical"]', "href", url);
+  fijarMeta('meta[property="og:url"]', "content", url);
+  fijarMeta('meta[name="description"]', "content", descripcion);
+  fijarMeta('meta[property="og:title"]', "content", titulo);
+  fijarMeta('meta[property="og:description"]', "content", descripcion);
+  fijarMeta('meta[name="twitter:title"]', "content", titulo);
+  fijarMeta('meta[name="twitter:description"]', "content", descripcion);
+}
+
 function enrutar(){
   const {partes, params} = leerRuta();
   const raiz = partes[0] || "";
   const app = $("#contenido");
   let html = "", titulo = "Maison Saldana — Collection d'Inspirations", prodLd = null;
+  let descripcion = "Eaux de parfum inspiradas en las grandes fragancias del mundo, en un mismo frasco de autor. Santo Domingo, República Dominicana.";
 
   if(raiz === ""){
     html = vistaInicio();
@@ -2030,17 +2085,28 @@ function enrutar(){
     if(f){ t = f; s = `Fragancias de familia ${f.toLowerCase()}.`; }
     if(m){ t = m; s = `Nuestra lectura de las fragancias de ${m}.`; }
     if(o){ t = o; s = TEXTOS_OCASION[o] || `Fragancias ${o.toLowerCase()}.`; }
-    html = vistaColeccion(t, s); titulo = t + " — Maison Saldana";
+    html = vistaColeccion(t, s); titulo = t + " — Maison Saldana"; descripcion = s;
   } else if(raiz === "perfume"){
     const p = PRODUCTOS.find(x=>x.slug===partes[1]);
     html = vistaProducto(partes[1]);
-    if(p){ titulo = p.nombre + " — Maison Saldana"; prodLd = p; }
+    if(p){
+      titulo = p.nombre + " — Maison Saldana";
+      prodLd = p;
+      descripcion = `${p.nombre}, eau de parfum ${p.familiaOlfativa.toLowerCase()} de Maison Saldana. `
+        + `${p.descripcion} ${dinero(p.precio)} · ${p.tamano}. Santo Domingo.`;
+    } else {
+      titulo = "Página no encontrada — Maison Saldana";
+      descripcion = "Esta fragancia no existe o cambió de dirección. Explora la colección completa.";
+    }
   } else if(raiz === "inspiraciones"){
     html = vistaInspiraciones(); titulo = "Inspiraciones — Maison Saldana";
+    descripcion = "Las casas de perfumería que admiramos y nuestra lectura de sus fragancias.";
   } else if(raiz === "notas"){
     html = vistaNotas(); titulo = "Notas olfativas — Maison Saldana";
+    descripcion = "Explora la colección por familia olfativa: floral, amaderado, gourmand, ámbar y más.";
   } else if(raiz === "casa"){
     html = vistaCasa(); titulo = "La casa — Maison Saldana";
+    descripcion = "Casa de perfumería independiente fundada en Santo Domingo. Un solo frasco de autor, 337 lecturas.";
   } else {
     html = vistaNoEncontrado(); titulo = "Página no encontrada — Maison Saldana";
   }
@@ -2051,6 +2117,7 @@ function enrutar(){
   app.innerHTML = html;
   document.title = titulo;
   sincronizarDatosProducto(prodLd);
+  sincronizarSEO(titulo, descripcion);
   window.scrollTo(0,0);
   requestAnimationFrame(()=>requestAnimationFrame(()=>app.classList.remove("ms-saliendo")));
   marcarNav();
@@ -2073,7 +2140,7 @@ function redibujarColeccion(){
 }
 
 function marcarNav(){
-  const actual = location.hash || "#/";
+  const actual = location.pathname + location.search;
   $$("#navPrincipal a, #navMovil a").forEach(a=>{
     if(a.getAttribute("href") === actual) a.setAttribute("aria-current","page");
     else a.removeAttribute("aria-current");
@@ -2206,7 +2273,7 @@ function pintarCarrito(){
     cuerpo.innerHTML = `<div class="ms-vacio" style="padding:60px 10px">
       <h3 style="font-size:22px">Tu carrito está vacío</h3>
       <p>Empieza por la colección: cada frasco es de 50 ml, Eau de Parfum.</p></div>`;
-    pie.innerHTML = `<a class="ms-btn ms-btn--linea ms-btn--ancho" href="#/coleccion" data-accion="cerrar-carrito">Ver la colección</a>`;
+    pie.innerHTML = `<a class="ms-btn ms-btn--linea ms-btn--ancho" href="/coleccion" data-accion="cerrar-carrito">Ver la colección</a>`;
     return;
   }
   cuerpo.innerHTML = estado.carrito.map(l=>{
@@ -2306,7 +2373,7 @@ function pintarBusqueda(q){
     return;
   }
   cont.innerHTML = res.slice(0,10).map(p=>`
-    <a class="ms-resultado" href="#/perfume/${esc(p.slug)}" data-accion="ir">
+    <a class="ms-resultado" href="/perfume/${esc(p.slug)}" data-accion="ir">
       <div class="ms-mini">
         <img src="${frascoDe(p)}" alt="" loading="lazy">
         ${rutaOriginal(p) ? `<img class="ms-mini-orig" src="${esc(rutaOriginal(p))}" alt="" loading="lazy">` : ""}
@@ -2453,10 +2520,21 @@ $("#modalCuenta").addEventListener("click", e=>{ if(e.target.id==="modalCuenta")
 document.addEventListener("keydown", e=>{ if(e.key==="Escape") cerrarTodo(); });
 $("#campoBusqueda").addEventListener("input", e=>pintarBusqueda(e.target.value));
 document.addEventListener("click", e=>{
-  const a = e.target.closest("#buscador a, #menuMovil a[href^='#/'], #cajonCarrito a[href^='#/']");
+  const a = e.target.closest("#buscador a, #menuMovil a[href^='/'], #cajonCarrito a[href^='/']");
   if(a) cerrarTodo();
 });
-window.addEventListener("hashchange", enrutar);
+window.addEventListener("popstate", enrutar);
+
+/* Los enlaces internos no recargan la página: los captura el enrutador. */
+document.addEventListener("click", e=>{
+  if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a = e.target.closest('a[href^="/"]');
+  if(!a || a.target === "_blank" || a.hasAttribute("download")) return;
+  const href = a.getAttribute("href");
+  if(href.startsWith("//") || /\.[a-z0-9]+$/i.test(href.split("?")[0])) return;
+  e.preventDefault();
+  irA(href);
+});
 
 /* El WhatsApp flotante se aparta al bajar (para no tapar el texto)
    y vuelve al subir o al detenerse. */
@@ -2486,7 +2564,6 @@ $("#sugerencias").addEventListener("click", e=>{
 });
 cargarCarrito();
 pintarCarrito();
-if(!location.hash) location.hash = "#/";
 enrutar();
 </script>
 </body>
