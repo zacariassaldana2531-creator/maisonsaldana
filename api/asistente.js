@@ -177,6 +177,8 @@ module.exports = async function handler(req, res){
       claveEncontrada: Boolean(leerClave()),
       nombresConGemini: nombresParecidos(),
       entorno: process.env.VERCEL_ENV || "(sin VERCEL_ENV)",
+      urlDeEsteDespliegue: process.env.VERCEL_URL || "(sin VERCEL_URL)",
+      dominioDeProduccion: process.env.VERCEL_PROJECT_PRODUCTION_URL || "(sin dominio)",
       rama: process.env.VERCEL_GIT_COMMIT_REF || "(sin rama)",
       commit: (process.env.VERCEL_GIT_COMMIT_SHA || "").slice(0, 7) || "(sin commit)",
       variablesPropias: propias.length,
