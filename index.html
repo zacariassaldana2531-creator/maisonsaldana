@@ -1238,22 +1238,31 @@ const RAMPA = [1, 0.78, 0.58, 0.46, 0.36, 0.29, 0.22, 0.16, 0.12, 0.08, 0.04, 0]
 /* REGLA DE ORO: FLACON es el frasco oficial y universal de la casa.
    Se usa para TODAS las fragancias. No se sustituye nunca.        */
 const FLACON = "/originales/frasco-maison-saldana.webp";
+/* Cada portada es un zoom lentísimo de seis segundos sobre su propia
+   foto: la imagen respira sin que pase nada. Dos se acercan y dos se
+   alejan, para que el carrusel no se sienta mecánico.
+   Pesan entre 225 y 346 KB \u2014casi lo que una foto\u2014 porque no hay
+   movimiento real que comprimir, y sólo se descarga el de turno. */
 const PORTADAS = [
-  {img:"/originales/portada-1.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Lui"},
-  {img:"/originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
-  {img:"/originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
-  {img:"/originales/portada-4.webp", alt:"Maison Saldana \u2014 Una esencia, innumerables historias"},
+  {video:"/originales/portada-1", img:"/originales/portada-1.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Lui"},
+  {video:"/originales/portada-2", img:"/originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
+  {video:"/originales/portada-3", img:"/originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
+  {video:"/originales/portada-4", img:"/originales/portada-4.webp", alt:"Maison Saldana \u2014 Una esencia, innumerables historias"},
   /* Las dos siguientes son del Caribe y hablan de los c\u00edtricos. Se
      declaran aunque el archivo todav\u00eda no est\u00e9 subido: si falta, la
      l\u00e1mina se retira sola y el carrusel sigue con las que haya. El
      d\u00eda que se suban a originales/ aparecen sin tocar nada.
 
      UNA PORTADA TAMBI\u00c9N PUEDE SER UN VIDEO. Se le a\u00f1ade el campo
-     "video" y la "img" pasa a ser su foto de respaldo:
+     "video" \u2014sin extensi\u00f3n\u2014 y la "img" pasa a ser su foto de
+     respaldo. Deben existir los dos formatos, .webm y .mp4:
 
-       {video:"/originales/portada-7.mp4",
+       {video:"/originales/portada-7",
         img:"/originales/portada-7.webp",
         alt:"..."}
+
+     El navegador coge el primero que entienda: WebM donde se puede
+     \u2014pesa un tercio menos\u2014 y MP4 en el resto, sobre todo en iPhone.
 
      El video va mudo, en bucle y sin descargarse hasta que le toca su
      turno; mientras tanto se ve la foto. Si el archivo falta o el
@@ -1927,7 +1936,8 @@ function vistaInicio(){
       ${PORTADAS.map((p,i)=> p.video
         ? `<video class="ms-lamina" data-activa="${i===0}" poster="${esc(p.img)}"
             muted loop playsinline preload="none" aria-label="${esc(p.alt)}">
-             <source src="${esc(p.video)}" type="video/mp4">
+             <source src="${esc(p.video)}.webm" type="video/webm">
+             <source src="${esc(p.video)}.mp4" type="video/mp4">
            </video>`
         : `<img class="ms-lamina" src="${p.img}" alt="${esc(p.alt)}"
             data-activa="${i===0}" ${i===0?'fetchpriority="high"':'loading="lazy"'} decoding="async"
@@ -2772,10 +2782,28 @@ function mostrarLamina(i){
 function arrancarCarrusel(){
   pararCarrusel();
   const cont = $("#carrusel"); if(!cont) return;
-  laminaActual = 0;
-  $$("[data-punto]", cont).forEach(b=>{
-    b.addEventListener("click", ()=>{ mostrarLamina(Number(b.dataset.punto)); arrancarCarrusel(); });
-  });
+
+  /* Los puntos se conectan una sola vez por carrusel, y de paso se
+     empieza por la primera. Antes se reconectaban en cada llamada: como
+     tocar un punto vuelve a llamar aquí, cada clic dejaba encima otro
+     juego de escuchas, y además el contador volvía a cero, así que tras
+     tocar el punto 4 la siguiente portada era la 2 y no la 5. */
+  if(!cont.dataset.conectado){
+    cont.dataset.conectado = "1";
+    laminaActual = 0;
+    cont.addEventListener("click", e => {
+      const b = e.target.closest("[data-punto]");
+      if(!b) return;
+      mostrarLamina(Number(b.dataset.punto));
+      arrancarCarrusel();
+    });
+  }
+
+  /* Se activa la lámina de turno de verdad. Sin esto, una portada en
+     video que fuera la primera se quedaría en su foto hasta que el
+     carrusel diera la vuelta entera. */
+  mostrarLamina(laminaActual);
+
   if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   relojPortada = setInterval(()=> mostrarLamina(laminaActual + 1), SEGUNDOS_PORTADA * 1000);
 }
