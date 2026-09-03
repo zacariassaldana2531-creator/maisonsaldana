@@ -717,14 +717,24 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 }
 
 /* ====================== AVISOS =========================== */
+/* El aviso se retira POR DEBAJO del borde de la pantalla. Bajaba el
+   140% de su propia altura, que no alcanzaba a salvar los 26px a los
+   que está anclado: quedaba un dedo asomando abajo al centro en todas
+   las páginas. Con calc() baja su altura entera más ese anclaje, y
+   aterriza justo fuera de la vista sea cual sea su texto.
+   El pointer-events importa tanto como lo que se ve: al estar en la
+   capa más alta de la casa, ese trocito invisible se comía los toques
+   de lo que hubiera debajo. */
 .ms-brindis{
-  position:fixed; left:50%; bottom:26px; transform:translate(-50%,140%); z-index:120;
+  position:fixed; left:50%; bottom:26px; z-index:120;
+  transform:translate(-50%, calc(100% + 26px)); opacity:0; pointer-events:none;
   background:var(--noche); color:var(--oro-claro); padding:15px 28px; border-radius:999px;
   border:1px solid var(--oro-hondo);
-  font-size:11px; letter-spacing:.22em; text-transform:uppercase; transition:transform .5s var(--ease);
+  font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+  transition:transform .5s var(--ease), opacity .3s var(--ease);
   max-width:88vw; text-align:center; box-shadow:var(--sombra);
 }
-.ms-brindis[data-abierto="true"]{transform:translate(-50%,0)}
+.ms-brindis[data-abierto="true"]{transform:translate(-50%,0); opacity:1}
 .ms-modal{
   position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:var(--gutter);
   background:rgba(11,10,8,.55); opacity:0; pointer-events:none; transition:opacity .4s;
