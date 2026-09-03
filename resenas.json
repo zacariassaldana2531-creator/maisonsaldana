@@ -1,0 +1,13 @@
+{
+  "_como_agregar": "Cada reseña es un bloque entre llaves { }, separado del siguiente por una coma. El campo codigo es el de la fragancia (E22, EM14...) y decide en qué ficha aparece; si lo dejas vacío, la reseña sale como reseña general de la casa. estrellas va de 1 a 5. destacada en true la sube a la portada. La última reseña NO lleva coma al final. Si te equivocas con una coma, el sitio no se rompe: simplemente no muestra reseñas hasta que se arregle.",
+  "_ejemplo": {
+    "codigo": "E22",
+    "nombre": "María F.",
+    "ciudad": "Santo Domingo",
+    "estrellas": 5,
+    "fecha": "2026-09-01",
+    "texto": "Aquí va lo que escribió el cliente, tal cual, sin corregirle el tono.",
+    "destacada": true
+  },
+  "resenas": []
+}
