@@ -24,9 +24,15 @@
 
 /* Google retira modelos para las cuentas nuevas sin avisar: la 2.5
    dejó de estar disponible de un día para otro y el asesor se quedó
-   mudo. Por eso el nombre se puede cambiar desde las variables de
-   entorno de Vercel, sin tocar código, si vuelve a pasar. */
-const MODELO = process.env.GEMINI_MODEL || "gemini-3.6-flash";
+   mudo. Por eso se usa un alias —"latest"— que Google mantiene
+   apuntando al modelo vigente, y el nombre se puede cambiar desde las
+   variables de entorno de Vercel, sin tocar código.
+
+   Y se usa el ligero, no el grande: recomendar un perfume de una
+   lista no necesita un modelo que delibere. El ligero contesta en
+   segundos y tiene un cupo gratuito mucho más holgado, que es lo que
+   sostiene una tienda abierta todo el día. */
+const MODELO = process.env.GEMINI_MODEL || "gemini-flash-lite-latest";
 const API = "https://generativelanguage.googleapis.com/v1beta/models";
 
 /* ---------- límites de cordura ---------------------------------
