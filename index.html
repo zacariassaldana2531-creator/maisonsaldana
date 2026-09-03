@@ -959,12 +959,12 @@ const RAMPA = [1, 0.78, 0.58, 0.46, 0.36, 0.29, 0.22, 0.16, 0.12, 0.08, 0.04, 0]
 /* ---------- 2. IMÁGENES DE MARCA -------------------------------- */
 /* REGLA DE ORO: FLACON es el frasco oficial y universal de la casa.
    Se usa para TODAS las fragancias. No se sustituye nunca.        */
-const FLACON = "originales/frasco-maison-saldana.webp";
+const FLACON = "/originales/frasco-maison-saldana.webp";
 const PORTADAS = [
-  {img:"originales/portada-1.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Lui"},
-  {img:"originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
-  {img:"originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
-  {img:"originales/portada-4.webp", alt:"Maison Saldana \u2014 Una esencia, innumerables historias"},
+  {img:"/originales/portada-1.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Lui"},
+  {img:"/originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
+  {img:"/originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
+  {img:"/originales/portada-4.webp", alt:"Maison Saldana \u2014 Una esencia, innumerables historias"},
 ];
 const SEGUNDOS_PORTADA = 6;   // cada cuántos segundos cambia la portada
 
@@ -979,7 +979,7 @@ const SEGUNDOS_PORTADA = 6;   // cada cuántos segundos cambia la portada
    si no, la propia imagen avisa y se dibuja el frasco fantasma en su lugar.
    Subir una foto nueva a originales/ basta: no hay que tocar este archivo. */
 function rutaOriginal(p){
-  return p.imagenOriginal || "originales/" + p.codigo.toLowerCase() + ".webp";
+  return p.imagenOriginal || "/originales/" + p.codigo.toLowerCase() + ".webp";
 }
 
 const PRODUCTOS = [
