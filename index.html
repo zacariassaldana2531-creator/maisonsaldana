@@ -779,6 +779,184 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   .ms-wa-flotante{right:14px; bottom:calc(14px + env(safe-area-inset-bottom)); width:52px; height:52px}
   .ms-wa-flotante svg{width:24px; height:24px}
 }
+/* ============================================================
+   EL NARIZ — ASESOR DE FRAGANCIAS
+   ------------------------------------------------------------
+   Un cajón hermano del carrito: mismo ancho, mismo herraje,
+   misma luz. La conversación no debe parecer un artefacto
+   pegado encima de la tienda, sino otra sala de la misma casa.
+   ============================================================ */
+
+/* ---------- el botón que lo llama ---------- */
+/* Va encima del de WhatsApp y se distingue por el oro: el de
+   WhatsApp es la casa de noche, éste es la casa de día. */
+.ms-asesor-flotante{
+  position:fixed; z-index:70; right:18px; bottom:86px;
+  width:56px; height:56px; border-radius:50%;
+  background:linear-gradient(145deg, var(--oro-claro), var(--oro));
+  border:1px solid var(--oro-hondo);
+  display:grid; place-items:center; color:#14110D;
+  box-shadow:var(--sombra-suave);
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease), opacity .3s ease;
+}
+.ms-asesor-flotante svg{width:25px; height:25px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round}
+.ms-asesor-flotante--oculto{transform:translateY(320%); opacity:0; pointer-events:none}
+@media (hover:hover){
+  .ms-asesor-flotante:hover{transform:translateY(-3px) scale(1.05); box-shadow:var(--sombra)}
+}
+@media (max-width:600px){
+  .ms-asesor-flotante{right:14px; bottom:calc(78px + env(safe-area-inset-bottom)); width:52px; height:52px}
+  .ms-asesor-flotante svg{width:23px; height:23px}
+}
+
+/* ---------- el susurro de bienvenida ----------
+   Aparece una sola vez por visita, a los seis segundos, y se va
+   sola. Sin esto nadie descubre que el asesor existe. */
+.ms-asesor-susurro{
+  position:fixed; z-index:71; right:82px; bottom:90px;
+  max-width:min(54vw, 208px);
+  background:var(--noche); color:var(--oro-claro);
+  border:1px solid var(--oro-hondo); padding:11px 14px;
+  font-size:12px; line-height:1.45; text-align:left;
+  box-shadow:var(--sombra); cursor:pointer;
+  opacity:0; transform:translateY(6px) scale(.96); pointer-events:none;
+  transition:opacity .5s var(--ease), transform .5s var(--ease);
+}
+/* Un pico que lo amarra al botón: sin él parece un aviso suelto
+   caído en medio de la página. */
+.ms-asesor-susurro::after{
+  content:""; position:absolute; right:-6px; top:50%;
+  width:9px; height:9px; margin-top:-5px;
+  background:var(--noche); border-right:1px solid var(--oro-hondo);
+  border-top:1px solid var(--oro-hondo); transform:rotate(45deg);
+}
+.ms-asesor-susurro[data-abierto="true"]{opacity:1; transform:none; pointer-events:auto}
+@media (max-width:600px){
+  .ms-asesor-susurro{right:74px; bottom:calc(86px + env(safe-area-inset-bottom)); font-size:11.5px; padding:10px 12px}
+}
+
+/* ---------- el cajón ---------- */
+.ms-cajon--asesor{background:var(--papel)}
+.ms-asesor-titulo h3{font-size:20px; letter-spacing:.14em; text-transform:uppercase; margin:0}
+.ms-asesor-titulo small{
+  display:block; margin-top:3px; font-size:9.5px; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--oro);
+}
+
+/* El hilo respira menos que el resto de la casa: en una
+   conversación el aire de 64px a los lados corta la lectura. */
+.ms-asesor-hilo{
+  flex:1 1 auto; overflow-y:auto; overscroll-behavior:contain;
+  padding:22px clamp(18px, 3.4vw, 34px);
+  display:flex; flex-direction:column; gap:14px;
+}
+
+.ms-burbuja{
+  max-width:84%; padding:13px 16px; font-size:14.5px; line-height:1.62;
+  border-radius:var(--borde-radio); white-space:pre-wrap; overflow-wrap:anywhere;
+  animation:ms-asesor-entra .45s var(--ease) both;
+}
+.ms-burbuja--casa{
+  align-self:flex-start; background:var(--campo);
+  border:1px solid var(--linea); border-left:2px solid var(--oro);
+  color:var(--tinta);
+}
+.ms-burbuja--tu{
+  align-self:flex-end; background:var(--tinta); color:var(--papel);
+  border:1px solid var(--tinta);
+}
+.ms-burbuja--aviso{
+  align-self:stretch; max-width:100%; background:transparent;
+  border:1px solid var(--oro-claro); color:var(--tinta-suave);
+  font-size:12.5px; text-align:center;
+}
+@keyframes ms-asesor-entra{
+  from{opacity:0; transform:translateY(9px)}
+  to{opacity:1; transform:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .ms-burbuja{animation:none}
+}
+
+/* ---------- los tres puntos mientras piensa ---------- */
+.ms-asesor-pulso{
+  align-self:flex-start; display:flex; gap:5px; padding:15px 16px;
+  background:var(--campo); border:1px solid var(--linea); border-left:2px solid var(--oro);
+}
+.ms-asesor-pulso i{
+  width:5px; height:5px; border-radius:50%; background:var(--oro);
+  animation:ms-asesor-late 1.3s infinite var(--ease);
+}
+.ms-asesor-pulso i:nth-child(2){animation-delay:.18s}
+.ms-asesor-pulso i:nth-child(3){animation-delay:.36s}
+@keyframes ms-asesor-late{
+  0%,60%,100%{opacity:.25; transform:translateY(0)}
+  30%{opacity:1; transform:translateY(-3px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .ms-asesor-pulso i{animation:none; opacity:.6}
+}
+
+/* ---------- la ficha que propone ----------
+   Misma composición de doble frasco que el buscador: el cliente
+   reconoce la pieza antes de leer el nombre. */
+.ms-asesor-ficha{
+  align-self:stretch; display:grid; grid-template-columns:62px 1fr;
+  gap:14px; align-items:center; padding:12px 0;
+  border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
+  animation:ms-asesor-entra .45s var(--ease) both;
+}
+.ms-asesor-ficha .ms-mini{
+  background:var(--foto); border:1px solid var(--linea); height:74px; overflow:hidden;
+  position:relative; display:flex; align-items:flex-end; justify-content:center;
+  gap:3px; padding:0 4px 6px;
+}
+.ms-asesor-ficha .ms-mini img{height:84%; width:auto; max-width:60%; object-fit:contain; object-position:bottom}
+.ms-asesor-ficha .ms-mini .ms-mini-orig{height:56%; max-width:38%; mix-blend-mode:multiply}
+.ms-asesor-ficha h4{font-size:16.5px; margin:0}
+.ms-asesor-ficha small{
+  display:block; font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--tinta-suave); margin-top:3px;
+}
+.ms-asesor-ficha-tope{display:flex; align-items:baseline; justify-content:space-between; gap:10px}
+.ms-asesor-ficha .ms-precio{font-size:17px; white-space:nowrap}
+.ms-asesor-ficha-botones{display:flex; gap:8px; margin-top:9px}
+.ms-asesor-ficha-botones .ms-btn{padding:9px 14px; font-size:9px; letter-spacing:.18em; flex:1 1 auto}
+
+/* ---------- respuestas sugeridas ---------- */
+.ms-asesor-chips{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:11px}
+.ms-asesor-chips:empty{display:none}
+.ms-asesor-chips .ms-ficha{padding:8px 14px; font-size:9.5px; letter-spacing:.16em}
+
+/* ---------- el pie donde se escribe ---------- */
+.ms-asesor-pie{
+  border-top:1px solid var(--linea);
+  padding:14px clamp(18px, 3.4vw, 34px) calc(14px + env(safe-area-inset-bottom));
+}
+.ms-asesor-fila{display:flex; gap:9px; align-items:center}
+.ms-asesor-fila input{
+  flex:1 1 auto; min-width:0; background:var(--campo); color:var(--tinta);
+  border:1px solid var(--linea); border-radius:var(--borde-radio);
+  padding:13px 15px; font-family:var(--texto); font-size:15px; font-weight:300;
+  transition:border-color .3s;
+}
+.ms-asesor-fila input:focus{outline:none; border-color:var(--oro)}
+.ms-asesor-fila input::placeholder{color:var(--tinta-suave); opacity:.75}
+.ms-asesor-enviar{
+  flex:none; width:46px; height:46px; display:grid; place-items:center;
+  background:var(--tinta); color:var(--papel); border:1px solid var(--tinta);
+  transition:background .3s var(--ease), color .3s var(--ease);
+}
+.ms-asesor-enviar svg{width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+@media (hover:hover){
+  .ms-asesor-enviar:hover{background:transparent; color:var(--tinta)}
+}
+.ms-asesor-enviar[disabled]{opacity:.35; pointer-events:none}
+.ms-asesor-nota{
+  margin:10px 0 0; font-size:9.5px; letter-spacing:.1em; line-height:1.5;
+  color:var(--tinta-suave); text-align:center;
+}
+
 </style>
 </head>
 <body>
@@ -907,6 +1085,45 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 <a class="ms-wa-flotante" href="https://wa.me/18094394509?text=Hola%2C%20quiero%20saber%20m%C3%A1s%20sobre%20las%20fragancias%20de%20Maison%20Saldana" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.5.1-1.5-.7-2.4-1.3-3.4-2.9-.3-.4.3-.4.7-1.3.1-.2 0-.4 0-.5C11 9.7 10.6 8.5 10.3 8c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.2-.2-.5-.4z"/><path d="M12 2C6.5 2 2 6.4 2 12c0 1.9.5 3.6 1.5 5.2L2 22l4.9-1.4C8.5 21.5 10.2 22 12 22c5.5 0 10-4.4 10-10S17.5 2 12 2zm0 18.2c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3 .9.9-2.9-.2-.3C4.2 15 3.7 13.5 3.7 12c0-4.6 3.7-8.3 8.3-8.3s8.3 3.7 8.3 8.3-3.7 8.2-8.3 8.2z"/></svg>
 </a>
+
+<!-- Asesor de fragancias (El Nariz) -->
+<button class="ms-asesor-flotante" data-accion="asesor" aria-label="Hablar con el asesor de fragancias">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 4c3.1 3.7 4.7 6.1 4.7 8.2a4.7 4.7 0 0 1-9.4 0C7.3 10.1 8.9 7.7 12 4Z"/>
+    <path d="M19.4 3.4v2.4M18.2 4.6h2.4"/>
+    <path d="M4.6 6.9v1.6M3.8 7.7h1.6"/>
+  </svg>
+</button>
+
+<button class="ms-asesor-susurro" id="susurroAsesor" data-abierto="false" data-accion="asesor" hidden>
+  ¿No sabes cuál escoger? Pregúntame.
+</button>
+
+<aside class="ms-cajon ms-cajon--asesor" id="cajonAsesor" aria-label="Asesor de fragancias" data-abierto="false">
+  <div class="ms-cajon-cab">
+    <div class="ms-asesor-titulo">
+      <h3>El Nariz</h3>
+      <small>Asesor de fragancias</small>
+    </div>
+    <button class="ms-icono" data-accion="cerrar-asesor" aria-label="Cerrar asesor">
+      <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="ms-asesor-hilo" id="hiloAsesor" role="log" aria-live="polite" aria-relevant="additions"></div>
+
+  <div class="ms-asesor-pie">
+    <div class="ms-asesor-chips" id="chipsAsesor"></div>
+    <form class="ms-asesor-fila" id="formAsesor" autocomplete="off">
+      <label class="ms-h1-oculto" for="campoAsesor">Escribe qué fragancia buscas</label>
+      <input id="campoAsesor" type="text" maxlength="500" placeholder="Algo dulce para la noche…" enterkeyhint="send">
+      <button class="ms-asesor-enviar" type="submit" id="enviarAsesor" aria-label="Enviar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 12h13M12 6.5 17.5 12 12 17.5"/></svg>
+      </button>
+    </form>
+    <p class="ms-asesor-nota">Respuestas generadas con inteligencia artificial. La disponibilidad final se confirma por WhatsApp.</p>
+  </div>
+</aside>
 
 <div class="ms-velo" id="velo" data-abierto="false"></div>
 <div class="ms-brindis" id="brindis" role="status" aria-live="polite"></div>
@@ -2352,7 +2569,7 @@ function abrir(sel){
   document.body.classList.add("ms-bloqueado");
 }
 function cerrarTodo(){
-  ["#menuMovil","#cajonCarrito","#buscador","#modalCuenta"].forEach(s=>$(s).dataset.abierto="false");
+  ["#menuMovil","#cajonCarrito","#buscador","#modalCuenta","#cajonAsesor"].forEach(s=>$(s).dataset.abierto="false");
   velo().dataset.abierto = "false";
   document.body.classList.remove("ms-bloqueado");
 }
@@ -2466,6 +2683,7 @@ document.addEventListener("click", (e)=>{
     case "menu": abrir("#menuMovil"); break;
     case "tema": alternarTema(); break;
     case "carrito": abrir("#cajonCarrito"); break;
+    case "asesor": abrirAsesor(); break;
     case "cuenta": abrir("#modalCuenta"); break;
     case "buscar":
       abrir("#buscador");
@@ -2486,7 +2704,7 @@ document.addEventListener("click", (e)=>{
     case "pagar": finalizarPedido(); break;
     case "ir":
     case "cerrar-menu": case "cerrar-carrito": case "cerrar-buscar":
-    case "cerrar-modal":
+    case "cerrar-modal": case "cerrar-asesor":
       cerrarTodo(); break;
   }
 });
@@ -2539,20 +2757,306 @@ document.addEventListener("click", e=>{
 /* El WhatsApp flotante se aparta al bajar (para no tapar el texto)
    y vuelve al subir o al detenerse. */
 (function(){
-  const wa = $(".ms-wa-flotante");
-  if(!wa) return;
+  const flotantes = [
+    {nodo:$(".ms-wa-flotante"),     clase:"ms-wa-flotante--oculto"},
+    {nodo:$(".ms-asesor-flotante"), clase:"ms-asesor-flotante--oculto"}
+  ].filter(f=>f.nodo);
+  if(!flotantes.length) return;
   let ultimoY = window.scrollY, quieto;
-  const mostrar = ()=>wa.classList.remove("ms-wa-flotante--oculto");
+  const mostrar = ()=>flotantes.forEach(f=>f.nodo.classList.remove(f.clase));
   window.addEventListener("scroll", ()=>{
     const y = window.scrollY, dif = y - ultimoY;
     if(Math.abs(dif) < 6) return;            // ignora micro-movimientos
-    if(dif > 0 && y > 240) wa.classList.add("ms-wa-flotante--oculto");
+    if(dif > 0 && y > 240) flotantes.forEach(f=>f.nodo.classList.add(f.clase));
     else mostrar();
     ultimoY = y;
     clearTimeout(quieto);
     quieto = setTimeout(mostrar, 700);       // al detenerse, vuelve
   }, {passive:true});
 })();
+
+/* ================================================================
+   EL NARIZ — ASESOR DE FRAGANCIAS
+   ---------------------------------------------------------------
+   El cerebro no vive aquí: vive en /api/asistente.js, en el
+   servidor, porque ahí es donde puede guardarse la clave del
+   modelo sin que la vea el visitante.
+
+   Lo que hace este bloque es sólo tres cosas:
+   1. Armar el índice del catálogo que se le manda al modelo.
+   2. Pintar la conversación y las fichas que propone.
+   3. Ejecutar lo que el asesor decide: añadir al carrito, abrir
+      WhatsApp o llevar a la ficha del perfume.
+
+   Si el servidor no contesta —falta la clave, se acabó la cuota,
+   se cayó la red— el asesor no se rompe: busca en el catálogo
+   por su cuenta y pasa la mano a WhatsApp.
+   ================================================================ */
+const ASESOR_API = "/api/asistente";
+const asesor = { hilo: [], pensando: false, arrancado: false, ultima: "" };
+
+/* ---------- el catálogo, comprimido para el modelo -------------
+   338 fragancias completas serían una carta de vinos ilegible.
+   Se manda una línea por fragancia con lo que de verdad decide
+   una recomendación. Se arma una sola vez por visita.          */
+let _indiceAsesor = null;
+function indiceCatalogo(){
+  if(_indiceAsesor) return _indiceAsesor;
+  const GEN = { "Hombre":"H", "Mujer":"M", "Unisex":"U" };
+  _indiceAsesor = PRODUCTOS.map(p => [
+    p.codigo,
+    p.nombre,
+    GEN[p.genero] || "U",
+    p.familiaOlfativa,
+    p.precio,
+    ocasionesDe(p).map(o => o.replace(/^Para (el |la )?/, "")).join("/"),
+    [...p.notasSalida, ...p.notasCorazon, ...p.notasFondo].slice(0, 7).join(","),
+    p.inspiradoEn + " de " + p.marcaInspiracion,
+    p.disponible ? "" : "AGOTADO"
+  ].join("|")).join("\n");
+  return _indiceAsesor;
+}
+
+/* ---------- lo que está pasando ahora mismo --------------------
+   Sin esto el asesor atiende a ciegas: no sabría que el cliente
+   ya tiene tres frascos en el carrito ni qué ficha está mirando. */
+function contextoTienda(){
+  const partes = [];
+  const viendo = PRODUCTOS.find(p => location.pathname === "/perfume/" + p.slug);
+  if(viendo) partes.push(`Está mirando la ficha de ${viendo.nombre} (${viendo.codigo}).`);
+
+  if(estado.carrito.length){
+    const lineas = estado.carrito.map(l => {
+      const p = PRODUCTOS.find(x => x.id === l.id);
+      return p ? `${l.cantidad} × ${p.nombre} (${p.codigo})` : null;
+    }).filter(Boolean).join(", ");
+    const c = cuentas();
+    partes.push(`Lleva en el carrito: ${lineas}. Total ${dinero(c.total)}` +
+      (c.descuento > 0 ? `, con ${c.pct}% de descuento por cantidad ya aplicado.` : "."));
+  }else{
+    partes.push("Su carrito está vacío.");
+  }
+  return "LO QUE PASA AHORA EN LA TIENDA\n" + partes.join("\n");
+}
+
+/* ---------- pintar ---------------------------------------------- */
+function hilo(){ return $("#hiloAsesor"); }
+function alFinal(){ const h = hilo(); h.scrollTop = h.scrollHeight; }
+
+function burbuja(clase, texto){
+  const d = document.createElement("div");
+  d.className = "ms-burbuja ms-burbuja--" + clase;
+  d.textContent = texto;                 // textContent, no innerHTML: nada de lo que
+  hilo().appendChild(d);                 // llega del modelo se interpreta como HTML
+  return d;
+}
+
+function fichaAsesor(p){
+  const d = document.createElement("div");
+  d.className = "ms-asesor-ficha";
+  const accion = p.disponible
+    ? `<button class="ms-btn" data-agregar="${esc(p.id)}">Añadir</button>`
+    : `<span class="ms-agotado" style="align-self:center">Agotado</span>`;
+  d.innerHTML = `
+    <a class="ms-mini" href="/perfume/${esc(p.slug)}" data-accion="ir" aria-label="Ver ${esc(p.nombre)}">
+      <img src="${esc(frascoDe(p))}" alt="" loading="lazy">
+      <img class="ms-mini-orig" src="${esc(rutaOriginal(p))}" alt="" loading="lazy" onerror="msSinFoto(this)">
+    </a>
+    <div>
+      <div class="ms-asesor-ficha-tope">
+        <h4>${esc(p.nombre)}</h4>
+        <span class="ms-precio">${dinero(p.precio)}</span>
+      </div>
+      <small>${esc(p.familiaOlfativa)} · ${esc(p.genero)} · ${esc(p.tamano)}</small>
+      <div class="ms-asesor-ficha-botones">
+        ${accion}
+        <a class="ms-btn ms-btn--linea" href="/perfume/${esc(p.slug)}" data-accion="ir">Ver ficha</a>
+      </div>
+    </div>`;
+  return d;
+}
+
+function botonWhatsApp(productos){
+  const d = document.createElement("div");
+  d.className = "ms-asesor-ficha-botones";
+  const lista = productos.length
+    ? ":\n\n" + productos.map(p => `• ${p.nombre} — ${dinero(p.precio)}`).join("\n")
+    : " y quisiera orientación para escoger una fragancia.";
+  d.innerHTML = `<a class="ms-btn ms-btn--ancho" target="_blank" rel="noopener"
+    href="${esc(enlaceWhatsApp("Hola Maison Saldana, estuve con el asesor de la web" + lista))}">Seguir por WhatsApp</a>`;
+  return d;
+}
+
+function pintarChips(lista){
+  $("#chipsAsesor").innerHTML = (lista || [])
+    .map(s => `<button type="button" class="ms-ficha" data-sugiere="${esc(s)}">${esc(s)}</button>`)
+    .join("");
+}
+
+/* ---------- cuando el servidor no contesta ----------------------
+   No se deja al cliente hablando solo: se busca en el catálogo
+   con lo último que escribió y se le abre la puerta de WhatsApp. */
+/* El buscador de la tienda exige que la frase entera aparezca en la
+   ficha, y en un chat nadie escribe "vainilla": escribe "algo con
+   vainilla y ámbar". Aquí se parte la frase y se puntúa palabra por
+   palabra, ignorando tildes y palabras de relleno. */
+const PALABRAS_VACIAS = new Set(["algo","con","para","que","una","uno","este","esta","del","los","las","por","como","pero","quiero","busco","tengo","hay","muy","mas","sea","alguna","algun","dame","tienen","tiene"]);
+function sinTildes(t){ return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+
+function buscarSuelto(frase){
+  const palabras = sinTildes(String(frase || ""))
+    .split(/[^a-z0-9ñ]+/)
+    .filter(w => w.length > 2 && !PALABRAS_VACIAS.has(w));
+  if(!palabras.length) return [];
+  return PRODUCTOS
+    .filter(p => p.disponible)
+    .map(p => {
+      const heno = sinTildes([
+        p.nombre, p.inspiradoEn, p.marcaInspiracion, p.familiaOlfativa, p.genero,
+        ...p.notasSalida, ...p.notasCorazon, ...p.notasFondo
+      ].join(" "));
+      return { p, puntos: palabras.reduce((n, w) => n + (heno.includes(w) ? 1 : 0), 0) };
+    })
+    .filter(x => x.puntos > 0)
+    .sort((a, b) => b.puntos - a.puntos)
+    .slice(0, 3)
+    .map(x => x.p);
+}
+
+function respaldo(aviso, pista){
+  if(pista) console.warn("[asesor]", pista);
+  burbuja("aviso", aviso || "El asesor no está disponible en este momento.");
+  const encontrados = buscarSuelto(asesor.ultima);
+  if(encontrados.length){
+    burbuja("casa", "Mientras tanto, esto es lo que encontré en el catálogo con lo que me dijiste:");
+    encontrados.forEach(p => hilo().appendChild(fichaAsesor(p)));
+  }
+  hilo().appendChild(botonWhatsApp(encontrados));
+  pintarChips([]);
+  alFinal();
+}
+
+/* ---------- la conversación ------------------------------------- */
+async function preguntar(texto){
+  const q = String(texto || "").trim().slice(0, 500);
+  if(!q || asesor.pensando) return;
+
+  asesor.ultima = q;
+  asesor.hilo.push({ rol: "cliente", texto: q });
+  burbuja("tu", q);
+  pintarChips([]);
+  alFinal();
+
+  asesor.pensando = true;
+  $("#enviarAsesor").disabled = true;
+  const pulso = document.createElement("div");
+  pulso.className = "ms-asesor-pulso";
+  pulso.innerHTML = "<i></i><i></i><i></i>";
+  hilo().appendChild(pulso);
+  alFinal();
+
+  try{
+    const r = await fetch(ASESOR_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        mensajes: asesor.hilo.slice(-16),
+        catalogo: indiceCatalogo(),
+        contexto: contextoTienda()
+      })
+    });
+    const datos = await r.json().catch(() => null);
+    pulso.remove();
+
+    if(!r.ok || !datos || !datos.respuesta){
+      respaldo(datos && datos.mensaje, datos && datos.pista);
+      return;
+    }
+
+    asesor.hilo.push({ rol: "asesor", texto: datos.respuesta });
+    burbuja("casa", datos.respuesta);
+
+    /* Sólo se muestran códigos que existen de verdad: si el modelo
+       se inventa uno, se cae solo y no llega a la pantalla. */
+    const propuestos = (datos.codigos || [])
+      .map(c => PRODUCTOS.find(p => p.codigo.toUpperCase() === String(c).trim().toUpperCase()))
+      .filter(Boolean);
+    propuestos.forEach(p => hilo().appendChild(fichaAsesor(p)));
+
+    if(datos.accion === "carrito"){
+      const puestos = propuestos.filter(p => p.disponible);
+      puestos.forEach(p => agregar(p.id, 1, false));
+      if(puestos.length) brindis(puestos.length === 1
+        ? `${puestos[0].nombre} · añadido al carrito`
+        : `${puestos.length} frascos · añadidos al carrito`);
+    }
+    if(datos.accion === "whatsapp"){
+      hilo().appendChild(botonWhatsApp(propuestos));
+    }
+
+    pintarChips(datos.seguimiento);
+    alFinal();
+
+  }catch(e){
+    pulso.remove();
+    respaldo("Se cortó la conexión con el asesor.");
+  }finally{
+    asesor.pensando = false;
+    $("#enviarAsesor").disabled = false;
+    alFinal();
+  }
+}
+
+/* ---------- abrir y cerrar -------------------------------------- */
+function abrirAsesor(){
+  ocultarSusurro(true);
+  abrir("#cajonAsesor");
+  if(!asesor.arrancado){
+    asesor.arrancado = true;
+    burbuja("casa", "Buenas. Soy El Nariz, de la casa. Dime para quién es y cómo te gusta oler — dulce, fresco, amaderado — y te llevo a la tuya.");
+    pintarChips(["Para mí, de noche", "Un regalo para ella", "Algo fresco de día", "Lo más pedido"]);
+    alFinal();
+  }
+  /* En el teléfono no se enfoca solo: saltaría el teclado encima
+     de la conversación antes de que se alcance a leer nada. */
+  if(window.matchMedia("(hover:hover)").matches){
+    setTimeout(() => $("#campoAsesor").focus(), 160);
+  }
+}
+
+function ocultarSusurro(paraSiempre){
+  const s = $("#susurroAsesor");
+  if(!s || s.hidden) return;
+  s.dataset.abierto = "false";
+  setTimeout(() => { s.hidden = true; }, 520);
+  if(paraSiempre){ try{ sessionStorage.setItem("ms-asesor-visto", "1"); }catch(e){} }
+}
+
+$("#formAsesor").addEventListener("submit", e => {
+  e.preventDefault();
+  const campo = $("#campoAsesor");
+  const valor = campo.value;
+  campo.value = "";
+  preguntar(valor);
+});
+$("#chipsAsesor").addEventListener("click", e => {
+  const b = e.target.closest("[data-sugiere]");
+  if(b) preguntar(b.dataset.sugiere);
+});
+
+/* El susurro sale a los siete segundos, una vez por visita, y sólo
+   si el cliente todavía no ha abierto el asesor por su cuenta. */
+setTimeout(() => {
+  let visto = false;
+  try{ visto = sessionStorage.getItem("ms-asesor-visto") === "1"; }catch(e){}
+  if(visto || asesor.arrancado) return;
+  const s = $("#susurroAsesor");
+  if(!s) return;
+  s.hidden = false;
+  requestAnimationFrame(() => { s.dataset.abierto = "true"; });
+  setTimeout(() => ocultarSusurro(false), 11000);
+}, 7000);
+
 
 pintarNavegacion();
 $("#sugerencias").innerHTML = ["Creed","Dior","Chanel","Ámbar","Vainilla","Unisex"]
