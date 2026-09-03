@@ -132,16 +132,55 @@ function texto(v, tope){
   return typeof v === "string" ? v.slice(0, tope).trim() : "";
 }
 
+/* ---------- encontrar la clave ---------------------------------
+   El nombre de la variable se teclea a mano en un panel web, y a
+   veces desde un teléfono, donde el corrector mete mayúsculas o un
+   espacio de más. Un descuido de tecleo no debería dejar la tienda
+   sin asesor: si no aparece con el nombre exacto, se busca
+   cualquier variante razonable antes de darse por vencido.      */
+function leerClave(){
+  const exacta = process.env.GEMINI_API_KEY;
+  if(exacta && exacta.trim()) return exacta.trim();
+  for(const nombre of Object.keys(process.env)){
+    if(/^\s*gemini[\s_-]*api[\s_-]*key\s*$/i.test(nombre)){
+      const v = process.env[nombre];
+      if(v && v.trim()) return v.trim();
+    }
+  }
+  return "";
+}
+
+/* Nombres de variables que se parecen a la que buscamos. Sólo
+   nombres, nunca valores: sirve para ver de un vistazo si el
+   problema es un nombre mal escrito. */
+function nombresParecidos(){
+  return Object.keys(process.env).filter(n => /gemini/i.test(n));
+}
+
 module.exports = async function handler(req, res){
   res.setHeader("Cache-Control", "no-store");
 
   if(req.method === "OPTIONS"){ res.status(204).end(); return; }
+
+  /* Chequeo de salud: /api/asistente?estado=1
+     Dice si la clave está puesta y con qué nombre la ve el servidor.
+     Nunca devuelve el valor de nada: sólo nombres y un sí o un no. */
+  if(req.method === "GET" && /[?&]estado=1/.test(req.url || "")){
+    res.status(200).json({
+      claveEncontrada: Boolean(leerClave()),
+      nombresConGemini: nombresParecidos(),
+      totalVariables: Object.keys(process.env).length,
+      modelo: MODELO
+    });
+    return;
+  }
+
   if(req.method !== "POST"){
     res.status(405).json({ error: "metodo", mensaje: "Solo POST." });
     return;
   }
 
-  const clave = process.env.GEMINI_API_KEY;
+  const clave = leerClave();
   if(!clave){
     /* Lo que ve el cliente y lo que necesita saber quien administra
        la tienda son dos cosas distintas: el aviso va en "mensaje" y
