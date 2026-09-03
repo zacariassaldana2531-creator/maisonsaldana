@@ -22,7 +22,11 @@
    La tienda nunca se ve rota.
    ================================================================ */
 
-const MODELO = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+/* Google retira modelos para las cuentas nuevas sin avisar: la 2.5
+   dejó de estar disponible de un día para otro y el asesor se quedó
+   mudo. Por eso el nombre se puede cambiar desde las variables de
+   entorno de Vercel, sin tocar código, si vuelve a pasar. */
+const MODELO = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 const API = "https://generativelanguage.googleapis.com/v1beta/models";
 
 /* ---------- límites de cordura ---------------------------------
@@ -32,7 +36,7 @@ const API = "https://generativelanguage.googleapis.com/v1beta/models";
 const MAX_MENSAJE   = 1000;   // caracteres por turno del cliente
 const MAX_TURNOS    = 16;     // memoria de la conversación
 const MAX_CATALOGO  = 90000;  // caracteres del índice del catálogo
-const MAX_SALIDA    = 1100;   // tokens de respuesta
+const MAX_SALIDA    = 2600;   // tokens de respuesta (el razonamiento del modelo también gasta)
 
 /* ---------- freno por visitante --------------------------------
    Memoria del proceso: se borra cuando Vercel apaga la instancia.
@@ -275,7 +279,21 @@ module.exports = async function handler(req, res){
   const corte = new AbortController();
   const reloj = setTimeout(() => corte.abort(), 20000);
 
-  try{
+  /* Una llamada a Google. "ahorro" apaga el razonamiento interno:
+     en una tienda pesa más la rapidez que la deliberación. No todos
+     los modelos aceptan esa opción, así que se pide primero y, si la
+     rechaza, se repite sin ella en vez de dejar al cliente sin
+     respuesta por un detalle de configuración. */
+  async function llamarAGoogle(ahorro){
+    const generationConfig = {
+      temperature: 0.75,
+      topP: 0.95,
+      maxOutputTokens: MAX_SALIDA,
+      responseMimeType: "application/json",
+      responseSchema: ESQUEMA
+    };
+    if(ahorro) generationConfig.thinkingConfig = { thinkingBudget: 0 };
+
     const r = await fetch(`${API}/${MODELO}:generateContent`, {
       method: "POST",
       signal: corte.signal,
@@ -284,23 +302,22 @@ module.exports = async function handler(req, res){
         systemInstruction: { parts: [{ text: instrucciones(catalogo, contexto) }] },
         contents,
         safetySettings: FILTROS,
-        generationConfig: {
-          temperature: 0.75,
-          topP: 0.95,
-          maxOutputTokens: MAX_SALIDA,
-          responseMimeType: "application/json",
-          responseSchema: ESQUEMA,
-          /* Sin razonamiento interno: en una tienda pesa más la
-             rapidez que la deliberación, y ahorra cuota. */
-          thinkingConfig: { thinkingBudget: 0 }
-        }
+        generationConfig
       })
     });
+    return { ok: r.ok, estado: r.status, texto: await r.text() };
+  }
+
+  try{
+    let r = await llamarAGoogle(true);
+    if(!r.ok && r.estado === 400 && /thinking/i.test(r.texto)){
+      r = await llamarAGoogle(false);
+    }
 
     if(!r.ok){
-      const detalle = await r.text();
-      console.error("Gemini respondió", r.status, detalle.slice(0, 600));
-      const cuota = r.status === 429;
+      const detalle = r.texto;
+      console.error("Gemini respondió", r.estado, detalle.slice(0, 600));
+      const cuota = r.estado === 429;
       res.status(cuota ? 429 : 502).json({
         error: cuota ? "cuota" : "modelo",
         mensaje: cuota
@@ -309,12 +326,13 @@ module.exports = async function handler(req, res){
         /* Sólo para la consola de quien administra la tienda: el
            cliente ve "mensaje", nunca esto. Google no incluye la
            clave en sus errores. */
-        pista: `Google respondió ${r.status}: ${detalle.slice(0, 400)}`
+        pista: `Google respondió ${r.estado}: ${detalle.slice(0, 400)}`
       });
       return;
     }
 
-    const datos = await r.json();
+    let datos;
+    try{ datos = JSON.parse(r.texto); }catch(e){ datos = null; }
     const crudo = datos?.candidates?.[0]?.content?.parts?.[0]?.text || "";
     let salida;
     try{ salida = JSON.parse(crudo); }catch(e){ salida = null; }
