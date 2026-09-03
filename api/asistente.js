@@ -166,9 +166,20 @@ module.exports = async function handler(req, res){
      Dice si la clave está puesta y con qué nombre la ve el servidor.
      Nunca devuelve el valor de nada: sólo nombres y un sí o un no. */
   if(req.method === "GET" && /[?&]estado=1/.test(req.url || "")){
+    /* Las VERCEL_* son públicas y sirven para saber QUÉ despliegue
+       está contestando: si resulta ser de vista previa, una variable
+       guardada sólo para producción nunca le va a llegar. De las
+       demás sólo se cuenta cuántas hay, nunca cómo se llaman. */
+    const propias = Object.keys(process.env).filter(
+      n => !/^(VERCEL|AWS|LAMBDA|NODE|NPM|PATH|HOME|LANG|LC_|TZ|PWD|SHLVL|TERM|_)/.test(n)
+    );
     res.status(200).json({
       claveEncontrada: Boolean(leerClave()),
       nombresConGemini: nombresParecidos(),
+      entorno: process.env.VERCEL_ENV || "(sin VERCEL_ENV)",
+      rama: process.env.VERCEL_GIT_COMMIT_REF || "(sin rama)",
+      commit: (process.env.VERCEL_GIT_COMMIT_SHA || "").slice(0, 7) || "(sin commit)",
+      variablesPropias: propias.length,
       totalVariables: Object.keys(process.env).length,
       modelo: MODELO
     });
