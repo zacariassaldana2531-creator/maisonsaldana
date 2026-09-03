@@ -250,15 +250,18 @@ module.exports = async function handler(req, res){
   }
 
   const corte = new AbortController();
-  const reloj = setTimeout(() => corte.abort(), 20000);
+  const reloj = setTimeout(() => corte.abort(), 45000);
 
   /* Una llamada a Google.
-     Nota: aquí se pedía apagar el razonamiento interno del modelo
-     (thinkingConfig), porque en una tienda pesa más la rapidez que la
-     deliberación. gemini-3.6-flash rechaza esa opción con un escueto
-     "argumento inválido", así que ya no se manda. Si algún día vuelve
-     a admitirse, este es el sitio. */
-  async function llamarAGoogle(){
+     El razonamiento interno del modelo hay que bajarlo: en una tienda
+     pesa más la rapidez que la deliberación, y a pleno pensar tardaba
+     más de veinte segundos, que nadie espera en un chat.
+
+     Cada generación de Gemini lo pide a su manera —la 2.5 con un
+     presupuesto de tokens, la 3 con un nivel— y ninguna acepta el
+     nombre de la otra. Se pasa el ajuste que toque y, si el modelo lo
+     rechaza, se repite la llamada sin él: más lento, pero contesta. */
+  async function llamarAGoogle(razonamiento){
     const generationConfig = {
       temperature: 0.75,
       topP: 0.95,
@@ -266,6 +269,7 @@ module.exports = async function handler(req, res){
       responseMimeType: "application/json",
       responseSchema: ESQUEMA
     };
+    if(razonamiento) generationConfig.thinkingConfig = razonamiento;
 
     const r = await fetch(`${API}/${MODELO}:generateContent`, {
       method: "POST",
@@ -282,14 +286,16 @@ module.exports = async function handler(req, res){
   }
 
   try{
-    let r = await llamarAGoogle();
+    let r = await llamarAGoogle({ thinkingLevel: "low" });
+    if(!r.ok && r.estado === 400) r = await llamarAGoogle(null);
+
     /* El modelo gratuito se satura a ratos y devuelve 503 con un
        "vuelve más tarde". Casi siempre pasa al segundo intento, así
        que se reintenta una vez antes de mandar al cliente a WhatsApp
        por una congestión de medio segundo. */
     if(r.estado === 503){
       await new Promise(listo => setTimeout(listo, 900));
-      r = await llamarAGoogle();
+      r = await llamarAGoogle({ thinkingLevel: "low" });
     }
 
     if(!r.ok){
@@ -346,4 +352,4 @@ module.exports = async function handler(req, res){
 
 /* Vercel corta las funciones a los 10 segundos por defecto; el
    modelo a veces tarda más y la respuesta se perdía a medias. */
-module.exports.config = { maxDuration: 30 };
+module.exports.config = { maxDuration: 60 };
