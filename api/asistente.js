@@ -192,6 +192,26 @@ module.exports = async function handler(req, res){
     return;
   }
 
+  /* Qué modelos puede usar esta clave: /api/asistente?modelos=1
+     Google retira modelos y cambia los cupos del plan gratuito sin
+     avisar. Preguntar el catálogo de modelos no gasta cuota de
+     conversación, así que es la forma barata de elegir bien. */
+  if(req.method === "GET" && /[?&]modelos=1/.test(req.url || "")){
+    const k = leerClave();
+    if(!k){ res.status(503).json({ paso: "clave" }); return; }
+    try{
+      const r = await fetch(`${API}?pageSize=200`, { headers: { "x-goog-api-key": k } });
+      const d = await r.json();
+      const lista = (d.models || [])
+        .filter(m => (m.supportedGenerationMethods || []).includes("generateContent"))
+        .map(m => m.name.replace("models/", ""));
+      res.status(200).json({ estado: r.status, cuantos: lista.length, modelos: lista });
+    }catch(e){
+      res.status(200).json({ paso: "red", detalle: String(e && e.message).slice(0, 200) });
+    }
+    return;
+  }
+
   if(req.method !== "POST"){
     res.status(405).json({ error: "metodo", mensaje: "Solo POST." });
     return;
@@ -310,7 +330,7 @@ module.exports = async function handler(req, res){
         /* Sólo para la consola de quien administra la tienda: el
            cliente ve "mensaje", nunca esto. Google no incluye la
            clave en sus errores. */
-        pista: `Google respondió ${r.estado}: ${detalle.slice(0, 400)}`
+        pista: `Google respondió ${r.estado}: ${detalle.slice(0, 900)}`
       });
       return;
     }
