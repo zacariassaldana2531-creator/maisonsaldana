@@ -33,6 +33,13 @@
    segundos y tiene un cupo gratuito mucho más holgado, que es lo que
    sostiene una tienda abierta todo el día. */
 const MODELO = process.env.GEMINI_MODEL || "gemini-flash-lite-latest";
+
+/* Y un suplente. Hoy aprendimos dos formas de quedarse mudo: que
+   Google retire el modelo (404) y que se agote su cupo del día (429).
+   El cupo gratuito se cuenta por modelo, así que un segundo nombre
+   sirve para las dos cosas: si el titular no puede, atiende el
+   suplente en vez de mandar a todo el mundo a WhatsApp. */
+const MODELO_RESERVA = process.env.GEMINI_MODEL_RESERVA || "gemini-3.5-flash-lite";
 const API = "https://generativelanguage.googleapis.com/v1beta/models";
 
 /* ---------- límites de cordura ---------------------------------
@@ -198,26 +205,6 @@ module.exports = async function handler(req, res){
     return;
   }
 
-  /* Qué modelos puede usar esta clave: /api/asistente?modelos=1
-     Google retira modelos y cambia los cupos del plan gratuito sin
-     avisar. Preguntar el catálogo de modelos no gasta cuota de
-     conversación, así que es la forma barata de elegir bien. */
-  if(req.method === "GET" && /[?&]modelos=1/.test(req.url || "")){
-    const k = leerClave();
-    if(!k){ res.status(503).json({ paso: "clave" }); return; }
-    try{
-      const r = await fetch(`${API}?pageSize=200`, { headers: { "x-goog-api-key": k } });
-      const d = await r.json();
-      const lista = (d.models || [])
-        .filter(m => (m.supportedGenerationMethods || []).includes("generateContent"))
-        .map(m => m.name.replace("models/", ""));
-      res.status(200).json({ estado: r.status, cuantos: lista.length, modelos: lista });
-    }catch(e){
-      res.status(200).json({ paso: "red", detalle: String(e && e.message).slice(0, 200) });
-    }
-    return;
-  }
-
   if(req.method !== "POST"){
     res.status(405).json({ error: "metodo", mensaje: "Solo POST." });
     return;
@@ -242,6 +229,26 @@ module.exports = async function handler(req, res){
       error: "muchos-mensajes",
       mensaje: "Vas muy rápido. Espera un momento y seguimos, o escríbenos por WhatsApp."
     });
+    return;
+  }
+
+  /* Qué modelos puede usar esta clave: /api/asistente?modelos=1
+     Google retira modelos y cambia los cupos del plan gratuito sin
+     avisar. Preguntar el catálogo de modelos no gasta cuota de
+     conversación, así que es la forma barata de elegir bien. */
+  if(req.method === "GET" && /[?&]modelos=1/.test(req.url || "")){
+    const k = leerClave();
+    if(!k){ res.status(503).json({ paso: "clave" }); return; }
+    try{
+      const r = await fetch(`${API}?pageSize=200`, { headers: { "x-goog-api-key": k } });
+      const d = await r.json();
+      const lista = (d.models || [])
+        .filter(m => (m.supportedGenerationMethods || []).includes("generateContent"))
+        .map(m => m.name.replace("models/", ""));
+      res.status(200).json({ estado: r.status, cuantos: lista.length, modelos: lista });
+    }catch(e){
+      res.status(200).json({ paso: "red", detalle: String(e && e.message).slice(0, 200) });
+    }
     return;
   }
 
@@ -287,7 +294,7 @@ module.exports = async function handler(req, res){
      presupuesto de tokens, la 3 con un nivel— y ninguna acepta el
      nombre de la otra. Se pasa el ajuste que toque y, si el modelo lo
      rechaza, se repite la llamada sin él: más lento, pero contesta. */
-  async function llamarAGoogle(razonamiento){
+  async function llamarAGoogle(razonamiento, modelo){
     const generationConfig = {
       temperature: 0.75,
       topP: 0.95,
@@ -297,7 +304,7 @@ module.exports = async function handler(req, res){
     };
     if(razonamiento) generationConfig.thinkingConfig = razonamiento;
 
-    const r = await fetch(`${API}/${MODELO}:generateContent`, {
+    const r = await fetch(`${API}/${modelo || MODELO}:generateContent`, {
       method: "POST",
       signal: corte.signal,
       headers: { "Content-Type": "application/json", "x-goog-api-key": clave },
@@ -312,16 +319,29 @@ module.exports = async function handler(req, res){
   }
 
   try{
-    let r = await llamarAGoogle({ thinkingLevel: "low" });
+    const bajo = { thinkingLevel: "low" };
+    let r = await llamarAGoogle(bajo);
+
+    /* No todos los modelos aceptan que se les baje el razonamiento;
+       los que no, contestan 400 sin decir por qué. Se repite sin ese
+       ajuste: más lento, pero contesta. */
     if(!r.ok && r.estado === 400) r = await llamarAGoogle(null);
 
-    /* El modelo gratuito se satura a ratos y devuelve 503 con un
-       "vuelve más tarde". Casi siempre pasa al segundo intento, así
-       que se reintenta una vez antes de mandar al cliente a WhatsApp
-       por una congestión de medio segundo. */
+    /* 503 es congestión pasajera del plan gratuito. Casi siempre pasa
+       al segundo intento; no vale mandar a nadie a WhatsApp por medio
+       segundo de cola. */
     if(r.estado === 503){
       await new Promise(listo => setTimeout(listo, 900));
-      r = await llamarAGoogle({ thinkingLevel: "low" });
+      r = await llamarAGoogle(bajo);
+    }
+
+    /* Modelo retirado (404) o cupo agotado (429): entra el suplente,
+       que tiene su propio cupo. */
+    if(!r.ok && (r.estado === 404 || r.estado === 429) && MODELO_RESERVA !== MODELO){
+      console.warn(`El modelo ${MODELO} falló con ${r.estado}; probando ${MODELO_RESERVA}`);
+      let s2 = await llamarAGoogle(bajo, MODELO_RESERVA);
+      if(!s2.ok && s2.estado === 400) s2 = await llamarAGoogle(null, MODELO_RESERVA);
+      if(s2.ok) r = s2;
     }
 
     if(!r.ok){
