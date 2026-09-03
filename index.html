@@ -1241,6 +1241,12 @@ const PORTADAS = [
   {img:"/originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
   {img:"/originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
   {img:"/originales/portada-4.webp", alt:"Maison Saldana \u2014 Una esencia, innumerables historias"},
+  /* Las dos siguientes son del Caribe y hablan de los c\u00edtricos. Se
+     declaran aunque el archivo todav\u00eda no est\u00e9 subido: si falta, la
+     l\u00e1mina se retira sola y el carrusel sigue con las que haya. El
+     d\u00eda que se suban a originales/ aparecen sin tocar nada. */
+  {img:"/originales/portada-5.webp", alt:"Maison Saldana \u2014 Notas c\u00edtricas del Caribe, Pour Elle"},
+  {img:"/originales/portada-6.webp", alt:"Maison Saldana \u2014 Notas c\u00edtricas del Caribe, Pour Lui"},
 ];
 const SEGUNDOS_PORTADA = 6;   // cada cuántos segundos cambia la portada
 
@@ -1902,7 +1908,8 @@ function vistaInicio(){
   <section class="ms-hero">
     <div class="ms-carrusel" id="carrusel">
       ${PORTADAS.map((p,i)=>`<img class="ms-lamina" src="${p.img}" alt="${esc(p.alt)}"
-        data-activa="${i===0}" ${i===0?'fetchpriority="high"':'loading="lazy"'} decoding="async">`).join("")}
+        data-activa="${i===0}" ${i===0?'fetchpriority="high"':'loading="lazy"'} decoding="async"
+        onerror="portadaAusente(this)">`).join("")}
       <div class="ms-puntos" role="tablist" aria-label="Portadas">
         ${PORTADAS.map((p,i)=>`<button role="tab" data-punto="${i}" aria-label="Portada ${i+1}" aria-selected="${i===0}"></button>`).join("")}
       </div>
@@ -2699,6 +2706,24 @@ function pintarBusqueda(q){
 
 /* ---------- carrusel de portadas -------------------------------- */
 let relojPortada = null, laminaActual = 0;
+
+/* Una portada declarada cuyo archivo todavía no está subido no puede
+   dejar el icono de imagen rota en lo primero que ve un cliente. Se
+   retira su lámina y su punto, se renumeran los que quedan, y el
+   carrusel sigue como si nunca hubiera estado. */
+function portadaAusente(img){
+  const cont = img.closest(".ms-carrusel");
+  if(!cont){ img.remove(); return; }
+  const i = $$(".ms-lamina", cont).indexOf(img);
+  const punto = $$("[data-punto]", cont)[i];
+  img.remove();
+  if(punto) punto.remove();
+  $$("[data-punto]", cont).forEach((p, n) => {
+    p.dataset.punto = n;
+    p.setAttribute("aria-label", "Portada " + (n + 1));
+  });
+  mostrarLamina(0);
+}
 function pararCarrusel(){ if(relojPortada){ clearInterval(relojPortada); relojPortada = null; } }
 function mostrarLamina(i){
   const cont = $("#carrusel"); if(!cont) return;
