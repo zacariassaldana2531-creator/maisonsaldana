@@ -172,7 +172,7 @@ Los dos están marcados con comentarios que lo explican.
 | Archivo | Qué es |
 |---|---|
 | `index.html` | Toda la página: textos, carta, horario, teléfonos |
-| `styles.css` | Los colores, las tipografías y la maquetación |
+| `styles.css` | Los colores (bloque `:root` del principio), tipografías y maquetación |
 | `main.js` | Los detalles que se mueven (cartelito de abierto, filtros de la carta) |
 | `lib/manifest.js` | El horario que usa el cartelito de "Abierto ahora" |
 | `lib/gsap.min.js`, `lib/ScrollTrigger.min.js` | Librerías de animación |
@@ -199,3 +199,35 @@ nueva y no la vieja guardada en su navegador:
 ```
 
 Pon la fecha del día (`?v=20261120`, por ejemplo).
+
+---
+
+## 9. Los colores
+
+La web es **negro cálido con brasa y dorado**. Todos los colores están en
+un solo sitio: el bloque `:root { ... }` al principio de `styles.css`. No
+hay ni un color suelto en el resto del archivo, así que cambiando ese
+bloque cambia la web entera.
+
+Dos reglas que conviene no romper:
+
+- **Nada de negro puro (`#000`) ni blanco puro (`#fff`).** El fondo es
+  `#100C0A` (negro con una gota de marrón) y el texto `#F4EDE1` (crema).
+  El negro y el blanco puros juntos vibran y cansan la vista al leer.
+- **El rojo es acento, no texto.** Va en botones, detalles y palabras
+  sueltas. Para textos pequeños en rojo se usa el tono claro
+  (`--brasa-2`), porque el rojo de relleno se queda justo en el límite de
+  lo legible a tamaños chicos.
+
+La sección de reseñas es la única clara. Está puesta a propósito a mitad
+de página: rompe el negro justo donde el ojo se cansa, y hace que las
+reseñas destaquen por contraste en vez de por tamaño.
+
+Se comprobó el contraste de los 22 textos de la web contra el fondo que
+tienen detrás: **todos pasan el mínimo de accesibilidad** (WCAG AA).
+
+### Si algún día quieres volver al fondo claro
+
+Está guardado en el historial: es el commit anterior a este. También se
+puede hacer a mano cambiando las seis primeras variables del bloque, pero
+lo limpio es recuperar la versión.
