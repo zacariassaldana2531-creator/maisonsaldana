@@ -1,0 +1,3 @@
+# Basura de Python al ejecutar tools/procesar_fotos.py
+__pycache__/
+*.pyc

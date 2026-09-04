@@ -18,6 +18,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
 
+<link rel="preload" as="image" href="assets/img/hero.webp" fetchpriority="high" />
+
 <script>document.documentElement.classList.add("js");</script>
 <link rel="stylesheet" href="styles.css?v=20260904" />
 </head>
@@ -69,6 +71,10 @@
 
 <!-- ============================ HERO ============================ -->
 <section class="hero" id="top">
+  <div class="hero-foto" aria-hidden="true">
+    <img src="assets/img/hero.webp" alt="" fetchpriority="high" decoding="async" />
+    <div class="hero-velo"></div>
+  </div>
   <div class="hero-plate" aria-hidden="true">
     <div class="hero-plate-glow"></div>
     <div class="hero-plate-ring"></div>
@@ -126,6 +132,11 @@
     <span class="ticker-item">Abierto desde las 7 a.m.</span><span class="ticker-dot"></span>
   </div>
 </div>
+
+<!-- ============================ BANDA ============================ -->
+<figure class="banda">
+  <img src="assets/img/casa.webp" alt="Pinchos de pollo dorándose sobre la parrilla al carbón" loading="lazy" decoding="async" />
+</figure>
 
 <!-- ============================ LA CASA ============================ -->
 <section class="casa" id="casa">
@@ -211,7 +222,7 @@
         </header>
         <ul class="platos">
           <li class="plato plato--destacado" data-reveal data-brasa>
-            <div class="plato-marco"><span class="plato-vacio" aria-hidden="true">Foto</span></div>
+            <div class="plato-marco"><img class="plato-foto" src="assets/img/pollo-horneado.webp" alt="Pollo entero recién salido del horno, con la piel dorada" loading="lazy" decoding="async" /></div>
             <div class="plato-texto">
               <h4 class="plato-nombre">Pollo horneado entero <span class="plato-sello">La casa</span></h4>
               <p class="plato-desc">El plato por el que la gente hace fila al mediodía. Piel dorada, jugoso por dentro.</p>
@@ -257,14 +268,15 @@
         </header>
         <ul class="platos">
           <li class="plato plato--destacado" data-reveal data-brasa>
-            <div class="plato-marco"><span class="plato-vacio" aria-hidden="true">Foto</span></div>
+            <div class="plato-marco"><img class="plato-foto" src="assets/img/pollo-frito.webp" alt="Presas de pollo frito crujiente servidas sobre tabla de madera" loading="lazy" decoding="async" /></div>
             <div class="plato-texto">
               <h4 class="plato-nombre">Pollo frito</h4>
               <p class="plato-desc">Crujiente, salado en su punto, del sartén a la funda.</p>
             </div>
             <span class="plato-precio"></span>
           </li>
-          <li class="plato" data-reveal data-brasa>
+          <li class="plato plato--destacado" data-reveal data-brasa>
+            <div class="plato-marco"><img class="plato-foto" src="assets/img/alitas.webp" alt="Alitas de pollo sazonadas dorándose en la rustidera" loading="lazy" decoding="async" /></div>
             <div class="plato-texto">
               <h4 class="plato-nombre">Alitas</h4>
               <p class="plato-desc">Por unidad o por orden, para picar o para acompañar.</p>
@@ -288,7 +300,8 @@
           <p class="cat-pie">Lo que nadie espera de un pica pollo, y aquí lleva años en la carta.</p>
         </header>
         <ul class="platos">
-          <li class="plato" data-reveal data-brasa>
+          <li class="plato plato--destacado" data-reveal data-brasa>
+            <div class="plato-marco"><img class="plato-foto" src="assets/img/salmon.webp" alt="Filete de salmón a la parrilla con salsa de cítricos" loading="lazy" decoding="async" /></div>
             <div class="plato-texto">
               <h4 class="plato-nombre">Salmón a la parrilla</h4>
               <p class="plato-desc">A la plancha, con su punto de limón.</p>
@@ -326,8 +339,7 @@
           <p class="cat-pie">Abrimos a las siete de la mañana. Hay gente que viene solo por esto.</p>
         </header>
         <ul class="platos">
-          <li class="plato plato--destacado" data-reveal data-brasa>
-            <div class="plato-marco"><span class="plato-vacio" aria-hidden="true">Foto</span></div>
+          <li class="plato" data-reveal data-brasa>
             <div class="plato-texto">
               <h4 class="plato-nombre">Mangú <span class="plato-sello">Desde las 7</span></h4>
               <p class="plato-desc">Plátano majado, como debe ser, desde temprano.</p>
@@ -562,7 +574,11 @@
       <a href="https://www.instagram.com/pollosthael_1/" target="_blank" rel="noopener">Instagram</a>
     </nav>
 
-    <p class="foot-legal">© <span data-anio>2026</span> Pollos Thael.</p>
+    <p class="foot-legal">
+      © <span data-anio>2026</span> Pollos Thael. ·
+      Fotografías bajo licencia Creative Commons vía Openverse.
+      <a class="foot-creditos" href="creditos.html">Créditos fotográficos →</a>
+    </p>
   </div>
 </footer>
 

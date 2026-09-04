@@ -374,6 +374,35 @@ h1, h2, h3, h4 {
     radial-gradient(120% 78% at 50% 0%, #FBF7EF 0%, var(--bg) 46%, var(--bg-2) 100%);
 }
 
+/* La foto de portada. No es el protagonista: va detrás de un velo crema
+   para que el titular se lea siempre, y aporta el calor del horno. */
+.hero-foto { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.hero-foto img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 46%;
+  /* El desenfoque es a propósito: convierte una foto que se amplía
+     mucho en profundidad de campo, y deja el titular como protagonista. */
+  filter: saturate(1.06) contrast(1.03) blur(3px);
+  transform: scale(1.06);
+}
+/* El velo: opaco justo detrás del texto, casi transparente en los bordes.
+   Así la foto se ve de verdad y el titular se sigue leyendo. */
+.hero-velo {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(58% 52% at 50% 50%,
+      rgba(246,241,231,.955) 0%,
+      rgba(246,241,231,.93)  46%,
+      rgba(246,241,231,.74)  74%,
+      rgba(246,241,231,.50) 100%),
+    linear-gradient(180deg,
+      rgba(246,241,231,.86) 0%,
+      rgba(246,241,231,.46) 24%,
+      rgba(246,241,231,.44) 60%,
+      rgba(246,241,231,.88) 88%,
+      var(--bg) 100%);
+}
+
 /* El "plato": halo de brasa detrás del titular. Es el sello visual. */
 .hero-plate {
   position: absolute; top: 50%; left: 50%;
@@ -383,6 +412,7 @@ h1, h2, h3, h4 {
 }
 .hero-plate-glow {
   position: absolute; inset: 12%;
+  opacity: .55;
   border-radius: 50%;
   background:
     radial-gradient(circle at 50% 45%, rgba(201, 146, 47, .30) 0%, rgba(198, 59, 18, .17) 38%, transparent 68%);
@@ -499,6 +529,25 @@ h1, h2, h3, h4 {
   to   { transform: translateX(-50%); }
 }
 
+/* ---------- Banda ancha de foto ---------- */
+.banda {
+  position: relative;
+  margin: 0;
+  height: clamp(180px, 30vw, 380px);
+  overflow: hidden;
+  background: var(--bg-3);
+}
+.banda img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 58%;
+  transform: scale(1.02);
+}
+.banda::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(23,20,15,.14) 0%, transparent 26%, transparent 72%, rgba(23,20,15,.18) 100%);
+}
+
 /* ---------- La casa ---------- */
 .casa { padding: clamp(4.5rem, 11vw, 8.5rem) 0; }
 .casa-head { max-width: 22ch; }
@@ -609,6 +658,7 @@ h1, h2, h3, h4 {
 
 .plato-marco {
   grid-column: 1 / -1;
+  position: relative;
   aspect-ratio: 16 / 9;
   display: grid; place-items: center;
   background:
@@ -622,7 +672,7 @@ h1, h2, h3, h4 {
   color: rgba(23, 20, 15, .28);
 }
 .plato-foto {
-  width: 100%; height: 100%; object-fit: cover;
+  width: 100%; height: 100%; object-fit: cover; object-position: center 52%;
   transition: transform .8s var(--ease-out), filter .8s var(--ease-out);
 }
 .plato:hover .plato-foto { transform: scale(1.05); filter: saturate(1.12); }
@@ -824,7 +874,32 @@ h1, h2, h3, h4 {
 }
 .foot-links a:hover { color: var(--brasa); }
 
-.foot-legal { font-size: .76rem; color: var(--ink-mute); }
+.foot-legal { font-size: .76rem; color: var(--ink-mute); line-height: 1.7; }
+.foot-creditos { color: var(--ink-soft); border-bottom: 1px solid var(--linea); }
+.foot-creditos:hover { color: var(--brasa); border-color: var(--brasa); }
+
+/* ---------- Página de créditos fotográficos ---------- */
+.creditos { padding: clamp(5rem, 12vw, 8rem) 0 4rem; }
+.creditos-intro { margin-top: 1.4rem; color: var(--ink-mute); max-width: 62ch; }
+.creditos-lista { margin-top: 3rem; border-top: 1px solid var(--linea); }
+.credito {
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--linea-2);
+  display: grid; gap: 1.2rem;
+}
+.credito-mini {
+  width: 104px; height: 78px; border-radius: 10px;
+  object-fit: cover; background: var(--bg-2);
+}
+.credito-titulo { font-size: 1rem; font-weight: 600; }
+.credito-meta { font-size: .86rem; color: var(--ink-mute); margin-top: .3rem; }
+.credito-meta a { color: var(--brasa); }
+.credito-meta a:hover { text-decoration: underline; }
+.volver {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-size: .87rem; font-weight: 600; color: var(--ink-soft);
+}
+.volver:hover { color: var(--brasa); }
 
 /* =============================================================
    7. EFECTOS
@@ -848,6 +923,7 @@ html:not(.js) [data-reveal] { opacity: 1; transform: none; }
 }
 
 @media (min-width: 720px) {
+  .credito { grid-template-columns: 104px 1fr; align-items: center; }
   .hero-sep { display: block; }
   .hero-scroll { display: grid; }
   .pilares { grid-template-columns: repeat(3, 1fr); gap: 2.6rem; }

@@ -1,7 +1,7 @@
 # Pollos Thael — la web
 
-Una sola página, sin programas raros ni cuotas mensuales. Son cuatro
-archivos que se copian a un hosting y ya funciona.
+Una sola página, sin programas raros ni cuotas mensuales. Se copian los
+archivos a un hosting y ya funciona.
 
 Para verla ahora mismo: abre `index.html` con doble clic. Funciona igual
 desde el escritorio que desde internet.
@@ -52,27 +52,72 @@ entero y cambia el nombre y la descripción.
 
 ## 3. Las fotos
 
-Ahora mismo, donde va una foto hay un recuadro que dice FOTO. La web se ve
-bien igual, pero con fotos reales de tu pollo se ve mucho mejor.
+**Léelo entero, es lo más importante de este archivo.**
 
-Cuando las tengas:
+Las fotos que tiene ahora la web **no son de Pollos Thael**. Son
+fotografías de archivo con licencia Creative Commons, buscadas en
+Openverse, elegidas a mano entre unas sesenta y retocadas todas con el
+mismo tono cálido para que parezcan un solo reportaje.
 
-1. Guarda cada foto en la carpeta `assets/img/` con nombre sencillo y en
-   formato **.webp** (por ejemplo `pollo-horneado.webp`).
-2. En `index.html`, busca la línea del recuadro de ese plato:
+Están ahí para que la web no se vea vacía mientras se hacen las fotos de
+verdad. No son el pollo de la casa, y por eso:
 
-   ```html
-   <div class="plato-marco"><span class="plato-vacio" aria-hidden="true">Foto</span></div>
+- La página `creditos.html` lo dice con todas las letras y da el autor y
+  la licencia de cada una. **Ese enlace del pie no se puede quitar**: las
+  licencias CC BY y CC BY-SA obligan a dar crédito.
+- En cuanto haya fotos reales, se sustituyen y esa página desaparece.
+
+### Cómo poner fotos reales (lo mejor que le puedes hacer a esta web)
+
+1. Haz las fotos con el móvil, **de día y cerca de una ventana o de la
+   puerta**. Nada de flash: la luz del flash aplana la comida y le quita
+   el brillo. Un pollo recién sacado del horno, con vapor, junto a una
+   ventana, gana a cualquier foto de archivo.
+2. Guárdalas en `assets/photos/source/` con estos nombres exactos, en
+   `.jpg`:
+
+   | Nombre del archivo | Qué foto va ahí |
+   |---|---|
+   | `hero.jpg` | El fondo de la portada — la rustidera llena, un plano abierto |
+   | `casa.jpg` | La banda ancha — el horno, la parrilla, las manos trabajando |
+   | `pollo-horneado.jpg` | Un pollo entero horneado |
+   | `pollo-frito.jpg` | Las presas de pollo frito |
+   | `alitas.jpg` | Las alitas |
+   | `salmon.jpg` | El salmón |
+
+3. Ejecuta una vez:
+
+   ```
+   python3 tools/procesar_fotos.py
    ```
 
-3. Cámbiala por esta, poniendo el nombre de tu archivo:
+   Recorta, corrige el color, comprime a `.webp` y las deja en
+   `assets/img/`. La web las coge sola: no hay que tocar el HTML.
 
-   ```html
-   <div class="plato-marco"><img class="plato-foto" src="assets/img/pollo-horneado.webp" alt="Pollo horneado" loading="lazy" decoding="async" /></div>
-   ```
+4. Borra la línea de los créditos del pie de `index.html` y el archivo
+   `creditos.html`, que ya no hacen falta.
 
-Solo tres platos llevan foto grande de momento (pollo horneado entero,
-pollo frito y mangú). Se le puede poner foto a cualquiera igual.
+Si alguna foto queda mal encuadrada, en `tools/procesar_fotos.py` hay una
+tabla al principio con el recorte de cada una, y comentarios que explican
+qué significa cada número.
+
+### Añadir fotos a otros platos
+
+Busca la línea del plato en `index.html` y cámbiala así:
+
+```html
+<li class="plato plato--destacado" data-reveal data-brasa>
+  <div class="plato-marco"><img class="plato-foto" src="assets/img/tostones.webp" alt="Tostones recién fritos" loading="lazy" decoding="async" /></div>
+  <div class="plato-texto">
+  ...
+```
+
+Lo que cambia respecto a un plato normal es `plato--destacado` en la
+primera línea y el bloque `plato-marco` con la foto.
+
+El mangú se quedó sin foto a propósito: no encontré ninguna de archivo que
+fuera mangú de verdad (las que hay son mofongo, que es otra cosa), y
+prefiero dejarlo sin foto antes que poner un plato que no es.
 
 ---
 
@@ -131,7 +176,10 @@ Los dos están marcados con comentarios que lo explican.
 | `main.js` | Los detalles que se mueven (cartelito de abierto, filtros de la carta) |
 | `lib/manifest.js` | El horario que usa el cartelito de "Abierto ahora" |
 | `lib/gsap.min.js`, `lib/ScrollTrigger.min.js` | Librerías de animación |
-| `assets/img/` | Aquí van las fotos |
+| `creditos.html` | Autoría de las fotos de archivo (obligatorio mientras se usen) |
+| `assets/img/` | Las fotos ya listas para la web |
+| `assets/photos/source/` | Las fotos originales, antes de procesar |
+| `tools/` | Solo de trabajo: no hace falta subirlo al hosting |
 | `.htaccess` | Le dice al hosting que no guarde versiones viejas en caché |
 
 ---
