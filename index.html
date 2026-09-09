@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Maison Saldana — Collection d'Inspirations</title>
-<meta name="description" content="Maison Saldana. Collection d'Inspirations. Eaux de parfum inspiradas en las grandes fragancias, en un mismo frasco de autor.">
+<title>Inspiraciones de perfumes en Santo Domingo | Maison Saldana</title>
+<meta name="description" content="337 perfumes inspirados en las grandes fragancias del mundo, en un mismo frasco de autor. Eau de parfum de 50 ml desde RD$ 1,000, con entrega en Santo Domingo.">
 <meta name="theme-color" content="#0F0D0B">
 <link rel="canonical" href="https://maisonsaldana.vercel.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Maison Saldana">
 <meta property="og:locale" content="es_DO">
-<meta property="og:title" content="Maison Saldana — Collection d'Inspirations">
-<meta property="og:description" content="Eaux de parfum inspiradas en las grandes fragancias del mundo. Un solo frasco de autor. Santo Domingo, República Dominicana.">
+<meta property="og:title" content="Inspiraciones de perfumes en Santo Domingo | Maison Saldana">
+<meta property="og:description" content="337 perfumes inspirados en las grandes fragancias del mundo, en un mismo frasco de autor. Eau de parfum de 50 ml desde RD$ 1,000, con entrega en Santo Domingo.">
 <meta property="og:url" content="https://maisonsaldana.vercel.app/">
 <meta property="og:image" content="https://maisonsaldana.vercel.app/originales/portada-4.webp">
 <meta property="og:image:width" content="1500">
 <meta property="og:image:height" content="843">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Maison Saldana — Collection d'Inspirations">
-<meta name="twitter:description" content="Eaux de parfum inspiradas en las grandes fragancias del mundo.">
+<meta name="twitter:title" content="Inspiraciones de perfumes en Santo Domingo | Maison Saldana">
+<meta name="twitter:description" content="337 perfumes inspirados en las grandes fragancias del mundo, en un mismo frasco de autor. Eau de parfum de 50 ml desde RD$ 1,000, con entrega en Santo Domingo.">
 <meta name="twitter:image" content="https://maisonsaldana.vercel.app/originales/portada-4.webp">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-{"@type":"Organization","@id":"https://maisonsaldana.vercel.app/#organizacion","name":"Maison Saldana","url":"https://maisonsaldana.vercel.app/","logo":"https://maisonsaldana.vercel.app/originales/frasco-maison-saldana.webp","slogan":"Collection d'Inspirations","areaServed":"DO","address":{"@type":"PostalAddress","addressLocality":"Santo Domingo","addressCountry":"DO"},"contactPoint":{"@type":"ContactPoint","contactType":"sales","telephone":"+1-809-439-4509","availableLanguage":"Spanish"}},
+{"@type":"Organization","@id":"https://maisonsaldana.vercel.app/#organizacion","name":"Maison Saldana","url":"https://maisonsaldana.vercel.app/","logo":"https://maisonsaldana.vercel.app/originales/frasco-maison-saldana.webp","slogan":"Collection d'Inspirations","alternateName":"Maison Saldana Perfumes","description":"Casa de perfumer\u00eda independiente de Santo Domingo. 337 perfumes inspirados en las grandes fragancias del mundo, presentados en un mismo frasco de autor. Eau de parfum de 50 ml.","areaServed":"DO","address":{"@type":"PostalAddress","addressLocality":"Santo Domingo","addressCountry":"DO"},"contactPoint":{"@type":"ContactPoint","contactType":"sales","telephone":"+1-809-439-4509","availableLanguage":"Spanish"}},
 {"@type":"WebSite","@id":"https://maisonsaldana.vercel.app/#sitio","url":"https://maisonsaldana.vercel.app/","name":"Maison Saldana","inLanguage":"es","publisher":{"@id":"https://maisonsaldana.vercel.app/#organizacion"}}
 ]}
 </script>
@@ -1018,6 +1018,43 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   width:17px; height:17px; flex:none; fill:none; stroke:currentColor;
   stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round;
 }
+/* ============================================================
+   BLOQUE DE ARRANQUE
+   ------------------------------------------------------------
+   Lo único que hay dentro de #contenido en el HTML que se
+   descarga. El enrutador lo sustituye por la tienda de verdad
+   en cuanto corre el script, que va al final del body: pasa
+   antes del primer pintado, así que nadie llega a verlo.
+
+   Existe por dos motivos. El primero, que quien entre con
+   JavaScript apagado encuentre algo que leer y por dónde
+   seguir. El segundo, que Google, en su primera pasada —la que
+   no ejecuta scripts— vea de qué va esta casa: antes de esto
+   sólo encontraba 141 palabras y ningún encabezado.
+
+   Dice lo mismo que la tienda dice después. Si algún día
+   cambia el discurso de la casa, cambia también aquí.
+   ============================================================ */
+.ms-arranque{
+  background:var(--noche); color:#D9D0C1;
+  padding:clamp(56px,9vw,120px) var(--gutter);
+  text-align:center;
+}
+.ms-arranque h1{
+  font-family:var(--display); font-weight:400; color:#F6F1E9;
+  font-size:clamp(28px,4.6vw,46px); line-height:1.12; margin:0 auto 26px;
+  max-width:18ch;
+}
+.ms-arranque p{
+  max-width:56ch; margin:0 auto 20px; line-height:1.9;
+  font-size:clamp(14.5px,1.6vw,17px);
+}
+.ms-arranque ul{list-style:none; padding:0; margin:38px 0 0; display:flex; flex-wrap:wrap; gap:14px 26px; justify-content:center}
+.ms-arranque a{
+  color:var(--oro-claro); font-size:11px; letter-spacing:.24em;
+  text-transform:uppercase; border-bottom:1px solid rgba(228,210,166,.35);
+  padding-bottom:3px;
+}
 </style>
 </head>
 <body>
@@ -1066,7 +1103,39 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   <ul id="navMovil"></ul>
 </nav>
 
-<main id="contenido" tabindex="-1"></main>
+<main id="contenido" tabindex="-1">
+  <!-- Lo sustituye el enrutador antes del primer pintado. Está aquí para
+       quien entre sin JavaScript y para la primera pasada de Google, que
+       no ejecuta scripts. Debe decir lo mismo que dice la tienda. -->
+  <section class="ms-arranque">
+    <h1>Inspiraciones de perfumes en Santo Domingo</h1>
+    <p>
+      Maison Saldana es una casa de perfumer&iacute;a independiente fundada en Santo Domingo,
+      Rep&uacute;blica Dominicana. Re&uacute;ne <strong>337 perfumes inspirados</strong> en las grandes
+      fragancias del mundo y los presenta en un mismo frasco de autor:
+      eau de parfum de 50&nbsp;ml, desde RD$&nbsp;1,000.
+    </p>
+    <p>
+      Hay 141 fragancias para hombre, 130 para mujer y 66 unisex, repartidas en doce
+      familias olfativas &mdash; floral, amaderada, gourmand, &aacute;mbar, c&iacute;trica, oud y seis m&aacute;s &mdash;
+      con lecturas propias de 84 casas de perfumer&iacute;a.
+    </p>
+    <p>
+      Cada fragancia declara abiertamente en qu&eacute; se inspira, porque no pretendemos ser
+      otra casa: pretendemos que puedas llevar lo que te gusta todos los d&iacute;as. El pedido
+      se cierra por WhatsApp y se entrega en Santo Domingo.
+    </p>
+    <ul>
+      <li><a href="/coleccion">Ver las 337 fragancias</a></li>
+      <li><a href="/coleccion?genero=Hombre">Perfumes inspirados para hombre</a></li>
+      <li><a href="/coleccion?genero=Mujer">Perfumes inspirados para mujer</a></li>
+      <li><a href="/coleccion?genero=Unisex">Perfumes unisex</a></li>
+      <li><a href="/inspiraciones">Inspiraciones de perfumes</a></li>
+      <li><a href="/notas">Buscar por nota olfativa</a></li>
+      <li><a href="/casa">La casa</a></li>
+    </ul>
+  </section>
+</main>
 
 <footer class="ms-pie">
   <div class="ms-contenedor">
@@ -2421,8 +2490,8 @@ function enrutar(){
   const {partes, params} = leerRuta();
   const raiz = partes[0] || "";
   const app = $("#contenido");
-  let html = "", titulo = "Maison Saldana — Collection d'Inspirations", prodLd = null;
-  let descripcion = "Eaux de parfum inspiradas en las grandes fragancias del mundo, en un mismo frasco de autor. Santo Domingo, República Dominicana.";
+  let html = "", titulo = "Inspiraciones de perfumes en Santo Domingo | Maison Saldana", prodLd = null;
+  let descripcion = "337 perfumes inspirados en las grandes fragancias del mundo, en un mismo frasco de autor. Eau de parfum de 50 ml desde RD$ 1,000, con entrega en Santo Domingo.";
 
   if(raiz === ""){
     html = vistaInicio();
@@ -2433,12 +2502,18 @@ function enrutar(){
                       ocasion: o?[o]:[], precioMax:null};
     estado.limite = 24;
     let t = "Collection d'Inspirations",
-        s = "Todas las fragancias de la casa, presentadas junto al perfume que las inspira.";
+        s = "Las 337 fragancias de la casa, cada una presentada junto al perfume que la inspira. Eau de parfum de 50 ml desde RD$ 1,000.";
     if(g){ t = g; s = `Fragancias Maison Saldana para ${g.toLowerCase()}.`; }
     if(f){ t = f; s = `Fragancias de familia ${f.toLowerCase()}.`; }
     if(m){ t = m; s = `Nuestra lectura de las fragancias de ${m}.`; }
     if(o){ t = o; s = TEXTOS_OCASION[o] || `Fragancias ${o.toLowerCase()}.`; }
-    html = vistaColeccion(t, s); titulo = t + " — Maison Saldana"; descripcion = s;
+    html = vistaColeccion(t, s);
+    /* Los títulos llevan por delante lo que la gente teclea. "Colección"
+       a secas no lo busca nadie; "perfumes inspirados", sí. */
+    titulo = (g || f || m || o)
+      ? `Perfumes inspirados · ${t} — Maison Saldana`
+      : "Perfumes inspirados: las 337 fragancias — Maison Saldana";
+    descripcion = s;
   } else if(raiz === "perfume"){
     const p = PRODUCTOS.find(x=>x.slug===partes[1]);
     html = vistaProducto(partes[1]);
@@ -2452,14 +2527,15 @@ function enrutar(){
       descripcion = "Esta fragancia no existe o cambió de dirección. Explora la colección completa.";
     }
   } else if(raiz === "inspiraciones"){
-    html = vistaInspiraciones(); titulo = "Inspiraciones — Maison Saldana";
-    descripcion = "Las casas de perfumería que admiramos y nuestra lectura de sus fragancias.";
+    html = vistaInspiraciones();
+    titulo = "Inspiraciones de perfumes: las 84 casas que reinterpretamos — Maison Saldana";
+    descripcion = "Las casas de perfumería que admiramos y nuestra lectura de sus fragancias. 337 perfumes inspirados, en un mismo frasco de autor, en Santo Domingo.";
   } else if(raiz === "notas"){
-    html = vistaNotas(); titulo = "Notas olfativas — Maison Saldana";
-    descripcion = "Explora la colección por familia olfativa: floral, amaderado, gourmand, ámbar y más.";
+    html = vistaNotas(); titulo = "Perfumes por nota olfativa — Maison Saldana";
+    descripcion = "Busca tu perfume por familia olfativa: floral, amaderado, gourmand, ámbar, cítrico, oud y ocho más. 337 fragancias en Santo Domingo.";
   } else if(raiz === "casa"){
-    html = vistaCasa(); titulo = "La casa — Maison Saldana";
-    descripcion = "Casa de perfumería independiente fundada en Santo Domingo. Un solo frasco de autor, 337 lecturas.";
+    html = vistaCasa(); titulo = "La casa — Maison Saldana, perfumería en Santo Domingo";
+    descripcion = "Casa de perfumería independiente fundada en Santo Domingo. Un solo frasco de autor y 337 perfumes inspirados en las grandes fragancias del mundo.";
   } else {
     html = vistaNoEncontrado(); titulo = "Página no encontrada — Maison Saldana";
   }
