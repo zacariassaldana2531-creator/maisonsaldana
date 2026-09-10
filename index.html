@@ -702,6 +702,12 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 .ms-resultado .ms-mini .ms-mini-orig{height:56%; max-width:38%; mix-blend-mode:multiply}
 .ms-resultado h4{font-size:18px}
 .ms-resultado small{font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--tinta-suave)}
+.ms-busca-nota{padding:18px 0 6px; font-size:13px; color:var(--tinta-suave)}
+.ms-busca-agotado{
+  font-family:var(--texto); font-size:9px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--tinta-suave); border:1px solid var(--linea); padding:2px 6px; vertical-align:middle;
+  margin-left:6px; white-space:nowrap;
+}
 .ms-sugerencias{max-width:var(--ancho); margin:10px auto 0; display:flex; flex-wrap:wrap; gap:8px}
 
 /* ====================== PIE ============================== */
@@ -1195,7 +1201,7 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 <!-- Buscador -->
 <div class="ms-buscador" id="buscador" data-abierto="false" role="search">
   <div class="ms-buscador-fila">
-    <input id="campoBusqueda" type="search" placeholder="Buscar fragancia, marca o nota" aria-label="Buscar" autocomplete="off">
+    <input id="campoBusqueda" type="search" placeholder="Busca por nombre, marca, nota o código" aria-label="Buscar" autocomplete="off">
     <button class="ms-icono" data-accion="cerrar-buscar" aria-label="Cerrar búsqueda">
       <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
     </button>
@@ -1991,15 +1997,141 @@ function filtrar(){
   return lista;
 }
 
-/* ---------- búsqueda -------------------------------------------- */
-function buscar(q){
-  const t = q.trim().toLowerCase();
-  if(t.length < 2) return [];
-  return PRODUCTOS.filter(p => [
-    p.nombre, p.inspiradoEn, p.marcaInspiracion, p.familiaOlfativa, p.genero,
-    ...p.notasSalida, ...p.notasCorazon, ...p.notasFondo
-  ].join(" ").toLowerCase().includes(t));
+/* ---------- búsqueda --------------------------------------------
+   La gente no busca como está escrito el catálogo. Busca en desorden
+   ("elixir yara"), sin tildes ("ambar", "jazmin", "limon" — el
+   teclado del teléfono no las pone solo), y mezclando cosas que
+   viven en campos distintos ("perfume dulce de mujer").
+
+   Así que la frase se parte en palabras, se comparan una por una sin
+   tildes contra cada ficha, y el resultado se ordena por lo cerca que
+   quedó: primero las fichas donde aparecen TODAS las palabras; si no
+   hay ninguna así, las que tienen alguna, porque enseñar algo
+   parecido siempre vale más que un "sin coincidencias". */
+
+/* Palabras que no distinguen una ficha de otra. Aquí dentro todo es
+   un perfume, así que "perfume" no dice nada y solo estorba. */
+const PALABRAS_VACIAS = new Set([
+  "de","del","la","el","los","las","un","una","uno","unos","unas","al","lo",
+  "y","o","en","con","por","para","que","se","su","sus","mi","mis","me","te",
+  "es","son","ser","sea","hay","muy","mas","como","pero","este","esta","esto",
+  "ese","esa","eso","algo","alguna","algun","alguno","otro","otra",
+  "quiero","busco","tengo","dame","tienen","tiene","ver","dar",
+  "perfume","perfumes","fragancia","fragancias","colonia","colonias",
+  "aroma","aromas","olor","olores","esencia","locion","frasco","frascos"
+]);
+
+function sinTildes(t){
+  return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
+
+/* Las palabras con las que vale la pena buscar. Se dejan pasar las de
+   dos letras porque los códigos de la casa son así: E1, E6, EM27. */
+function palabrasDe(frase){
+  return sinTildes(frase)
+    .split(/[^a-z0-9ñ]+/)
+    .filter(w => w.length >= 2 && !PALABRAS_VACIAS.has(w));
+}
+
+/* Cada ficha, partida en campos y ya sin tildes, con el peso de cada
+   uno: el nombre pesa más que una nota de fondo. Se calcula una sola
+   vez por producto y se guarda en la propia ficha. */
+function camposDe(p){
+  if(p._campos) return p._campos;
+  p._campos = [
+    [10, sinTildes(p.nombre)],
+    [ 9, sinTildes(p.inspiradoEn)],
+    [ 7, sinTildes(p.marcaInspiracion)],
+    [ 7, sinTildes(p.codigo)],
+    [ 4, sinTildes([p.familiaOlfativa, p.genero, p.concentracion,
+                    p.tamano, ...ocasionesDe(p)].join(" "))],
+    [ 3, sinTildes([...p.notasSalida, ...p.notasCorazon, ...p.notasFondo].join(" "))],
+    [ 1, sinTildes(p.descripcion)]
+  ];
+  return p._campos;
+}
+
+/* Una palabra lista para buscar. Las expresiones se arman una sola
+   vez por palabra y no una vez por ficha: son 343 fichas y esto corre
+   con cada tecla que el cliente escribe. */
+function prepararPalabra(w){
+  return {
+    w,
+    entera:  new RegExp("(^|[^a-z0-9ñ])" + w + "([^a-z0-9ñ]|$)"),
+    empieza: new RegExp("(^|[^a-z0-9ñ])" + w)
+  };
+}
+
+/* Cuánto vale una palabra en una ficha: entera vale todo el peso del
+   campo, al principio de otra palabra un poco menos, y suelta en
+   medio ("ambar" dentro de "ambarina") lo mínimo. */
+function puntosDe(campos, pal){
+  let mejor = 0;
+  for(const [peso, texto] of campos){
+    if(!texto.includes(pal.w)) continue;
+    mejor = Math.max(mejor, peso * (pal.entera.test(texto) ? 1 : pal.empieza.test(texto) ? 0.7 : 0.4));
+  }
+  return mejor;
+}
+
+/* Devuelve la lista y además si fue un acierto de verdad (todas las
+   palabras) o solo lo más parecido, para poder decirlo en pantalla. */
+function buscarDetalle(q){
+  const palabras = palabrasDe(q);
+  if(!palabras.length) return { lista: [], exacta: true, palabras };
+
+  const frase = sinTildes(q).trim();
+  const preparadas = palabras.map(prepararPalabra);
+  const marcados = PRODUCTOS.map(p => {
+    const campos = camposDe(p);
+    let puntos = 0, aciertos = 0;
+    for(const pal of preparadas){
+      const n = puntosDe(campos, pal);
+      if(n){ aciertos++; puntos += n; }
+    }
+    /* Escribió el nombre completo: eso manda sobre cualquier suma. */
+    if(campos[0][1] === frase || campos[1][1] === frase) puntos += 40;
+    return { p, puntos, aciertos };
+  });
+
+  const ordenar = xs => xs.sort((a, b) =>
+      b.aciertos - a.aciertos ||
+      b.puntos   - a.puntos ||
+      (a.p.disponible ? 0 : 1) - (b.p.disponible ? 0 : 1) ||
+      (b.p.destacado ? 1 : 0) - (a.p.destacado ? 1 : 0) ||
+      a.p.nombre.localeCompare(b.p.nombre, "es"))
+    .map(x => x.p);
+
+  const todas = marcados.filter(x => x.aciertos === palabras.length);
+  if(todas.length) return { lista: ordenar(todas), exacta: true, palabras };
+
+  const algunas = marcados.filter(x => x.aciertos > 0);
+  if(algunas.length) return { lista: ordenar(algunas), exacta: false, palabras };
+
+  /* Último intento antes de rendirse: en español la misma idea cambia
+     de terminación según quién la escriba —"regalo" y "regalar",
+     "florales" y "floral", "especiada" y "especiado"—. Se recorta cada
+     palabra larga a su raíz y se vuelve a mirar. */
+  const raices = palabras.filter(w => w.length > 5)
+                         .map(w => prepararPalabra(w.slice(0, 5)));
+  if(!raices.length) return { lista: [], exacta: true, palabras };
+
+  const porRaiz = PRODUCTOS.map(p => {
+    const campos = camposDe(p);
+    let puntos = 0, aciertos = 0;
+    for(const raiz of raices){
+      const n = puntosDe(campos, raiz);
+      if(n){ aciertos++; puntos += n; }
+    }
+    return { p, puntos, aciertos };
+  }).filter(x => x.aciertos > 0);
+
+  return porRaiz.length
+    ? { lista: ordenar(porRaiz), exacta: false, palabras }
+    : { lista: [], exacta: true, palabras };
+}
+
+function buscar(q){ return buscarDetalle(q).lista; }
 
 /* ================================================================
    VISTAS
@@ -2803,21 +2935,35 @@ function brindis(msg){
 }
 
 /* ---------- buscador -------------------------------------------- */
+const TOPE_BUSQUEDA = 12;
+
 function pintarBusqueda(q){
-  const res = buscar(q), cont = $("#resultados");
-  if(q.trim().length < 2){ cont.innerHTML = ""; return; }
-  if(!res.length){
-    cont.innerHTML = `<p style="padding:30px 0;color:var(--tinta-suave)">Sin coincidencias para “${esc(q)}”. Prueba con una marca, una nota o una familia olfativa.</p>`;
+  const cont = $("#resultados");
+  const { lista, exacta } = buscarDetalle(q);
+
+  if(!palabrasDe(q).length){ cont.innerHTML = ""; return; }
+
+  if(!lista.length){
+    cont.innerHTML = `<p class="ms-busca-nota">Sin coincidencias para “${esc(q)}”.
+      Prueba con una marca (Dior), una nota (vainilla), una familia (gourmand) o un código (EM137).</p>`;
     return;
   }
-  cont.innerHTML = res.slice(0,10).map(p=>`
+
+  /* Si no apareció lo que pidió, se dice; no se le hace creer que sí. */
+  const aviso = exacta
+    ? (lista.length > TOPE_BUSQUEDA
+        ? `<p class="ms-busca-nota">${lista.length} fragancias. Se muestran las ${TOPE_BUSQUEDA} más cercanas.</p>`
+        : "")
+    : `<p class="ms-busca-nota">Nada con todas esas palabras. Esto es lo más parecido:</p>`;
+
+  cont.innerHTML = aviso + lista.slice(0, TOPE_BUSQUEDA).map(p=>`
     <a class="ms-resultado" href="/perfume/${esc(p.slug)}" data-accion="ir">
       <div class="ms-mini">
         <img src="${frascoDe(p)}" alt="" loading="lazy">
         ${rutaOriginal(p) ? `<img class="ms-mini-orig" src="${esc(rutaOriginal(p))}" alt="" loading="lazy">` : ""}
       </div>
       <div>
-        <h4>${esc(p.nombre)}</h4>
+        <h4>${esc(p.nombre)}${p.disponible ? "" : ` <span class="ms-busca-agotado">Agotado</span>`}</h4>
         <small>Inspirado en ${esc(p.inspiradoEn)} · ${esc(p.marcaInspiracion)} · ${esc(p.familiaOlfativa)}</small>
       </div>
       <span class="ms-precio">${dinero(p.precio)}</span>
@@ -3294,31 +3440,12 @@ function pintarChips(lista){
 /* ---------- cuando el servidor no contesta ----------------------
    No se deja al cliente hablando solo: se busca en el catálogo
    con lo último que escribió y se le abre la puerta de WhatsApp. */
-/* El buscador de la tienda exige que la frase entera aparezca en la
-   ficha, y en un chat nadie escribe "vainilla": escribe "algo con
-   vainilla y ámbar". Aquí se parte la frase y se puntúa palabra por
-   palabra, ignorando tildes y palabras de relleno. */
-const PALABRAS_VACIAS = new Set(["algo","con","para","que","una","uno","este","esta","del","los","las","por","como","pero","quiero","busco","tengo","hay","muy","mas","sea","alguna","algun","dame","tienen","tiene"]);
-function sinTildes(t){ return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
-
+/* En un chat nadie escribe "vainilla": escribe "algo con vainilla y
+   ámbar". Es el mismo problema que resuelve el buscador de la tienda,
+   así que se usa el mismo motor y aquí solo se recortan las tres
+   mejores que se puedan vender hoy. */
 function buscarSuelto(frase){
-  const palabras = sinTildes(String(frase || ""))
-    .split(/[^a-z0-9ñ]+/)
-    .filter(w => w.length > 2 && !PALABRAS_VACIAS.has(w));
-  if(!palabras.length) return [];
-  return PRODUCTOS
-    .filter(p => p.disponible)
-    .map(p => {
-      const heno = sinTildes([
-        p.nombre, p.inspiradoEn, p.marcaInspiracion, p.familiaOlfativa, p.genero,
-        ...p.notasSalida, ...p.notasCorazon, ...p.notasFondo
-      ].join(" "));
-      return { p, puntos: palabras.reduce((n, w) => n + (heno.includes(w) ? 1 : 0), 0) };
-    })
-    .filter(x => x.puntos > 0)
-    .sort((a, b) => b.puntos - a.puntos)
-    .slice(0, 3)
-    .map(x => x.p);
+  return buscar(frase).filter(p => p.disponible).slice(0, 3);
 }
 
 function respaldo(aviso, pista){
