@@ -34,13 +34,15 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316130F'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%23C9A84C' text-anchor='middle'%3EMS%3C/text%3E%3C/svg%3E">
 
 <script>
-/* se aplica antes del primer pintado para evitar el destello blanco */
+/* se aplica antes del primer pintado para evitar el destello blanco.
+   La casa se ve de noche: quien llega por primera vez entra en oscuro,
+   venga del sistema que venga. Si cambia al claro con el bot\u00f3n, esa
+   decisi\u00f3n suya manda y se recuerda en las siguientes visitas. */
 (function(){
   try{
     var g = localStorage.getItem("ms-tema");
-    if(!g) g = matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro";
-    document.documentElement.dataset.tema = g;
-  }catch(e){ document.documentElement.dataset.tema = "claro"; }
+    document.documentElement.dataset.tema = g || "oscuro";
+  }catch(e){ document.documentElement.dataset.tema = "oscuro"; }
 })();
 </script>
 <style>
