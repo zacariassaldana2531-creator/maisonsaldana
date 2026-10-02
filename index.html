@@ -1294,24 +1294,32 @@ const CASA = {
    Todo el carrito se cobra según CUÁNTOS frascos lleve en total, sin
    importar cuáles sean: así también se premia a quien mezcla.
 
-   Hay dos precios de mayorista, uno por cada escalón de volumen, y
-   entre el frasco 1 y el 12 se llega al primero por una rampa. La
-   rampa se aplica sobre la distancia entre el precio de lista y los
-   750, así cada fragancia baja a su propio ritmo pero todas terminan
-   igual:
+   Hay tres escalones de mayorista, y cada uno es un precio plano: a
+   partir de ese número de frascos todas las fragancias valen igual,
+   sea la más barata o la más cara.
 
-     de 1,400 → 1,257 · 1,127 · 1,049 …  hasta 750, y 700 desde 20
-     de 1,100 → 1,023 ·   953 ·   911 …  hasta 750, y 700 desde 20   */
+     6 a 11 frascos  →  850 el frasco
+     12 a 19         →  750
+     20 en adelante  →  700
+
+   Del frasco 1 al 6 se llega al primer escalón por una rampa, que se
+   aplica sobre la distancia entre el precio de lista y los 850: así
+   cada fragancia baja a su propio ritmo pero todas aterrizan juntas.
+
+     de 1,400 → 1,235 · 1,103 · 1,004 · 922 · 850
+     de 1,100 →   975 ·   965 ·   920 · 883 · 850                 */
+const TOPE_SEIS   = 6;      // a partir de aquí, el primer escalón
 const TOPE_DOCENA = 12;     // a partir de aquí, precio de docena
 const TOPE_VEINTE = 20;     // a partir de aquí, el precio más bajo
+const PRECIO_SEIS   = 850;  // precio del frasco de 6 a 11
 const PRECIO_DOCENA = 750;  // precio del frasco de 12 a 19
 const PRECIO_VEINTE = 700;  // precio del frasco de 20 en adelante
 
-/* Factor según cuántos frascos lleve el carrito.
-   1 = precio de lista, 0 = PRECIO_DOCENA.
-   El índice es la cantidad: RAMPA[0] es para 1 frasco, RAMPA[11]
-   para 12, donde la rampa ya ha aterrizado.                    */
-const RAMPA = [1, 0.78, 0.58, 0.46, 0.36, 0.29, 0.22, 0.16, 0.12, 0.08, 0.04, 0];
+/* Factor del tramo que va del frasco 1 al 6.
+   1 = precio de lista, 0 = PRECIO_SEIS.
+   El índice es la cantidad: RAMPA[0] es para 1 frasco, RAMPA[5]
+   para 6, donde la rampa ya ha aterrizado.                     */
+const RAMPA = [1, 0.70, 0.46, 0.28, 0.13, 0];
 
 /* ---------- 2. IMÁGENES DE MARCA -------------------------------- */
 /* REGLA DE ORO: FLACON es el frasco oficial y universal de la casa.
@@ -2385,8 +2393,8 @@ function vistaProducto(slug){
         <p class="ms-precio-grande">${dinero(p.precio)}</p>
         <p class="ms-aviso-descuento">
           Lleva 2 y ahorras ${dinero(descuentoDe([p.precio,p.precio]))} · 
-          Lleva 6 y ahorras ${dinero(descuentoDe(Array(6).fill(p.precio)))} · 
-          La docena a ${dinero(PRECIO_DOCENA)} el frasco · 
+          ${TOPE_SEIS} frascos a ${dinero(PRECIO_SEIS)} cada uno · 
+          La docena a ${dinero(PRECIO_DOCENA)} · 
           De ${TOPE_VEINTE} en adelante, ${dinero(PRECIO_VEINTE)}
         </p>
         ${p.disponible ? `
@@ -2815,8 +2823,9 @@ function precioPorCantidad(precio, cantidad){
   if(cantidad < 1) return precio;
   if(cantidad >= TOPE_VEINTE) return Math.min(precio, PRECIO_VEINTE);
   if(cantidad >= TOPE_DOCENA) return Math.min(precio, PRECIO_DOCENA);
-  if(precio <= PRECIO_DOCENA) return precio;
-  return Math.round(PRECIO_DOCENA + (precio - PRECIO_DOCENA) * RAMPA[cantidad-1]);
+  if(cantidad >= TOPE_SEIS)   return Math.min(precio, PRECIO_SEIS);
+  if(precio <= PRECIO_SEIS) return precio;
+  return Math.round(PRECIO_SEIS + (precio - PRECIO_SEIS) * RAMPA[cantidad-1]);
 }
 
 /* Total ya rebajado de una lista de precios (uno por frasco). */
