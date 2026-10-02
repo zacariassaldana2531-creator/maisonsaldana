@@ -1337,6 +1337,12 @@ const FLACON = "/originales/frasco-maison-saldana.webp";
    Pesan entre 225 y 346 KB \u2014casi lo que una foto\u2014 porque no hay
    movimiento real que comprimir, y sólo se descarga el de turno. */
 const PORTADAS = [
+  /* Abre el carrusel. Es la \u00fanica portada rodada de verdad y con una
+     persona dentro, y en ella sale el frasco de la casa en la mano.
+     Al ir primera la carga todo el que entra: son 660 KB que las
+     dem\u00e1s no cuestan, y es el precio de que lo primero que se vea
+     sea esto y no un zoom sobre una foto. */
+  {video:"/originales/portada-7", img:"/originales/portada-7.webp", alt:"Maison Saldana \u2014 el frasco de la casa, Eau de Parfum de 50 ml"},
   {video:"/originales/portada-1", img:"/originales/portada-1.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Lui"},
   {video:"/originales/portada-2", img:"/originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
   {video:"/originales/portada-3", img:"/originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
@@ -1363,18 +1369,14 @@ const PORTADAS = [
 
      Con pocos basta. Los zooms lentos se quedan en 200-350 KB, pero un
      video rodado con una persona dentro no baja de 650 KB por mucho
-     que se apriete: quien entra desde el tel\u00e9fono lo paga en datos.
-     Por eso van al final del carrusel, donde casi nadie llega. */
+     que se apriete. El de la primera l\u00e1mina lo carga todo el mundo;
+     los dem\u00e1s, s\u00f3lo quien se queda a verlos. */
   /* La \u00fanica portada donde sale el frasco de verdad de la casa \u2014el
      cil\u00edndrico estriado que aparece en las 373 fichas\u2014 en vez del
      frasco gen\u00e9rico que le puso el generador a las otras cuatro.
      Est\u00e1 montada con la tipograf\u00eda y los colores del sitio. */
   {video:"/originales/portada-5", img:"/originales/portada-5.webp", alt:"Maison Saldana \u2014 Eau de Parfum, 50 ml"},
   {img:"/originales/portada-6.webp", alt:"Maison Saldana \u2014 Notas c\u00edtricas del Caribe, Pour Lui"},
-  /* Rodada de verdad, no generada: el frasco de la casa en la mano de
-     alguien, con la luz de una sala de Santo Domingo. Es la \u00fanica
-     portada con una persona, y por eso cierra el carrusel. */
-  {video:"/originales/portada-7", img:"/originales/portada-7.webp", alt:"Maison Saldana \u2014 el frasco de la casa, Eau de Parfum de 50 ml"},
 ];
 const SEGUNDOS_PORTADA = 6;   // cada cuántos segundos cambia la portada
 
@@ -2198,7 +2200,8 @@ function vistaInicio(){
   <section class="ms-hero">
     <div class="ms-carrusel" id="carrusel">
       ${PORTADAS.map((p,i)=> p.video
-        ? `<video class="ms-lamina" data-activa="${i===0}" poster="${esc(p.img)}"
+        ? `<video class="ms-lamina" data-activa="${i===0}"
+            ${i===0 ? `poster="${esc(p.img)}"` : `data-poster="${esc(p.img)}"`}
             muted loop playsinline preload="none" aria-label="${esc(p.alt)}">
              <source src="${esc(p.video)}.webm" type="video/webm">
              <source src="${esc(p.video)}.mp4" type="video/mp4">
@@ -3061,6 +3064,14 @@ function mostrarLamina(i){
        próxima vez empiece desde el principio. */
     if(l.tagName === "VIDEO"){
       if(activa){
+        /* El póster de una lámina que nadie ha visto todavía no se
+           descarga: se le pone encima cuando le llega el turno, que es
+           cuando sirve de algo —tapar el hueco mientras carga el video
+           y quedarse ahí si el video no puede—. Sólo la primera lámina
+           nace con su póster puesto, porque esa sí se ve de entrada. */
+        if(l.dataset.poster && !l.getAttribute("poster")){
+          l.setAttribute("poster", l.dataset.poster);
+        }
         if(l.preload === "none") l.preload = "auto";
         l.play().catch(()=>{});   // si el navegador lo bloquea, queda el póster
       }else{
