@@ -1306,8 +1306,14 @@ const CASA = {
    aplica sobre la distancia entre el precio de lista y los 850: así
    cada fragancia baja a su propio ritmo pero todas aterrizan juntas.
 
-     de 1,400 → 1,235 · 1,103 · 1,004 · 922 · 850
-     de 1,100 →   975 ·   965 ·   920 · 883 · 850                 */
+   Lo que salga de la rampa se redondea hacia abajo al múltiplo de 25
+   más cercano. Un precio de 919 no se le enseña a nadie: la tienda
+   cobra 900. Hacia abajo y no al más cercano, para que el redondeo
+   nunca cobre de más.
+
+     de 1,400 → 1,225 · 1,100 · 1,000 · 900 · 850
+     de 1,100 → 1,025 ·   950 ·   900 · 875 · 850                 */
+const REDONDEO    = 25;     // todos los precios caen en múltiplos de esto
 const TOPE_SEIS   = 6;      // a partir de aquí, el primer escalón
 const TOPE_DOCENA = 12;     // a partir de aquí, precio de docena
 const TOPE_VEINTE = 20;     // a partir de aquí, el precio más bajo
@@ -2825,7 +2831,8 @@ function precioPorCantidad(precio, cantidad){
   if(cantidad >= TOPE_DOCENA) return Math.min(precio, PRECIO_DOCENA);
   if(cantidad >= TOPE_SEIS)   return Math.min(precio, PRECIO_SEIS);
   if(precio <= PRECIO_SEIS) return precio;
-  return Math.round(PRECIO_SEIS + (precio - PRECIO_SEIS) * RAMPA[cantidad-1]);
+  const crudo = PRECIO_SEIS + (precio - PRECIO_SEIS) * RAMPA[cantidad-1];
+  return Math.max(PRECIO_SEIS, Math.floor(crudo / REDONDEO) * REDONDEO);
 }
 
 /* Total ya rebajado de una lista de precios (uno por frasco). */
