@@ -1,0 +1,43 @@
+CÓDIGO QR — MAISON SALDANA
+==========================
+
+Lleva a:  https://maisonsaldana.com
+QR versión 2 · 33 x 33 módulos · corrección de error nivel M (15%)
+
+QUÉ ARCHIVO USAR
+----------------
+  qr-maison-saldana.svg          Para la imprenta. Es vector: se puede
+                                 agrandar a cualquier tamaño sin que
+                                 pierda nitidez. En los colores de la
+                                 casa (noche sobre marfil).
+
+  qr-maison-saldana-negro.svg    Lo mismo, en negro sobre blanco. Si la
+                                 imprenta pone pegas con el color, este.
+
+  qr-maison-saldana.pdf          El mismo vector, en PDF, por si lo
+                                 piden así.
+
+  qr-maison-saldana.png          Para uso digital: redes, WhatsApp,
+                                 presentaciones. 1980 x 1980 px.
+
+  qr-maison-saldana-transparente.png   Sin fondo, para montarlo encima
+                                 de otro color.
+
+  hoja-imprenta-qr.png           La hoja que se le entrega a la
+                                 imprenta: tamaños a escala real y
+                                 ficha técnica. 180 x 285 mm a 300 ppp.
+
+AL IMPRIMIR
+-----------
+  Tamaño     30 mm de lado es lo cómodo. 15 mm es el mínimo.
+  Aire       Deja 10 mm libres alrededor. El blanco que rodea al
+             código ya viene en el archivo: no lo recortes.
+  Dónde      Nunca sobre un doblez ni sobre una esquina de la caja.
+  Color      El código tiene que ser más oscuro que el fondo. No lo
+             pases a dorado: el contraste no da y deja de leerse.
+
+SI ALGÚN DÍA CAMBIA LA DIRECCIÓN
+--------------------------------
+  Este código lleva la dirección dentro. Si la tienda se mudara de
+  dominio, las cajas ya impresas dejarían de funcionar. Mientras
+  maisonsaldana.com siga siendo tuyo, el código no caduca.
