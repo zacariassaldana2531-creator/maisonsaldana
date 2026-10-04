@@ -2204,7 +2204,8 @@ function vistaInicio(){
       ${PORTADAS.map((p,i)=> p.video
         ? `<video class="ms-lamina" data-activa="${i===0}"
             ${i===0 ? `poster="${esc(p.img)}"` : `data-poster="${esc(p.img)}"`}
-            muted loop playsinline preload="none" aria-label="${esc(p.alt)}">
+            muted loop playsinline aria-label="${esc(p.alt)}"
+            preload="${i===0 ? "auto" : "none"}">
              <source src="${esc(p.video)}.webm" type="video/webm">
              <source src="${esc(p.video)}.mp4" type="video/mp4">
            </video>`
@@ -3054,6 +3055,32 @@ function portadaAusente(img){
   mostrarLamina(0);
 }
 function pararCarrusel(){ if(relojPortada){ clearInterval(relojPortada); relojPortada = null; } }
+/* El navegador puede negarse a reproducir, y lo hace a menudo: una
+   pestaña que se abre de fondo, el ahorro de batería del teléfono, una
+   política de autoarranque. Antes ese "no" se tragaba en silencio y la
+   portada se quedaba congelada en su foto para siempre —sólo recargando
+   volvía a moverse—. Ahora se apunta el intento fallido y se vuelve a
+   probar en cuanto el navegador da señales de poder: cuando el visitante
+   vuelve a la pestaña, o al primer gesto que haga sobre la página. */
+let portadaPendiente = null;
+
+function reproducirPortada(video){
+  const intento = video.play();
+  if(!intento || !intento.catch) return;
+  intento.catch(()=>{ portadaPendiente = video; });
+}
+
+function reintentarPortada(){
+  const v = portadaPendiente;
+  if(!v || document.hidden) return;
+  portadaPendiente = null;
+  if(v.dataset.activa === "true") reproducirPortada(v);
+}
+
+document.addEventListener("visibilitychange", reintentarPortada);
+["pointerdown","touchstart","keydown"].forEach(ev =>
+  document.addEventListener(ev, reintentarPortada, {passive:true}));
+
 function mostrarLamina(i){
   const cont = $("#carrusel"); if(!cont) return;
   const laminas = $$(".ms-lamina", cont), puntos = $$("[data-punto]", cont);
@@ -3075,8 +3102,9 @@ function mostrarLamina(i){
           l.setAttribute("poster", l.dataset.poster);
         }
         if(l.preload === "none") l.preload = "auto";
-        l.play().catch(()=>{});   // si el navegador lo bloquea, queda el póster
+        reproducirPortada(l);     // si el navegador lo bloquea, se reintenta
       }else{
+        if(portadaPendiente === l) portadaPendiente = null;
         l.pause();
         try{ l.currentTime = 0; }catch(e){}
       }
@@ -3110,7 +3138,13 @@ function arrancarCarrusel(){
   mostrarLamina(laminaActual);
 
   if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  relojPortada = setInterval(()=> mostrarLamina(laminaActual + 1), SEGUNDOS_PORTADA * 1000);
+  /* Con la pestaña de fondo no se pasa de lámina: si no, el visitante
+     vuelve a mitad de la vuelta y además se habrían descargado videos
+     que nunca vio. Al volver, se le da un empujón a la que esté. */
+  relojPortada = setInterval(()=>{
+    if(document.hidden) return;
+    mostrarLamina(laminaActual + 1);
+  }, SEGUNDOS_PORTADA * 1000);
 }
 
 /* ================================================================
