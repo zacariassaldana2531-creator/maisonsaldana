@@ -1344,7 +1344,8 @@ const PORTADAS = [
      Al ir primera la carga todo el que entra: son 660 KB que las
      dem\u00e1s no cuestan, y es el precio de que lo primero que se vea
      sea esto y no un zoom sobre una foto. */
-  {video:"/originales/portada-7", img:"/originales/portada-7.webp", alt:"Maison Saldana \u2014 el frasco de la casa, Eau de Parfum de 50 ml"},
+  {video:"/originales/portada-7", videoMovil:"/originales/portada-7-movil",
+   img:"/originales/portada-7.webp", alt:"Maison Saldana \u2014 el frasco de la casa, Eau de Parfum de 50 ml"},
   {video:"/originales/portada-1", img:"/originales/portada-1.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Lui"},
   {video:"/originales/portada-2", img:"/originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
   {video:"/originales/portada-3", img:"/originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
@@ -1362,6 +1363,10 @@ const PORTADAS = [
         img:"/originales/portada-7.webp",
         alt:"..."}
 
+     Si adem\u00e1s se le pone "videoMovil" \u2014tambi\u00e9n sin extensi\u00f3n, y basta
+     con el .mp4\u2014, los tel\u00e9fonos se bajan esa copia en vez de la
+     grande. El navegador elige solo por el ancho de pantalla.
+
      El navegador coge el primero que entienda: WebM donde se puede
      \u2014pesa un tercio menos\u2014 y MP4 en el resto, sobre todo en iPhone.
 
@@ -1372,7 +1377,9 @@ const PORTADAS = [
      Con pocos basta. Los zooms lentos se quedan en 200-350 KB, pero un
      video rodado con una persona dentro no baja de 650 KB por mucho
      que se apriete. El de la primera l\u00e1mina lo carga todo el mundo;
-     los dem\u00e1s, s\u00f3lo quien se queda a verlos. */
+     los dem\u00e1s, s\u00f3lo quien se queda a verlos. Por eso el de la primera
+     tiene adem\u00e1s una copia de tel\u00e9fono de 215 KB: a 960 px, que es
+     m\u00e1s de lo que una pantalla de m\u00f3vil puede ense\u00f1ar. */
   /* La \u00fanica portada donde sale el frasco de verdad de la casa \u2014el
      cil\u00edndrico estriado que aparece en las 373 fichas\u2014 en vez del
      frasco gen\u00e9rico que le puso el generador a las otras cuatro.
@@ -2206,8 +2213,8 @@ function vistaInicio(){
             ${i===0 ? `poster="${esc(p.img)}"` : `data-poster="${esc(p.img)}"`}
             muted loop playsinline aria-label="${esc(p.alt)}"
             preload="${i===0 ? "auto" : "none"}">
-             <source src="${esc(p.video)}.webm" type="video/webm">
-             <source src="${esc(p.video)}.mp4" type="video/mp4">
+             <source src="${esc(videoDe(p))}.webm" type="video/webm">
+             <source src="${esc(videoDe(p))}.mp4" type="video/mp4">
            </video>`
         : `<img class="ms-lamina" src="${p.img}" alt="${esc(p.alt)}"
             data-activa="${i===0}" ${i===0?'fetchpriority="high"':'loading="lazy"'} decoding="async"
@@ -3055,6 +3062,22 @@ function portadaAusente(img){
   mostrarLamina(0);
 }
 function pararCarrusel(){ if(relojPortada){ clearInterval(relojPortada); relojPortada = null; } }
+/* En un tel\u00e9fono no cabe el video grande: la pantalla no da para
+   1500 px y la conexi\u00f3n suele ser peor. Cuando una portada tiene copia
+   de m\u00f3vil, a las pantallas chicas se les escribe esa y punto.
+
+   Se decide aqu\u00ed, al construir el carrusel, y no con el atributo
+   "media" de <source>: ese atributo s\u00f3lo lo respetan los navegadores
+   dentro de <picture>, en un <video> lo ignoran. Puesto ah\u00ed, el
+   tel\u00e9fono se bajaba los dos archivos y usaba el grande.
+
+   De la copia de m\u00f3vil hacen falta los dos formatos, igual que de la
+   grande: WebM donde se puede y MP4 en el resto, sobre todo en iPhone. */
+function videoDe(portada){
+  const chica = matchMedia("(max-width: 820px)").matches;
+  return (chica && portada.videoMovil) ? portada.videoMovil : portada.video;
+}
+
 /* El navegador puede negarse a reproducir, y lo hace a menudo: una
    pestaña que se abre de fondo, el ahorro de batería del teléfono, una
    política de autoarranque. Antes ese "no" se tragaba en silencio y la
