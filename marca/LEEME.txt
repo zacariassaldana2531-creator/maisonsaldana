@@ -20,12 +20,21 @@ QUÉ ARCHIVO USAR
   qr-maison-saldana.png          Para uso digital: redes, WhatsApp,
                                  presentaciones. 1980 x 1980 px.
 
-  qr-maison-saldana-transparente.png   Sin fondo, para montarlo encima
-                                 de otro color.
-
   hoja-imprenta-qr.png           La hoja que se le entrega a la
                                  imprenta: tamaños a escala real y
                                  ficha técnica. 180 x 285 mm a 300 ppp.
+
+SI NO TE LO LEE EL TELÉFONO
+---------------------------
+  No puedes escanear la pantalla del mismo teléfono con el que
+  escaneas. Necesitas el código en otra pantalla o impreso.
+
+  Los .svg no se abren en la galería de un teléfono: ese formato lo
+  entienden la imprenta y los programas de diseño, no el visor de
+  fotos. Para escanear desde el teléfono usa el .png.
+
+  Un código claro sobre fondo oscuro no lo lee casi ningún teléfono.
+  Tiene que ser oscuro sobre claro, siempre.
 
 AL IMPRIMIR
 -----------
