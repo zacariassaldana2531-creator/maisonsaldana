@@ -2,3 +2,7 @@ User-agent: *
 Allow: /
 
 Sitemap: https://maisonsaldana.com/sitemap.xml
+
+# El archivo 41a1a18fc675707bcb329eaf72ef3386.txt de la raíz es la clave de
+# IndexNow: con ella Bing, Yandex, Seznam, Naver y Yep aceptan avisos directos
+# cuando el catálogo cambia. Si se borra, dejan de aceptarlos.
