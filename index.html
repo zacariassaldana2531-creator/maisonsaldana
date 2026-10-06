@@ -94,15 +94,19 @@ html[data-tema="oscuro"]{
   --sombra-suave:0 18px 34px -22px rgba(0,0,0,.6);
   color-scheme:dark;
 }
-/* En oscuro la foto no puede quedarse blanca: se atenúa la imagen
-   JUNTO con su recuadro, con un filtro sobre el contenedor. Así bajan
-   los dos a la vez y no aparece costura entre el fondo horneado de la
-   fotografía y el fondo de la caja. Sube --foto-luz para aclarar. */
-html[data-tema="oscuro"]{ --foto-luz:.84; }
-html[data-tema="oscuro"] .ms-escena,
-html[data-tema="oscuro"] .ms-mini{
-  filter:brightness(var(--foto-luz)) contrast(1.03) saturate(.97);
-}
+/* En oscuro la foto no puede quedarse blanca: se atenúa la imagen JUNTO
+   con su recuadro, para que no aparezca costura entre el fondo horneado
+   de la fotografía y el fondo de la caja.
+
+   Esto se hacía con filter:brightness() sobre el contenedor, y costaba
+   caro: un filtro CSS obliga al navegador a pintar el elemento aparte,
+   en su propia memoria, y en la colección hay veinticuatro a la vez. En
+   un iPhone eso bastaba para tumbar la pestaña. Se consigue lo mismo
+   echando una capa negra translúcida por encima, que es pintura normal
+   y no reserva nada: negro al 16% da exactamente lo que daba
+   brightness(.84) sobre cualquier color opaco.
+   Sube --foto-sombra para oscurecer, bájalo para aclarar. */
+html[data-tema="oscuro"]{ --foto-sombra:.16; }
 html[data-tema="oscuro"] .ms-pie{background:#0B0A08}
 html[data-tema="oscuro"] .ms-agotado{color:#C98268}
 html[data-tema="oscuro"] .ms-quitar:hover{color:#C98268; border-color:#C98268}
@@ -403,6 +407,20 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 .ms-escena::after{ /* luz cálida sobre TODA la escena: unifica ambos frascos */
   content:""; position:absolute; inset:0; z-index:5; pointer-events:none;
   background:linear-gradient(105deg, rgba(255,253,250,.5) 0%, rgba(255,255,255,0) 38%, rgba(122,102,74,.1) 100%);
+}
+/* En oscuro, la misma capa lleva además la sombra. Aprovechar el
+   pseudoelemento que ya existía evita crear otro. */
+html[data-tema="oscuro"] .ms-escena::after{
+  background:
+    linear-gradient(rgba(0,0,0,var(--foto-sombra)), rgba(0,0,0,var(--foto-sombra))),
+    linear-gradient(105deg, rgba(255,253,250,.5) 0%, rgba(255,255,255,0) 38%, rgba(122,102,74,.1) 100%);
+}
+/* Las miniaturas del carrito, el buscador y el asesor no tenían capa
+   propia, así que aquí se les pone una. */
+html[data-tema="oscuro"] .ms-mini{ position:relative; }
+html[data-tema="oscuro"] .ms-mini::after{
+  content:""; position:absolute; inset:0; z-index:4; pointer-events:none;
+  background:rgba(0,0,0,var(--foto-sombra));
 }
 .ms-suelo{ /* suelo compartido, POR DEBAJO de ambos frascos */
   position:absolute; left:0; right:0; bottom:0; height:24%; z-index:1; pointer-events:none;
