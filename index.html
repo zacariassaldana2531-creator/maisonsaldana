@@ -1358,11 +1358,19 @@ const RAMPA = [1, 0.70, 0.46, 0.28, 0.13, 0];
 /* REGLA DE ORO: FLACON es el frasco oficial y universal de la casa.
    Se usa para TODAS las fragancias. No se sustituye nunca.        */
 const FLACON = "/originales/frasco-maison-saldana.webp";
-/* Cada portada es un zoom lentísimo de seis segundos sobre su propia
-   foto: la imagen respira sin que pase nada. Dos se acercan y dos se
-   alejan, para que el carrusel no se sienta mecánico.
-   Pesan entre 225 y 346 KB \u2014casi lo que una foto\u2014 porque no hay
-   movimiento real que comprimir, y sólo se descarga el de turno. */
+/* Las portadas 1 a 5 eran un zoom lentísimo de seis segundos sobre su
+   propia foto —dos se acercaban y dos se alejaban—. Se midió cuánto se
+   movían: entre un 5,5% y un 8%. En un teléfono eso no se nota, pero en
+   una pantalla de portátil son decenas de píxeles arrastrándose, y en
+   ordenador cansaba. Ahora van quietas.
+
+   Quitado el zoom no quedaba video: eran una foto fija a la que se le
+   aplicaba el movimiento por encima, así que cada una es ahora su propia
+   foto y ya está. De paso el carrusel dejó de pedir 1,2 MB de clips que
+   no enseñaban nada que la foto no enseñe.
+
+   Los .mp4 y .webm de las portadas 1 a 5 siguen en originales/ por si
+   algún día se quiere volver atrás; simplemente ya nadie los pide. */
 const PORTADAS = [
   /* Abre el carrusel. Es la \u00fanica portada rodada de verdad y con una
      persona dentro, y en ella sale el frasco de la casa en la mano.
@@ -1371,10 +1379,10 @@ const PORTADAS = [
      sea esto y no un zoom sobre una foto. */
   {video:"/originales/portada-7", videoMovil:"/originales/portada-7-movil",
    img:"/originales/portada-7.webp", alt:"Maison Saldana \u2014 el frasco de la casa, Eau de Parfum de 60 ml"},
-  {video:"/originales/portada-1", img:"/originales/portada-1.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Lui"},
-  {video:"/originales/portada-2", img:"/originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
-  {video:"/originales/portada-3", img:"/originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
-  {video:"/originales/portada-4", img:"/originales/portada-4.webp", alt:"Maison Saldana \u2014 Una esencia, innumerables historias"},
+  {img:"/originales/portada-1.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Lui"},
+  {img:"/originales/portada-2.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle"},
+  {img:"/originales/portada-3.webp", alt:"Maison Saldana \u2014 Collection d'Inspirations, Pour Elle et Pour Lui"},
+  {img:"/originales/portada-4.webp", alt:"Maison Saldana \u2014 Una esencia, innumerables historias"},
   /* Las dos siguientes son del Caribe y hablan de los c\u00edtricos. Se
      declaran aunque el archivo todav\u00eda no est\u00e9 subido: si falta, la
      l\u00e1mina se retira sola y el carrusel sigue con las que haya. El
@@ -1399,17 +1407,19 @@ const PORTADAS = [
      turno; mientras tanto se ve la foto. Si el archivo falta o el
      navegador no puede con \u00e9l, se queda la foto y nadie lo nota.
 
-     Con pocos basta. Los zooms lentos se quedan en 200-350 KB, pero un
-     video rodado con una persona dentro no baja de 650 KB por mucho
-     que se apriete. El de la primera l\u00e1mina lo carga todo el mundo;
-     los dem\u00e1s, s\u00f3lo quien se queda a verlos. Por eso el de la primera
-     tiene adem\u00e1s una copia de tel\u00e9fono de 215 KB: a 960 px, que es
-     m\u00e1s de lo que una pantalla de m\u00f3vil puede ense\u00f1ar. */
+     Con pocos basta, y que sean rodados de verdad: un zoom aplicado
+     sobre una foto fija no justifica el peso de un video, y en pantalla
+     grande se ve forzado. Un plano rodado con una persona dentro no baja
+     de 650 KB por mucho que se apriete. El de la primera l\u00e1mina lo carga
+     todo el mundo; los dem\u00e1s, s\u00f3lo quien se queda a verlos. Por eso el
+     de la primera tiene adem\u00e1s una copia de tel\u00e9fono de 215 KB: a
+     960 px, que es m\u00e1s de lo que una pantalla de m\u00f3vil puede
+     ense\u00f1ar. */
   /* La \u00fanica portada donde sale el frasco de verdad de la casa \u2014el
      cil\u00edndrico estriado que aparece en las 373 fichas\u2014 en vez del
      frasco gen\u00e9rico que le puso el generador a las otras cuatro.
      Est\u00e1 montada con la tipograf\u00eda y los colores del sitio. */
-  {video:"/originales/portada-5", img:"/originales/portada-5.webp", alt:"Maison Saldana \u2014 Eau de Parfum, 60 ml"},
+  {img:"/originales/portada-5.webp", alt:"Maison Saldana \u2014 Eau de Parfum, 60 ml"},
   {img:"/originales/portada-6.webp", alt:"Maison Saldana \u2014 Notas c\u00edtricas del Caribe, Pour Lui"},
 ];
 const SEGUNDOS_PORTADA = 6;   // cada cuántos segundos cambia la portada
