@@ -351,8 +351,13 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 .ms-hero .ms-fleuron{animation:ms-alza 1s .3s both var(--ease)}
 .ms-hero-pie p{animation:ms-alza 1s .55s both var(--ease)}
 .ms-hero-pie .ms-btn{animation:ms-alza 1s .8s both var(--ease)}
+/* La lámina de turno entra fundiéndose, sin moverse. Antes entraba
+   también un 4,5% más grande y se asentaba sola, pero ese porcentaje es
+   proporcional al ancho: en un teléfono son 17 px y no se nota, en un
+   portátil de 1512 px son 68 px de imagen encogiéndose a cada cambio de
+   portada y en la primera carga. En pantalla grande cansaba. */
 .ms-lamina[data-activa="true"]{animation:ms-vela 1.8s both ease}
-@keyframes ms-vela{from{opacity:0; transform:scale(1.045)} to{opacity:1; transform:none}}
+@keyframes ms-vela{from{opacity:0} to{opacity:1}}
 @media (prefers-reduced-motion:reduce){
   .ms-hero .ms-fleuron, .ms-hero-pie p, .ms-hero-pie .ms-btn, .ms-lamina[data-activa="true"]{animation:none}
 }
