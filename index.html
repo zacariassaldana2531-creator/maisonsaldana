@@ -979,6 +979,13 @@ html[data-tema="oscuro"] .ms-familia{
   border-top:1px solid var(--oro-hondo); transform:rotate(45deg);
 }
 .ms-asesor-susurro[data-abierto="true"]{opacity:1; transform:none; pointer-events:auto}
+/* Se aparta con los dos botones al bajar: es la pieza m\u00e1s ancha de
+   las tres y la que m\u00e1s texto tapaba. El selector lleva los dos
+   ganchos para pesar m\u00e1s que la regla de arriba sin recurrir a
+   !important. */
+.ms-asesor-susurro[data-abierto="true"].ms-asesor-susurro--oculto{
+  opacity:0; transform:translateY(6px) scale(.96); pointer-events:none;
+}
 @media (max-width:600px){
   .ms-asesor-susurro{right:74px; bottom:calc(86px + env(safe-area-inset-bottom)); font-size:11.5px; padding:10px 12px}
 }
@@ -3492,24 +3499,40 @@ document.addEventListener("click", e=>{
   irA(href);
 });
 
-/* El WhatsApp flotante se aparta al bajar (para no tapar el texto)
-   y vuelve al subir o al detenerse. */
+/* Los tres flotantes \u2014WhatsApp, El Nariz y su susurro\u2014 se apartan al
+   bajar y vuelven al subir, al llegar arriba del todo o al final de la
+   p\u00e1gina.
+
+   Antes tambi\u00e9n volv\u00edan a los 700 ms de dejar de bajar, y eso era justo
+   lo que tapaba el texto: bajas, te paras a leer una tarjeta, y el
+   bot\u00f3n reaparece encima de ella. Quedarse quieto ya no los trae de
+   vuelta; basta un gesto hacia arriba, que es lo que hace todo el
+   mundo cuando quiere la barra de un navegador.
+
+   El susurro no entraba en esta mecánica y se quedaba fijo sus once
+   segundos sobre lo que hubiera debajo. Ahora se aparta con los otros
+   dos y vuelve si su turno no ha pasado. */
 (function(){
   const flotantes = [
-    {nodo:$(".ms-wa-flotante"),     clase:"ms-wa-flotante--oculto"},
-    {nodo:$(".ms-asesor-flotante"), clase:"ms-asesor-flotante--oculto"}
+    {nodo:$(".ms-wa-flotante"),      clase:"ms-wa-flotante--oculto"},
+    {nodo:$(".ms-asesor-flotante"),  clase:"ms-asesor-flotante--oculto"},
+    {nodo:$("#susurroAsesor"),       clase:"ms-asesor-susurro--oculto"}
   ].filter(f=>f.nodo);
   if(!flotantes.length) return;
-  let ultimoY = window.scrollY, quieto;
-  const mostrar = ()=>flotantes.forEach(f=>f.nodo.classList.remove(f.clase));
+
+  let ultimoY = window.scrollY, apartados = false;
+  function apartar(si){
+    if(si === apartados) return;             // no se toca el DOM sin motivo
+    apartados = si;
+    flotantes.forEach(f=>f.nodo.classList.toggle(f.clase, si));
+  }
+
   window.addEventListener("scroll", ()=>{
     const y = window.scrollY, dif = y - ultimoY;
     if(Math.abs(dif) < 6) return;            // ignora micro-movimientos
-    if(dif > 0 && y > 240) flotantes.forEach(f=>f.nodo.classList.add(f.clase));
-    else mostrar();
     ultimoY = y;
-    clearTimeout(quieto);
-    quieto = setTimeout(mostrar, 700);       // al detenerse, vuelve
+    const alFinal = y + window.innerHeight >= document.documentElement.scrollHeight - 90;
+    apartar(dif > 0 && y > 240 && !alFinal);
   }, {passive:true});
 })();
 
