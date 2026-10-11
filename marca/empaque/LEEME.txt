@@ -3,8 +3,14 @@ EMPAQUE DEL FRASCO DE 60 ML — MAISON SALDANA
 
 QUÉ HAY AQUÍ
 
-  denso.png        Las cuatro opciones BUENAS, a escala real. Esta es la
-                   ronda a mirar: la anterior se quedó vacía.
+  OPCIÓN ELEGIDA: A · LA ESTRÍA, gofrada.
+
+  relieve.png      Cómo se ve la estría gofrada frente a la dibujada,
+                   con el corte del cartón y las medidas. MÍRALA.
+  FICHA-IMPRENTA-GOFRADO.txt
+                   Qué pedirle a la imprenta, palabra por palabra.
+
+  denso.png        Las cuatro opciones, a escala real.
   escala.png       La caja al lado de una tarjeta de crédito y del frasco,
                    todo a tamaño real. Para juzgar el tamaño de verdad,
                    que una pantalla no sirve para eso.
@@ -51,9 +57,13 @@ CÓMO SE IMPRIME
 
   Tipo        Estuche plegadizo de solapas metidas (tuck-end).
   Cartón      Cartulina estucada de 300 a 350 g/m².
-  Acabado     Laminado soft touch. No es capricho: el blanco sin
+  Acabado     Laminado soft touch mate. No es capricho: el blanco sin
               recubrir se raya con mirarlo, coge huella y con la
               humedad de Santo Domingo amarillea.
+  Relieve     GOFRADO de la estría, paso 2,2 mm, hondo 0,18 mm, en el
+              frente y los dos costados. Ficha aparte: ver
+              FICHA-IMPRENTA-GOFRADO.txt. EL LAMINADO VA ANTES DEL
+              GOFRADO; al revés, el rodillo aplasta el relieve.
   Tintas      Una sola, negro. El oro NO es tinta: es foil estampado
               en caliente, y va en una capa aparte del archivo.
   Sangrado    3 mm por fuera de la línea de corte, en los cuatro lados.

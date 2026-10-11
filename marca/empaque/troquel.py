@@ -109,7 +109,9 @@ _sp = _il.spec_from_file_location("denso", os.path.join(SALIDA, "denso.py"))
 _denso = _il.module_from_spec(_sp)
 sys.modules["denso"] = _denso
 _sp.loader.exec_module(_denso)
-OPCION = _denso.b_etiqueta          # a_estria · b_etiqueta · c_marco · d_bloque
+OPCION = _denso.a_estria            # a_estria · b_etiqueta · c_marco · d_bloque
+# En el plano la estría va dibujada en gris claro, pero NO se imprime:
+# representa la capa GOFRADO. Ver FICHA-IMPRENTA-GOFRADO.txt.
 
 fx = bordes[0]
 frente = OPCION()[0].resize((mm(A), mm(H)), Image.LANCZOS)

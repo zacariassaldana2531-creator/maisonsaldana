@@ -1,0 +1,157 @@
+LA ESTRÍA EN RELIEVE — FICHA PARA LA IMPRENTA
+Maison Saldana · estuche del Extrait de Parfum de 60 ml
+════════════════════════════════════════════════════════════════════
+
+CÓMO SE PIDE
+
+  Se pide GOFRADO, también llamado RELIEVE SECO o EMBOSSING CIEGO.
+  "Ciego" porque no lleva tinta: el relieve es el propio cartón
+  empujado entre dos matrices.
+
+  NO es barniz de alto relieve ni UV 3D. Eso deja una costra brillante
+  encima del cartón y se nota plástica. Aquí queremos lo contrario:
+  que al pasar el dedo se sienta el mismo acanalado del frasco de
+  vidrio, en mate y sin brillo.
+
+  Si la imprenta ofrece "micrograbado" o "textura", es lo mismo que
+  buscamos, solo que con matriz de trama fina.
+
+
+LA MATRIZ
+
+  Material        Latón (bronce), grabado o fresado.
+  Tipo            Macho y hembra. La hembra es imprescindible: con
+                  solo el macho contra una contra de resina la estría
+                  fina sale blanda y desigual.
+  Perfil          Canal de fondo redondeado, no en V. El vidrio del
+                  frasco es redondeado; una V se ve a cuchillo.
+  Ángulo de pared 45° a 60°. Más vertical que eso parte la fibra.
+  Coste           Es un gasto de una sola vez. Después solo se paga
+                  el pase por tirada.
+
+
+LA GEOMETRÍA — ESTO ES LO QUE HAY QUE DARLE
+
+  Paso (de cresta a cresta)      2,2 mm
+  Ancho de la cresta             1,0 mm
+  Ancho del valle                1,2 mm
+  Profundidad del hundido        0,18 mm
+  Dirección                      VERTICAL, paralela a la altura
+  Cuántas caben                  25 estrías en la cara de 54 mm
+
+  POR QUÉ 2,2 Y NO MÁS FINO. El dibujo original iba a 1,9 mm de paso
+  con cresta de 0,34 mm. Eso se imprime, pero no se gofra: por debajo
+  de 0,8 mm de cresta el latón no sostiene el filo y la fibra del
+  cartón se revienta en la cresta —se ve una línea blanca— o el
+  relieve se aplasta al primer manoseo. 1,0 mm es el mínimo que
+  cualquier taller saca limpio. A ojo la diferencia no se nota: 25
+  estrías en vez de 28.
+
+  POR QUÉ 0,18 MM DE HONDO. La cartulina de 330 g mide 0,42 mm de
+  calibre. El hundido no debe pasar de un tercio a la mitad de eso o
+  la cara de atrás se marca y la fibra se agrieta. 0,18 mm es un
+  tercio justo.
+
+  Si la imprenta propone otra cosa, que sea ELLA la que diga qué
+  aguanta su matriz con ese cartón. Pero que no baje de 0,8 mm de
+  cresta ni pase de 0,21 mm de hondo.
+
+
+EN QUÉ CARAS VA
+
+  FRENTE     Sí, estría completa, MENOS la ventana del texto.
+  COSTADOS   Sí, estría completa, de arriba abajo.
+  DORSO      NO. Va liso.
+  SOLAPAS    NO.
+  PESTAÑA    NO.
+
+  La caja se ve acanalada por donde se mira de frente y de lado, como
+  el frasco. El dorso se queda liso porque ahí va el QR.
+
+
+LAS TRES COSAS QUE NO SE PUEDEN GOFRAR
+
+  1. LA VENTANA DEL TEXTO, en el frente. Es el rectángulo donde van
+     MAISON SALDANA, el fleurón, la colección, EXTRAIT DE PARFUM y
+     60 ML. Va PLANA: la matriz no la toca. Si el texto cae sobre
+     estría, la letra se quiebra y deja de leerse.
+     Mide 46 × 38 mm y va centrada, de 25 a 63 mm desde el borde
+     superior de la cara.
+
+  2. EL QR del dorso. Gofrar un QR le deforma los módulos y el
+     teléfono deja de leerlo. El dorso entero va liso.
+
+  3. LA PESTAÑA DE PEGADO. El pegamento no agarra sobre textura.
+     Tiene que quedar lisa, y además 2 mm de margen liso alrededor.
+
+  Y UNA MÁS: la estría arranca y termina a 3 mm de los hendidos
+  horizontales, los de arriba y abajo del cuerpo. Gofrar encima de un
+  hendido estropea el doblez.
+
+
+EL ORDEN DE LAS OPERACIONES — IMPORTA
+
+  1. Impresión en offset, una tinta (negro).
+  2. Laminado soft touch mate.
+  3. Estampado en caliente del foil dorado (solo el fleurón).
+  4. GOFRADO.
+  5. Troquelado.
+  6. Plegado y pegado.
+
+  EL LAMINADO VA ANTES DEL GOFRADO, NUNCA DESPUÉS. Si se lamina
+  encima de un relieve ya hecho, el rodillo lo aplasta y el trabajo
+  se pierde. Esto es lo que más se equivoca; conviene decirlo en voz
+  alta al entregar el arte.
+
+
+REGISTRO
+
+  Tolerancia entre impresión y gofrado: ±0,5 mm.
+  Si la ventana plana se desplaza más que eso respecto del texto, se
+  verá media letra sobre estría. Conviene pedir que la matriz se
+  monte con marcas de registro del mismo pliego.
+
+
+QUÉ PEDIR ANTES DE LA TIRADA
+
+  Un PASE DE PRUEBA sobre el cartón definitivo, ya laminado. No sobre
+  cartón suelto ni sobre papel: el soft touch cambia cómo se siente
+  el relieve.
+
+  En la prueba hay que mirar, con el dedo y a contraluz:
+    □ ¿Se siente la estría sin tener que buscarla?
+    □ ¿Hay línea blanca en alguna cresta? (fibra reventada: menos hondo)
+    □ ¿Se marca el relieve en la cara interior? (demasiado hondo)
+    □ ¿La ventana del texto quedó realmente plana?
+    □ ¿El texto se lee limpio, sin quebrarse?
+    □ ¿El dorso quedó liso y el QR se escanea?
+    □ ¿La pestaña de pegado quedó lisa?
+
+
+EL ARTE QUE SE ENTREGA
+
+  El gofrado va en una CAPA APARTE del archivo vectorial, en un color
+  plano llamado GOFRADO, marcado como sobreimpresión y fuera de la
+  separación de color. Igual el foil, en su propia capa llamada FOIL.
+
+  Capas del archivo: CORTE · HENDIDO · NEGRO · FOIL · GOFRADO.
+
+  Los PNG de esta carpeta NO son el arte final. Son el plano para
+  entenderse. El archivo que entra en máquina se reconstruye en
+  vectorial con estas medidas.
+
+
+SI LA IMPRENTA DICE QUE NO PUEDE
+
+  Por orden de preferencia, las salidas:
+
+  1. Subir el paso a 2,6 o 3,0 mm. Menos estrías (21 o 18) pero el
+     efecto se mantiene. Es la primera concesión que haría.
+  2. Cartulina ya texturizada de fábrica con grano lineal. Más
+     barato, pero no se elige el paso y sale en TODA la hoja,
+     incluidos el dorso y la pestaña.
+  3. Barniz UV de alto relieve en mate. Se siente, pero es una capa
+     encima: al tacto es plástico, no cartón. Última opción.
+
+  Lo que NO vale: imprimir la estría en gris y decir que es relieve.
+  Eso es lo que había antes y no es lo que se busca.

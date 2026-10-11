@@ -91,7 +91,10 @@ def cara():
 # =========================================================== A · LA ESTRÍA
 def a_estria():
     im, d = cara()
-    paso, grosor = 1.9, 0.34
+    # Geometría de gofrado, no de dibujo: paso 2,2 con cresta de 1,0.
+    # Por debajo de 0,8 mm de cresta el latón del troquel no aguanta
+    # y la fibra del cartón revienta. Son 25 estrías en la cara.
+    paso, grosor = 2.2, 1.0
     x = paso / 2
     while x < W:
         d.rectangle([mm(x), 0, mm(x) + max(1, int(grosor * PPM)), mm(H)], fill=ESTRIA)
@@ -100,9 +103,9 @@ def a_estria():
     d.rectangle([mm(4), mm(25), mm(W - 4), mm(63)], fill=BLANCO)
     pila(d, 29.0)
     return im, "A · La estría", [
-        "La estría del vidrio llevada al cartón, en relieve seco.",
-        "Llena la cara entera sin una gota de tinta de más.",
-        "1 tinta + relieve seco + foil en el fleurón."]
+        "La estría del frasco, GOFRADA: se siente con el dedo.",
+        "25 estrías de 2,2 mm. Sin tinta: es el cartón empujado.",
+        "1 tinta + gofrado + foil en el fleurón."]
 
 
 # ========================================================= B · LA ETIQUETA
