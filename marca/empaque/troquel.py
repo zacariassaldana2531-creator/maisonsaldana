@@ -111,26 +111,26 @@ cx1 = bordes[1]
 centrado(42.0, "EAU DE PARFUM", ft(JOST, 3.2), NEGRO, 0.3, cx1)
 centrado(48.0, "60 ML  ·  2 FL OZ", ft(JOST, 3.2), NEGRO, 0.3, cx1)
 
-# DORSO: QR, dirección y el hueco de la etiqueta variable
+# DORSO: QR, web y procedencia. La caja es universal: la misma para
+# las 373 fragancias, así que aquí no va el nombre de ninguna. Al
+# quitar el recuadro que lo reservaba quedaba un hueco en medio, así
+# que el bloque del QR sube al centro óptico y la procedencia baja a
+# apoyarse en el pie.
 dx = bordes[2]
+QR_ARRIBA = 29
 try:
     # El archivo trae fondo marfil; sobre una caja blanca ese cuadrado
     # se vería. Se pasa a blanco puro antes de colocarlo.
     qr = Image.open(QR).convert("L").point(lambda v: 0 if v < 128 else 255)
     qr = qr.resize((mm(15), mm(15)), Image.NEAREST).convert("RGB")
-    lam.paste(qr, (int(dx + mm((A - 15) / 2)), int(YC0 + mm(18))))
-except Exception as e:
-    d.rectangle([dx + mm((A - 15) / 2), YC0 + mm(18),
-                 dx + mm((A + 15) / 2), YC0 + mm(33)], outline=NEGRO, width=2)
-centrado(35.5, "MAISONSALDANA.COM", ft(JOST, 2.9), NEGRO, 0.22, dx)
-# recuadro de la etiqueta variable: aquí va el nombre de la fragancia
-d.rectangle([dx + mm((A - 38) / 2), YC0 + mm(46),
-             dx + mm((A + 38) / 2), YC0 + mm(60)],
-            outline=(205, 200, 192), width=2)
-centrado(50.0, "NOMBRE DE LA", ft(JOST, 2.7), (170, 164, 155), 0.2, dx)
-centrado(54.5, "FRAGANCIA  ·  CÓDIGO", ft(JOST, 2.7), (170, 164, 155), 0.2, dx)
-centrado(74.0, "HECHO EN REPÚBLICA DOMINICANA", ft(JOST, 2.5), NEGRO, 0.16, dx)
-centrado(78.5, "SANTO DOMINGO  ·  809 439 4509", ft(JOST, 2.5), NEGRO, 0.16, dx)
+    lam.paste(qr, (int(dx + mm((A - 15) / 2)), int(YC0 + mm(QR_ARRIBA))))
+except Exception:
+    d.rectangle([dx + mm((A - 15) / 2), YC0 + mm(QR_ARRIBA),
+                 dx + mm((A + 15) / 2), YC0 + mm(QR_ARRIBA + 15)],
+                outline=NEGRO, width=2)
+centrado(QR_ARRIBA + 19.0, "MAISONSALDANA.COM", ft(JOST, 2.9), NEGRO, 0.22, dx)
+centrado(72.0, "HECHO EN REPÚBLICA DOMINICANA", ft(JOST, 2.5), NEGRO, 0.16, dx)
+centrado(76.5, "SANTO DOMINGO  ·  809 439 4509", ft(JOST, 2.5), NEGRO, 0.16, dx)
 
 # COSTADO 2: la firma
 cx2 = bordes[3]

@@ -5,6 +5,7 @@ QUÉ HAY AQUÍ
 
   minimal.png      Las cuatro opciones de cara frontal, a escala real.
   troquel.png      El plano de la caja desplegada, con el arte repartido.
+                   Caja universal: sin nombre ni código de fragancia.
   proporcion.png   El frasco y la caja propuesta, uno al lado del otro.
 
   frente-1-el-silencio.png    Las cuatro caras por separado, a 356 ppp.
@@ -64,16 +65,19 @@ EL QR
   https://maisonsaldana.com
 
 
-LO QUE TODAVÍA NO ESTÁ RESUELTO
+CAJA UNIVERSAL
 
-  Una caja para 373 fragancias. Ni la caja ni la etiqueta del frasco
-  dicen cuál perfume es. Quien compre tres se queda con tres frascos
-  idénticos sin saber cuál es cuál.
+  Decisión tomada: una sola caja para las 373 fragancias. En ninguna
+  cara va el nombre ni el código del perfume. Eso simplifica todo —un
+  solo troquel, una sola tirada, el precio por unidad baja mucho— y
+  permite imprimir de golpe sin saber qué se venderá.
 
-  En el dorso del troquel hay un recuadro reservado para eso: una
-  etiqueta pequeña, de unos 38 × 14 mm, con el nombre y el código.
-  Un solo diseño, texto variable. Se imprime en hojas de etiquetas
-  adhesivas y se pega en la caja y en el frasco.
+  La consecuencia hay que tenerla presente: la caja no identifica lo
+  que lleva dentro. Ni la caja ni la etiqueta del frasco dicen cuál
+  fragancia es, así que hace falta resolverlo por fuera —al despachar,
+  en la bolsa, o con una pegatina puesta a mano— o quien compre varias
+  no sabrá cuál es cuál. No es un problema del diseño de la caja; es
+  algo que se decide en el despacho.
 
   PENDIENTE DE DEFINIR: lote, fabricante, cualquier texto legal que
   exija vender cosmética en República Dominicana. Eso no se inventa.
