@@ -1,0 +1,90 @@
+EMPAQUE DEL FRASCO DE 60 ML — MAISON SALDANA
+════════════════════════════════════════════════════════════════
+
+QUÉ HAY AQUÍ
+
+  minimal.png      Las cuatro opciones de cara frontal, a escala real.
+  troquel.png      El plano de la caja desplegada, con el arte repartido.
+  proporcion.png   El frasco y la caja propuesta, uno al lado del otro.
+
+  frente-1-el-silencio.png    Las cuatro caras por separado, a 356 ppp.
+  frente-2-el-monograma.png   Son de 54 × 90 mm a tamaño real: se pueden
+  frente-3-la-linea.png       colocar directamente en Canva o mandarlas
+  frente-4-el-sello.png       a la imprenta como referencia visual.
+
+  conceptos.py     Los programas que dibujan todo lo anterior. Si cambia
+  minimal.py       una medida, se cambia ahí y se vuelve a generar; no
+  troquel.py       hay que rehacer nada a mano.
+  proporcion.py
+
+
+LAS MEDIDAS — OJO, SON PROPUESTAS
+
+  Frasco:  Ø 48 mm × 85 mm de alto con tapa
+  Caja:    54 × 54 × 90 mm por dentro
+  Cartón:  desarrollo de 228 × 154 mm
+
+  El frasco NO se midió con regla: se dedujo de su propia fotografía.
+  Se midió el diámetro en píxeles, se calculó qué volumen interno daría
+  cada diámetro posible, y 48 mm es el que devuelve 61 ml — el volumen
+  que vende la casa. Cuadra, pero hay que confirmarlo.
+
+  ANTES DE MANDAR NADA A LA IMPRENTA: medir el frasco de verdad.
+  Diámetro, alto sin tapa y alto con tapa. Si cambia el diámetro,
+  cambian la caja, el troquel y la cuna.
+
+
+CÓMO SE IMPRIME
+
+  Tipo        Estuche plegadizo de solapas metidas (tuck-end).
+  Cartón      Cartulina estucada de 300 a 350 g/m².
+  Acabado     Laminado soft touch. No es capricho: el blanco sin
+              recubrir se raya con mirarlo, coge huella y con la
+              humedad de Santo Domingo amarillea.
+  Tintas      Una sola, negro. El oro NO es tinta: es foil estampado
+              en caliente, y va en una capa aparte del archivo.
+  Sangrado    3 mm por fuera de la línea de corte, en los cuatro lados.
+  Seguridad   4 mm por dentro: nada de texto más cerca del corte.
+  Resolución  300 ppp mínimo a tamaño real.
+  Perfil      CMYK. El foil va como capa separada, no como color.
+
+  LA CUNA. Un frasco redondo suelto dentro de una caja cuadrada se
+  mueve, suena a vacío y llega roto. Hay que troquelar una cuna de
+  cartón en la misma plancha. Es lo que ocupan los 3 mm de holgura.
+
+
+EL QR
+
+  Va en el dorso, 15 mm de lado, centrado, con 10 mm de aire alrededor.
+  Usar marca/qr-maison-saldana.svg (vectorial, escala a lo que sea).
+  Sobre caja blanca hay que pasarlo a fondo blanco: el archivo trae
+  fondo marfil y sobre blanco ese cuadrado se nota.
+
+  Comprobado: a 15 mm en el plano, un lector lo decodifica y lleva a
+  https://maisonsaldana.com
+
+
+LO QUE TODAVÍA NO ESTÁ RESUELTO
+
+  Una caja para 373 fragancias. Ni la caja ni la etiqueta del frasco
+  dicen cuál perfume es. Quien compre tres se queda con tres frascos
+  idénticos sin saber cuál es cuál.
+
+  En el dorso del troquel hay un recuadro reservado para eso: una
+  etiqueta pequeña, de unos 38 × 14 mm, con el nombre y el código.
+  Un solo diseño, texto variable. Se imprime en hojas de etiquetas
+  adhesivas y se pega en la caja y en el frasco.
+
+  PENDIENTE DE DEFINIR: lote, fabricante, cualquier texto legal que
+  exija vender cosmética en República Dominicana. Eso no se inventa.
+
+
+ADVERTENCIA DE PRODUCCIÓN
+
+  Estos PNG son PLANOS para decidir y para enseñarle al impresor.
+  NO son arte final y no se mandan a imprimir tal cual.
+
+  El arte final se reconstruye en vectorial —Illustrator, Affinity,
+  CorelDRAW— con el texto exacto, las medidas al milímetro, el
+  sangrado y el troquel en capas separadas. Un PNG imprimido da
+  letras blandas y un QR que puede no leer.
