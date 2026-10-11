@@ -3,10 +3,12 @@ EMPAQUE DEL FRASCO DE 60 ML — MAISON SALDANA
 
 QUÉ HAY AQUÍ
 
-  OPCIÓN ELEGIDA: A · LA ESTRÍA, gofrada.
+  OPCIÓN ELEGIDA: A · LA ESTRÍA, en ORO y gofrada.
 
+  oro.png          Tres repartos de oro y las dos láminas, mate y
+                   brillante. HAY QUE ELEGIR UNO. MÍRALA.
   relieve.png      Cómo se ve la estría gofrada frente a la dibujada,
-                   con el corte del cartón y las medidas. MÍRALA.
+                   con el corte del cartón y las medidas.
   FICHA-IMPRENTA-GOFRADO.txt
                    Qué pedirle a la imprenta, palabra por palabra.
 
@@ -60,12 +62,15 @@ CÓMO SE IMPRIME
   Acabado     Laminado soft touch mate. No es capricho: el blanco sin
               recubrir se raya con mirarlo, coge huella y con la
               humedad de Santo Domingo amarillea.
-  Relieve     GOFRADO de la estría, paso 2,2 mm, hondo 0,18 mm, en el
-              frente y los dos costados. Ficha aparte: ver
-              FICHA-IMPRENTA-GOFRADO.txt. EL LAMINADO VA ANTES DEL
-              GOFRADO; al revés, el rodillo aplasta el relieve.
-  Tintas      Una sola, negro. El oro NO es tinta: es foil estampado
-              en caliente, y va en una capa aparte del archivo.
+  Estría      ESTAMPADO COMBINADO: lámina dorada MATE y relieve en
+              una sola pasada, con un troquel combinado de latón.
+              Paso 2,2 mm, cresta 1,0, hondo 0,18. Frente y costados.
+              Ficha aparte: FICHA-IMPRENTA-GOFRADO.txt.
+              EL LAMINADO VA ANTES DEL ESTAMPADO; al revés, el rodillo
+              aplasta el relieve. Y hay que comprobar que el soft
+              touch admite lámina: no todos la agarran.
+  Tintas      Una sola, negro. El oro NO es tinta: es lámina
+              estampada en caliente, y va en su propia capa.
   Sangrado    3 mm por fuera de la línea de corte, en los cuatro lados.
   Seguridad   4 mm por dentro: nada de texto más cerca del corte.
   Resolución  300 ppp mínimo a tamaño real.

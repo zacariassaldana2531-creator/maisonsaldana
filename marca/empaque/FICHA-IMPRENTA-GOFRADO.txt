@@ -1,28 +1,46 @@
-LA ESTRÍA EN RELIEVE — FICHA PARA LA IMPRENTA
+LA ESTRÍA EN ORO Y EN RELIEVE — FICHA PARA LA IMPRENTA
 Maison Saldana · estuche del Extrait de Parfum de 60 ml
 ════════════════════════════════════════════════════════════════════
 
 CÓMO SE PIDE
 
-  Se pide GOFRADO, también llamado RELIEVE SECO o EMBOSSING CIEGO.
-  "Ciego" porque no lleva tinta: el relieve es el propio cartón
-  empujado entre dos matrices.
+  La estría va DORADA Y EN RELIEVE a la vez. Eso no son dos trabajos:
+  es uno solo, y se pide así:
 
-  NO es barniz de alto relieve ni UV 3D. Eso deja una costra brillante
-  encima del cartón y se nota plástica. Aquí queremos lo contrario:
-  que al pasar el dedo se sienta el mismo acanalado del frasco de
-  vidrio, en mate y sin brillo.
+      ESTAMPADO EN CALIENTE COMBINADO CON RELIEVE
+      (troquel combinado · foil + emboss en una pasada)
 
-  Si la imprenta ofrece "micrograbado" o "textura", es lo mismo que
-  buscamos, solo que con matriz de trama fina.
+  Una sola matriz estampa la lámina dorada y hunde el cartón al mismo
+  tiempo. El oro queda en la cresta y el valle se queda en blanco.
+
+  POR QUÉ COMBINADO Y NO DOS PASADAS. Si se estampa el oro en una
+  pasada y se gofra en otra, hay que hacer coincidir dos matrices
+  distintas sobre crestas de 1 mm. No sale: basta medio milímetro de
+  desvío para que el oro quede montado a caballo entre la cresta y el
+  valle. Con troquel combinado el registro es perfecto por
+  construcción, porque es la misma pieza de latón.
+
+  NO es barniz de alto relieve ni UV 3D con purpurina. Eso deja una
+  costra encima del cartón y se nota plástica. Queremos lámina
+  metálica de verdad sobre cartón hundido.
+
+  LA LÁMINA VA MATE, NO BRILLANTE. Es la decisión que más cambia el
+  resultado y cuesta lo mismo. Con 25 estrías doradas en la cara, el
+  oro brillante tira a papel de regalo; el mate se lee como metal.
+  Pedir oro mate y, si la imprenta tiene muestrario, ver la lámina
+  física antes de decidir.
 
 
 LA MATRIZ
 
   Material        Latón (bronce), grabado o fresado.
-  Tipo            Macho y hembra. La hembra es imprescindible: con
-                  solo el macho contra una contra de resina la estría
-                  fina sale blanda y desigual.
+  Tipo            COMBINADA de estampado y relieve, macho y hembra.
+                  La hembra es imprescindible: con solo el macho
+                  contra una contra de resina la estría fina sale
+                  blanda y desigual.
+  Calefactada     El estampado en caliente necesita que la matriz
+                  tenga temperatura. Es una matriz distinta —y más
+                  cara— que una de gofrado ciego.
   Perfil          Canal de fondo redondeado, no en V. El vidrio del
                   frasco es redondeado; una V se ve a cuchillo.
   Ángulo de pared 45° a 60°. Más vertical que eso parte la fibra.
@@ -55,6 +73,29 @@ LA GEOMETRÍA — ESTO ES LO QUE HAY QUE DARLE
   Si la imprenta propone otra cosa, que sea ELLA la que diga qué
   aguanta su matriz con ese cartón. Pero que no baje de 0,8 mm de
   cresta ni pase de 0,21 mm de hondo.
+
+
+CUÁNTO ORO — TRES REPARTOS, HAY QUE ELEGIR UNO
+
+  Ver oro.png. Los tres llevan la misma estría; cambia cuánta va
+  dorada.
+
+  1  Estría completa en las tres caras.
+     45 % de la cara cubierta. 66 cm² de lámina por caja.
+     Es el más rotundo y el más caro.
+
+  2  Igual, pero con lámina brillante.
+     Mismo coste que el 1. NO recomendado: con tanta estría, el
+     brillo tira a papel de regalo.
+
+  3  Oro solo en el tercio de arriba y el de abajo; el centro,
+     en relieve seco sin lámina.
+     23 % de la cara. La mitad de lámina y la mitad de riesgo.
+     El oro enmarca, el centro respira y el texto queda definido
+     por el propio blanco. ES EL QUE RECOMIENDO.
+
+  Pedir presupuesto de los tres: el coste del troquel es el mismo,
+  lo que cambia es el consumo de lámina.
 
 
 EN QUÉ CARAS VA
@@ -93,15 +134,23 @@ EL ORDEN DE LAS OPERACIONES — IMPORTA
 
   1. Impresión en offset, una tinta (negro).
   2. Laminado soft touch mate.
-  3. Estampado en caliente del foil dorado (solo el fleurón).
-  4. GOFRADO.
-  5. Troquelado.
-  6. Plegado y pegado.
+  3. ESTAMPADO COMBINADO: la estría dorada y su relieve, en una
+     sola pasada con el troquel combinado. El fleurón entra en la
+     misma pasada, con la misma lámina.
+  4. Troquelado.
+  5. Plegado y pegado.
 
-  EL LAMINADO VA ANTES DEL GOFRADO, NUNCA DESPUÉS. Si se lamina
+  EL LAMINADO VA ANTES DEL ESTAMPADO, NUNCA DESPUÉS. Si se lamina
   encima de un relieve ya hecho, el rodillo lo aplasta y el trabajo
   se pierde. Esto es lo que más se equivoca; conviene decirlo en voz
   alta al entregar el arte.
+
+  PERO OJO CON EL SOFT TOUCH. Hay laminados soft touch sobre los que
+  la lámina dorada NO agarra bien: se despega al rascar con la uña.
+  Hay que preguntar expresamente si su película es apta para
+  estampado, y exigir la prueba de la uña sobre el pase de muestra.
+  Si no lo es, las salidas son pedir una película estampable o
+  cambiar a laminado mate normal.
 
 
 REGISTRO
@@ -120,6 +169,9 @@ QUÉ PEDIR ANTES DE LA TIRADA
 
   En la prueba hay que mirar, con el dedo y a contraluz:
     □ ¿Se siente la estría sin tener que buscarla?
+    □ ¿El oro cayó CLAVADO en la cresta, sin montarse en el valle?
+    □ LA PRUEBA DE LA UÑA: ¿se despega el oro al rascarlo?
+    □ ¿El oro es mate de verdad o tira a brillante?
     □ ¿Hay línea blanca en alguna cresta? (fibra reventada: menos hondo)
     □ ¿Se marca el relieve en la cara interior? (demasiado hondo)
     □ ¿La ventana del texto quedó realmente plana?
@@ -134,7 +186,11 @@ EL ARTE QUE SE ENTREGA
   plano llamado GOFRADO, marcado como sobreimpresión y fuera de la
   separación de color. Igual el foil, en su propia capa llamada FOIL.
 
-  Capas del archivo: CORTE · HENDIDO · NEGRO · FOIL · GOFRADO.
+  Capas del archivo: CORTE · HENDIDO · NEGRO · FOIL-RELIEVE.
+
+  La estría dorada y su relieve van en UNA SOLA capa, porque son una
+  sola matriz. Llamarla FOIL-RELIEVE y decirlo en la orden, para que
+  no fabriquen dos troqueles.
 
   Los PNG de esta carpeta NO son el arte final. Son el plano para
   entenderse. El archivo que entra en máquina se reconstruye en
@@ -145,13 +201,19 @@ SI LA IMPRENTA DICE QUE NO PUEDE
 
   Por orden de preferencia, las salidas:
 
-  1. Subir el paso a 2,6 o 3,0 mm. Menos estrías (21 o 18) pero el
-     efecto se mantiene. Es la primera concesión que haría.
-  2. Cartulina ya texturizada de fábrica con grano lineal. Más
+  1. Pasar al reparto 3: oro solo arriba y abajo. Menos lámina,
+     menos pasada, mismo carácter.
+  2. Subir el paso a 2,6 o 3,0 mm. Menos estrías (21 o 18) pero el
+     efecto se mantiene.
+  3. Separar en dos trabajos: gofrado ciego en toda la estría y foil
+     solo en el fleurón. Se pierde el oro de la estría pero se
+     conserva el tacto, y es bastante más barato.
+  4. Cartulina ya texturizada de fábrica con grano lineal. Más
      barato, pero no se elige el paso y sale en TODA la hoja,
      incluidos el dorso y la pestaña.
-  3. Barniz UV de alto relieve en mate. Se siente, pero es una capa
+  5. Barniz UV de alto relieve en mate. Se siente, pero es una capa
      encima: al tacto es plástico, no cartón. Última opción.
 
-  Lo que NO vale: imprimir la estría en gris y decir que es relieve.
-  Eso es lo que había antes y no es lo que se busca.
+  Lo que NO vale: imprimir la estría en tinta dorada y decir que es
+  oro. La tinta dorada sobre blanco sale mostaza y no brilla. O es
+  lámina estampada, o no es oro.

@@ -54,7 +54,8 @@ d.text((tx, SUELO + mm(10)), f"{TARJ_W} × {TARJ_H} mm  ·  igual en todo el mun
 # ---------- 2. la caja cerrada, en perspectiva ligera --------------------
 cx = tx + mm(TARJ_W + 14)
 cy = MG
-frente = denso.b_etiqueta()[0].resize((mm(CAJA_W), mm(CAJA_H)), Image.LANCZOS)
+# La opción elegida: A, la estría en oro.
+frente = denso.a_estria()[0].resize((mm(CAJA_W), mm(CAJA_H)), Image.LANCZOS)
 lam.paste(frente, (int(cx), int(cy)))
 d.rectangle([cx, cy, cx + mm(CAJA_W), SUELO], outline=(188, 182, 174), width=2)
 

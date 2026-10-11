@@ -89,23 +89,44 @@ def cara():
 
 
 # =========================================================== A · LA ESTRÍA
+# Estampado combinado: la lámina dorada y el hundido salen de la misma
+# matriz, en una pasada. Por eso el oro cae clavado en la cresta y el
+# valle se queda en blanco del papel. La lámina va MATE: con 25 estrías
+# doradas, el oro brillante tira a papel de regalo.
+ORO_FOIL = ((198, 170, 112), (146, 117, 64), (176, 146, 92))   # luz, sombra, medio
+
+
 def a_estria():
-    im, d = cara()
-    # Geometría de gofrado, no de dibujo: paso 2,2 con cresta de 1,0.
-    # Por debajo de 0,8 mm de cresta el latón del troquel no aguanta
-    # y la fibra del cartón revienta. Son 25 estrías en la cara.
-    paso, grosor = 2.2, 1.0
-    x = paso / 2
+    import numpy as np
+    paso, cresta = 2.2, 1.0
+    luz, sombra, medio = ORO_FOIL
+    alto, ancho = mm(H), mm(W)
+    lienzo = np.full((alto, ancho, 3), 255.0)
+
+    x = 0.0
     while x < W:
-        d.rectangle([mm(x), 0, mm(x) + max(1, int(grosor * PPM)), mm(H)], fill=ESTRIA)
+        c0, c1 = mm(x), min(mm(x + cresta), ancho)
+        if c1 > c0:                       # la cresta, con su reflejo metálico
+            tr = np.linspace(0, 1, c1 - c0)
+            mezcla = np.empty((c1 - c0, 3))
+            for k in range(3):
+                mezcla[:, k] = np.interp(tr, [0, 0.28, 0.62, 1.0],
+                                         [sombra[k], luz[k], medio[k], sombra[k]])
+            lienzo[:, c0:c1] = mezcla[None, :, :]
+        v0, v1 = mm(x + cresta), min(mm(x + paso), ancho)
+        if v1 > v0:                       # el valle, papel con la sombra del canto
+            tr = np.linspace(0, 1, v1 - v0)
+            lienzo[:, v0:v1] -= (np.exp(-((tr - 0.2) ** 2) / 0.05) * 22)[None, :, None]
         x += paso
-    # ventana limpia donde se apoya el texto, como el vidrio liso bajo la etiqueta
-    d.rectangle([mm(4), mm(25), mm(W - 4), mm(63)], fill=BLANCO)
-    pila(d, 29.0)
+
+    # la ventana del texto: plana y sin lámina, para que la letra se lea
+    lienzo[mm(25):mm(63), mm(4):mm(W - 4)] = 255.0
+    im = Image.fromarray(np.clip(lienzo, 0, 255).astype(np.uint8))
+    pila(ImageDraw.Draw(im), 29.0)
     return im, "A · La estría", [
-        "La estría del frasco, GOFRADA: se siente con el dedo.",
-        "25 estrías de 2,2 mm. Sin tinta: es el cartón empujado.",
-        "1 tinta + gofrado + foil en el fleurón."]
+        "La estría del frasco, en oro mate y GOFRADA a la vez.",
+        "Una sola matriz estampa y hunde: se ve y se siente.",
+        "1 tinta + estampado combinado (foil + relieve)."]
 
 
 # ========================================================= B · LA ETIQUETA
