@@ -3,15 +3,27 @@ EMPAQUE DEL FRASCO DE 60 ML — MAISON SALDANA
 
 QUÉ HAY AQUÍ
 
-  minimal.png      Las cuatro opciones de cara frontal, a escala real.
+  denso.png        Las cuatro opciones BUENAS, a escala real. Esta es la
+                   ronda a mirar: la anterior se quedó vacía.
+  escala.png       La caja al lado de una tarjeta de crédito y del frasco,
+                   todo a tamaño real. Para juzgar el tamaño de verdad,
+                   que una pantalla no sirve para eso.
+
+  minimal.png      La primera ronda, demasiado vacía. Se queda por si
+                   alguna idea suelta vale.
   troquel.png      El plano de la caja desplegada, con el arte repartido.
                    Caja universal: sin nombre ni código de fragancia.
   proporcion.png   El frasco y la caja propuesta, uno al lado del otro.
 
-  frente-1-el-silencio.png    Las cuatro caras por separado, a 356 ppp.
-  frente-2-el-monograma.png   Son de 54 × 90 mm a tamaño real: se pueden
-  frente-3-la-linea.png       colocar directamente en Canva o mandarlas
-  frente-4-el-sello.png       a la imprenta como referencia visual.
+  frente-a-la-estria.png      Las caras de la ronda buena, por separado,
+  frente-b-la-etiqueta.png    a 54 × 90 mm y 356 ppp. Se colocan
+  frente-c-el-marco.png       directamente en Canva o se le enseñan al
+  frente-d-el-bloque.png      impresor como referencia visual.
+
+  frente-1-el-silencio.png    Las de la primera ronda, por si acaso.
+  frente-2-el-monograma.png
+  frente-3-la-linea.png
+  frente-4-el-sello.png
 
   conceptos.py     Los programas que dibujan todo lo anterior. Si cambia
   minimal.py       una medida, se cambia ahí y se vuelve a generar; no
