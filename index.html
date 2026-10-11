@@ -358,6 +358,38 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
    portada y en la primera carga. En pantalla grande cansaba. */
 .ms-lamina[data-activa="true"]{animation:ms-vela 1.8s both ease}
 @keyframes ms-vela{from{opacity:0} to{opacity:1}}
+/* EN PANTALLA ANCHA EL R\u00d3TULO VA ENCIMA DE LA PORTADA.
+   Medido en un port\u00e1til de 950 px: la ventana acaba en 950, el
+   carrusel 16:9 acaba en 971 y la primera l\u00ednea de texto ca\u00eda en
+   1069. Quien entraba desde un ordenador ve\u00eda una foto y nada m\u00e1s:
+   ni qu\u00e9 es esto, ni cu\u00e1ntas fragancias hay, ni un bot\u00f3n.
+
+   Dos cambios y el mismo arreglo. La caja deja de ser 16:9 exacta y
+   se queda con la altura que quepa, dejando asomar lo que viene
+   debajo; y el pie del hero sale del flujo y se apoya sobre la
+   portada, con un velo que lo despega de la foto.
+
+   Lo que se recorta de la l\u00e1mina sale por arriba y por abajo a
+   partes iguales, y abajo lo tapa el propio velo. En el tel\u00e9fono
+   nada de esto se aplica: all\u00ed el 16:9 mide 219 px de alto y no cabe
+   un texto dentro, as\u00ed que el pie se queda debajo como estaba. */
+@media (min-width:900px){
+  .ms-carrusel{
+    max-width:calc((100svh - 200px) * 1.78);
+    min-width:min(100%, 760px);
+  }
+  .ms-hero::after{display:none}
+  .ms-hero-pie{
+    position:absolute; left:0; right:0; bottom:0; z-index:4;
+    max-width:none; padding:150px var(--gutter) 54px;
+    background:linear-gradient(180deg,
+      rgba(11,10,8,0) 0%, rgba(11,10,8,.42) 38%,
+      rgba(11,10,8,.80) 76%, var(--papel) 100%);
+  }
+  .ms-hero-pie p{margin:20px auto 26px; max-width:52ch; color:#E6DFD2}
+  .ms-puntos{top:26px; bottom:auto}
+}
+
 @media (prefers-reduced-motion:reduce){
   .ms-hero .ms-fleuron, .ms-hero-pie p, .ms-hero-pie .ms-btn, .ms-lamina[data-activa="true"]{animation:none}
 }
@@ -567,6 +599,59 @@ html[data-tema="oscuro"] .ms-mini::after{
 .ms-mosaico small{
   display:block; margin-top:10px; font-size:10px; letter-spacing:.28em;
   text-transform:uppercase; color:var(--tinta-suave); position:relative;
+}
+/* ---------- familias olfativas --------------------------------
+   Eran doce rect\u00e1ngulos iguales con una palabra dentro. Ahora cada
+   una lleva su tono lavado sobre el fondo de la casa, una l\u00ednea de
+   acento de ese mismo color y las tres notas que la distinguen. El
+   tono entra por --tono desde la propia tarjeta. */
+.ms-familias{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(236px,1fr));
+  gap:clamp(12px,1.6vw,20px);
+}
+.ms-familia{
+  position:relative; display:flex; flex-direction:column; justify-content:flex-end;
+  min-height:clamp(176px,19vw,224px); padding:26px 24px 24px;
+  border:1px solid var(--linea); overflow:hidden;
+  background:
+    linear-gradient(158deg, rgba(var(--tono),.22) 0%, rgba(var(--tono),.07) 56%, rgba(var(--tono),0) 100%),
+    var(--campo);
+  transition:border-color .4s, box-shadow .4s, transform .4s var(--ease);
+}
+html[data-tema="oscuro"] .ms-familia{
+  background:
+    linear-gradient(158deg, rgba(var(--tono),.30) 0%, rgba(var(--tono),.10) 56%, rgba(var(--tono),0) 100%),
+    var(--campo);
+}
+.ms-familia::after{  /* la l\u00ednea de acento, que crece al pasar por encima */
+  content:""; position:absolute; left:24px; bottom:0; height:2px; width:34px;
+  background:rgb(var(--tono)); transition:width .5s var(--ease);
+}
+.ms-familia h3{font-size:clamp(22px,2.5vw,29px); line-height:1.1}
+.ms-familia small{
+  display:block; margin-top:7px; font-size:10px; letter-spacing:.26em;
+  text-transform:uppercase; color:var(--tinta-suave);
+}
+.ms-familia p{
+  margin:16px 0 0; font-size:12.5px; line-height:1.7; color:var(--tinta-suave);
+  border-top:1px solid var(--linea); padding-top:13px;
+}
+@media (hover:hover){
+  .ms-familia:hover{border-color:rgba(var(--tono),.6); box-shadow:var(--sombra-suave); transform:translateY(-3px)}
+  .ms-familia:hover::after{width:calc(100% - 48px)}
+}
+@media (max-width:760px){
+  .ms-familias{grid-template-columns:repeat(2,1fr); gap:10px}
+  .ms-familia{min-height:150px; padding:18px 16px 16px}
+  .ms-familia::after{left:16px}
+  .ms-familia h3{font-size:clamp(17px,4.6vw,22px)}
+  .ms-familia small{font-size:8.5px; letter-spacing:.16em}
+  .ms-familia p{font-size:11px; margin-top:11px; padding-top:9px; line-height:1.6}
+  @media (hover:hover){ .ms-familia:hover::after{width:calc(100% - 32px)} }
+}
+@media (prefers-reduced-motion:reduce){
+  .ms-familia, .ms-familia::after{transition:none}
+  .ms-familia:hover{transform:none}
 }
 .ms-listado{
   display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
@@ -1418,7 +1503,9 @@ const PORTADAS = [
   /* La \u00fanica portada donde sale el frasco de verdad de la casa \u2014el
      cil\u00edndrico estriado que aparece en las 373 fichas\u2014 en vez del
      frasco gen\u00e9rico que le puso el generador a las otras cuatro.
-     Est\u00e1 montada con la tipograf\u00eda y los colores del sitio. */
+     Llevaba el r\u00f3tulo de la casa escrito a la izquierda; se le quit\u00f3
+     cuando el r\u00f3tulo pas\u00f3 a ir en HTML encima del carrusel, porque si
+     no sal\u00eda dos veces y encima se pisaban. */
   {img:"/originales/portada-5.webp", alt:"Maison Saldana \u2014 Eau de Parfum, 60 ml"},
   {img:"/originales/portada-6.webp", alt:"Maison Saldana \u2014 Notas c\u00edtricas del Caribe, Pour Lui"},
 ];
@@ -1819,6 +1906,70 @@ const PRODUCTOS = [
 /* ---------- 4. TAXONOMÍAS --------------------------------------- */
 const GENEROS = ["Mujer","Hombre","Unisex"];
 const FAMILIAS = ["Floral","Fresco","Gourmand","Amaderado","Ámbar","Frutal","Oud","Especiado","Acuático","Aromático","Cítrico","Limpio"];
+
+/* Un tono por familia, para que la p\u00e1gina de notas deje de ser doce
+   cajas iguales. Van en "r,g,b" sueltos porque la hoja de estilo los
+   usa con distinta transparencia seg\u00fan el tema: un lavado de color
+   sobre el fondo de la casa, no un bloque plano. Son colores sucios a
+   prop\u00f3sito \u2014nogal, salvia, p\u00e1prika\u2014: la paleta del sitio es
+   sobria y doce colores saturados la romper\u00edan. */
+const TONO_FAMILIA = {
+  "Floral":    "206,142,158",   // rosa empolvado
+  "Fresco":    "142,190,176",   // verde agua
+  "Gourmand":  "198,150,96",    // caramelo
+  "Amaderado": "150,116,84",    // nogal
+  "Ámbar":     "201,164,94",    // el oro de la casa
+  "Frutal":    "196,112,108",   // fruta roja
+  "Oud":       "124,92,112",    // ciruela oscura
+  "Especiado": "186,110,74",    // páprika
+  "Acuático":  "124,164,190",   // azul de agua
+  "Aromático": "146,168,124",   // salvia
+  "Cítrico":   "198,190,110",   // limón
+  "Limpio":    "172,180,188",   // gris perla
+};
+
+/* Las tres notas que MEJOR DISTINGUEN a una familia, no las que m\u00e1s se
+   repiten. No es lo mismo: la bergamota sale en media tienda, as\u00ed que
+   decir que el c\u00edtrico huele a bergamota no informa de nada. Aqu\u00ed se
+   compara cu\u00e1nto aparece una nota dentro de la familia contra cu\u00e1nto
+   aparece en todo el cat\u00e1logo, y ganan las que destacan. Por eso el
+   floral sale con nardos y rosa de Damasco en vez de con almizcle.
+
+   Se exige un m\u00ednimo de presencia para que una nota suelta de una
+   sola fragancia no se cuele, y en las familias peque\u00f1as \u2014el oud son
+   dos\u2014 se completa con las m\u00e1s repetidas. Se calcula al vuelo desde
+   el cat\u00e1logo: a\u00f1ades fragancias y esto se pone al d\u00eda solo. */
+let _notasFamilia = null;
+function notasCaracteristicas(familia){
+  if(!_notasFamilia){
+    _notasFamilia = {};
+    const global = new Map(), porFamilia = new Map(), tam = new Map();
+    PRODUCTOS.forEach(p=>{
+      const notas = new Set([...(p.notasSalida||[]), ...(p.notasCorazon||[]), ...(p.notasFondo||[])]);
+      const f = p.familiaOlfativa;
+      if(!porFamilia.has(f)){ porFamilia.set(f, new Map()); tam.set(f, 0); }
+      tam.set(f, tam.get(f) + 1);
+      const dentro = porFamilia.get(f);
+      notas.forEach(n=>{
+        global.set(n, (global.get(n) || 0) + 1);
+        dentro.set(n, (dentro.get(n) || 0) + 1);
+      });
+    });
+    const N = PRODUCTOS.length;
+    porFamilia.forEach((dentro, f)=>{
+      const n = tam.get(f), minimo = Math.max(2, Math.round(n * 0.18));
+      const fuertes = [...dentro.entries()]
+        .filter(([, c]) => c >= minimo)
+        .sort((a, b) => (b[1]/n)/(global.get(b[0])/N) - (a[1]/n)/(global.get(a[0])/N))
+        .map(([k]) => k);
+      const repetidas = [...dentro.entries()].sort((a,b)=>b[1]-a[1]).map(([k])=>k);
+      const tres = fuertes.slice(0, 3);
+      for(const k of repetidas){ if(tres.length >= 3) break; if(!tres.includes(k)) tres.push(k); }
+      _notasFamilia[f] = tres;
+    });
+  }
+  return _notasFamilia[familia] || [];
+}
 /* ---------- OCASIONES -------------------------------------------
    Cada fragancia se clasifica sola a partir de su familia y sus
    notas. No hay que etiquetar producto por producto.            */
@@ -2318,7 +2469,7 @@ function vistaInicio(){
       <div class="ms-listado">
         ${marcas.map(m=>`<a href="/coleccion?marca=${encodeURIComponent(m)}">
           <strong>${esc(m)}</strong>
-          <small>${PRODUCTOS.filter(p=>p.marcaInspiracion===m).length} inspiración(es)</small>
+          <small>${(c => c === 1 ? "1 inspiración" : c + " inspiraciones")(PRODUCTOS.filter(p=>p.marcaInspiracion===m).length)}</small>
         </a>`).join("")}
       </div>
       <p style="text-align:center;margin-top:34px"><a class="ms-enlace" href="/inspiraciones">Ver todas las inspiraciones</a></p>
@@ -2524,7 +2675,7 @@ function vistaInspiraciones(){
     <div class="ms-listado">
       ${marcas.map(({m,n})=>`<a href="/coleccion?marca=${encodeURIComponent(m)}">
         <strong>${esc(m)}</strong>
-        <small>${n} inspiración${n===1?"":"es"}</small>
+        <small>${n} ${n===1 ? "inspiración" : "inspiraciones"}</small>
       </a>`).join("")}
     </div>
   </div>`;
@@ -2537,11 +2688,16 @@ function vistaNotas(){
       <h1>Notas olfativas</h1>
       <p>Elige una familia y encuentra la fragancia que corresponde a tu forma de oler el día.</p>
     </div>
-    <div class="ms-mosaico" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">
+    <div class="ms-familias">
       ${FAMILIAS.map(f=>{
         const n = PRODUCTOS.filter(p=>p.familiaOlfativa===f).length;
-        return `<a href="/coleccion?familia=${encodeURIComponent(f)}" style="min-height:170px">
-          <div><h3 style="font-size:clamp(21px,2.6vw,27px)">${f}</h3><small>${n} fragancia${n===1?"":"s"}</small></div>
+        if(!n) return "";
+        const notas = notasCaracteristicas(f);
+        return `<a class="ms-familia" href="/coleccion?familia=${encodeURIComponent(f)}"
+                   style="--tono:${TONO_FAMILIA[f] || "169,138,75"}">
+          <h3>${esc(f)}</h3>
+          <small>${n} fragancia${n===1?"":"s"}</small>
+          ${notas.length ? `<p>${notas.map(esc).join(" &middot; ")}</p>` : ""}
         </a>`;
       }).join("")}
     </div>
