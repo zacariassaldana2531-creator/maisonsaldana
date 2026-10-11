@@ -59,9 +59,10 @@ def fleuron(d, cx, cy, alto, color):
 
 
 def pila(d, y0, ancho=W, x0=0, esc=1.0):
-    """La pila de la etiqueta del frasco: nombre, fleurón, colección,
-    concentración y volumen. Es lo que ya lleva el frasco; repetirla en
-    la caja hace que las dos piezas se lean como una sola."""
+    """La pila entera: nombre, fleurón, colección, concentración y
+    volumen. Va completa EN EL FRENTE, que es donde se busca. Antes la
+    concentración y el volumen estaban repetidos en un costado y ahí no
+    los mira nadie."""
     linea(d, y0, "MAISON SALDANA", ft(BODONI, 8.2 * esc), NEGRO, 0.40 * esc, ancho, x0)
     y = y0 + 7.6 * esc
     cx = x0 + ancho / 2
@@ -74,9 +75,10 @@ def pila(d, y0, ancho=W, x0=0, esc=1.0):
     fleuron(d, cx, y, 2.1 * esc, ORO)
     linea(d, y0 + 11.0 * esc, "COLLECTION D'INSPIRATIONS",
           ft(JOST, 2.9 * esc), NEGRO, 0.22 * esc, ancho, x0)
-    filete(d, y0 + 16.6 * esc, 16 * esc, HILO, cx=x0 + ancho / 2)
-    linea(d, y0 + 19.0 * esc, "EAU DE PARFUM", ft(JOST, 3.1 * esc), NEGRO, 0.26 * esc, ancho, x0)
-    filete(d, y0 + 24.6 * esc, 16 * esc, HILO, cx=x0 + ancho / 2)
+    filete(d, y0 + 16.6 * esc, 18 * esc, HILO, cx=x0 + ancho / 2)
+    linea(d, y0 + 19.0 * esc, "EXTRAIT DE PARFUM",
+          ft(JOST, 3.1 * esc), NEGRO, 0.26 * esc, ancho, x0)
+    filete(d, y0 + 24.6 * esc, 18 * esc, HILO, cx=x0 + ancho / 2)
     linea(d, y0 + 27.0 * esc, "60 ML", ft(BODONI, 4.6 * esc), NEGRO, 0.24 * esc, ancho, x0)
     return y0 + 31.5 * esc
 

@@ -9,6 +9,7 @@ final se reconstruye en vectorial.
 """
 from PIL import Image, ImageDraw, ImageFont
 import os
+import sys
 
 F = "/tmp/claude-0/-home-user-maisonsaldana/ea3b086e-04ac-5a0b-b7d0-5c4540eaa5c0/scratchpad/fuentes"
 BODONI, JOST = f"{F}/bodoni-1.ttf", f"{F}/jost-3236.ttf"
@@ -100,16 +101,25 @@ for i, (nombre, w) in enumerate(paneles):
                        (bx + mm(5), yy + sg * mm(OREJA))], fill=(252, 250, 247))
 
 # ---------- arte ---------------------------------------------------------
-# FRENTE: el sello
-fx = bordes[0]
-centrado(37.0, "MAISON SALDANA", ft(BODONI, 7.4), NEGRO, 0.5, fx)
-fleuron(fx + mm(A) / 2, 44.2, 2.1, ORO)
-centrado(47.6, "COLLECTION D'INSPIRATIONS", ft(JOST, 3.1), NEGRO, 0.26, fx)
+# FRENTE: el diseño elegido, entero. Se pega la misma lámina que se
+# dibuja en denso.py, así el troquel y la opción que se apruebe no
+# pueden separarse nunca. Cambiar de opción es cambiar esta línea.
+import importlib.util as _il
+_sp = _il.spec_from_file_location("denso", os.path.join(SALIDA, "denso.py"))
+_denso = _il.module_from_spec(_sp)
+sys.modules["denso"] = _denso
+_sp.loader.exec_module(_denso)
+OPCION = _denso.b_etiqueta          # a_estria · b_etiqueta · c_marco · d_bloque
 
-# COSTADO 1: concentración y volumen
+fx = bordes[0]
+frente = OPCION()[0].resize((mm(A), mm(H)), Image.LANCZOS)
+lam.paste(frente, (int(fx), int(YC0)))
+
+# COSTADOS: solo la firma. La concentración y el volumen NO van aquí:
+# van en el frente, con el resto, que es donde se buscan. Tenerlos en
+# los dos sitios era repetirlos y dejar el frente a medias.
 cx1 = bordes[1]
-centrado(42.0, "EAU DE PARFUM", ft(JOST, 3.2), NEGRO, 0.3, cx1)
-centrado(48.0, "60 ML  ·  2 FL OZ", ft(JOST, 3.2), NEGRO, 0.3, cx1)
+centrado(45.0, "MAISON SALDANA", ft(JOST, 3.0), NEGRO, 0.28, cx1)
 
 # DORSO: QR, web y procedencia. La caja es universal: la misma para
 # las 373 fragancias, así que aquí no va el nombre de ninguna. Al
