@@ -1,0 +1,68 @@
+{
+ "hero": {
+  "src": "assets/img/hero.webp",
+  "title": "Chicken Wings on the Grill",
+  "creator": "Augapfel",
+  "creator_url": "https://www.flickr.com/photos/47038415@N00",
+  "license": "by",
+  "license_version": "2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "foreign_landing_url": "https://www.flickr.com/photos/47038415@N00/296424771",
+  "source": "flickr"
+ },
+ "casa": {
+  "src": "assets/img/casa.webp",
+  "title": "DFC 5235- Charcoal-grilled skewers of juicy, marinated chicken sizzling to a perfect caramelized finish",
+  "creator": "Pattaya Patrol",
+  "creator_url": null,
+  "license": "by-sa",
+  "license_version": "4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=188523041",
+  "source": "wikimedia"
+ },
+ "pollo-horneado": {
+  "src": "assets/img/pollo-horneado.webp",
+  "title": "pollo a la brasa",
+  "creator": "goodiesfirst",
+  "creator_url": "https://www.flickr.com/photos/49215102@N00",
+  "license": "by",
+  "license_version": "2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "foreign_landing_url": "https://www.flickr.com/photos/49215102@N00/8761648762",
+  "source": "flickr"
+ },
+ "pollo-frito": {
+  "src": "assets/img/pollo-frito.webp",
+  "title": "Bon Chon Korean Fried Chicken",
+  "creator": "arnold | inuyaki",
+  "creator_url": "https://www.flickr.com/photos/58819758@N00",
+  "license": "by",
+  "license_version": "2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "foreign_landing_url": "https://www.flickr.com/photos/58819758@N00/1435410013",
+  "source": "flickr"
+ },
+ "alitas": {
+  "src": "assets/img/alitas.webp",
+  "title": "Chicken Wings on the Grill",
+  "creator": "Augapfel",
+  "creator_url": "https://www.flickr.com/photos/47038415@N00",
+  "license": "by",
+  "license_version": "2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "foreign_landing_url": "https://www.flickr.com/photos/47038415@N00/296424771",
+  "source": "flickr"
+ },
+ "salmon": {
+  "src": "assets/img/salmon.webp",
+  "title": "Grilled salmon with citrus sauce",
+  "creator": "Khrl Zhfr",
+  "creator_url": "https://www.flickr.com/photos/26037046@N00",
+  "license": "by",
+  "license_version": "2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "foreign_landing_url": "https://www.flickr.com/photos/26037046@N00/5707194694",
+  "source": "flickr"
+ }
+}
