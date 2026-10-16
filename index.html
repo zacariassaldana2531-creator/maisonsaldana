@@ -120,7 +120,7 @@ html[data-tema="oscuro"]{
 html[data-tema="oscuro"]{ --foto-sombra:.16; }
 html[data-tema="oscuro"] .ms-pie{background:#0B0A08}
 html[data-tema="oscuro"] .ms-agotado{color:#C98268}
-html[data-tema="oscuro"] .ms-quitar:hover{color:#C98268; border-color:#C98268}
+@media (hover:hover){ html[data-tema="oscuro"] .ms-quitar:hover{color:#C98268; border-color:#C98268} }
 html[data-tema="oscuro"] .ms-tarjeta .ms-escena{border-color:rgba(120,105,80,.45)}
 /* el cambio no debe dar un latigazo */
 body, .ms-cabecera, .ms-tarjeta, .ms-escena{transition:background-color .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease)}
@@ -145,6 +145,25 @@ a{color:inherit; text-decoration:none}
 button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
 :focus-visible{outline:1px solid var(--oro); outline-offset:3px}
 ::selection{background:var(--oro-claro); color:var(--tinta)}
+/* Lo que se toca no se selecciona: un dedo sostenido sobre una tarjeta
+   abría una selección de texto que se quedaba pintada de oro y no se
+   iba hasta tocar en otro sitio. El texto de leer sigue copiable. */
+.ms-tarjeta, .ms-mosaico a, .ms-ocasiones a, .ms-nav a, .ms-menu li a,
+.ms-icono, .ms-btn, .ms-enlace, .ms-ficha, .ms-puntos button,
+.ms-familia, .ms-listado a, .ms-migas a, .ms-pie a, button{
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
+}
+/* El destello azul del navegador no es de la casa. Se apaga y se
+   responde al toque con un gesto propio, que si no la tienda parece
+   muerta al tocarla. */
+html{-webkit-tap-highlight-color:transparent}
+@media (hover:none){
+  .ms-tarjeta:active .ms-escena{transform:scale(.985); border-color:var(--oro-claro)}
+  .ms-tarjeta .ms-escena{transition:transform .18s var(--ease), border-color .18s var(--ease)}
+  .ms-btn:active{opacity:.72}
+  .ms-icono:active{background:var(--icono-hover)}
+  .ms-mosaico a:active{border-color:var(--oro-claro)}
+}
 /* scrollbar discreta, hilo de oro — solo escritorio */
 @media (hover:hover){
   ::-webkit-scrollbar{width:9px}
@@ -187,15 +206,15 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   content:""; position:absolute; inset:0; opacity:0; transition:opacity .5s;
   background:radial-gradient(90% 80% at 50% 120%, rgba(169,132,60,.12), transparent 70%);
 }
-.ms-ocasiones a:hover{background:var(--campo)}
-.ms-ocasiones a:hover::before{opacity:1}
+@media (hover:hover){ .ms-ocasiones a:hover{background:var(--campo)} }
+@media (hover:hover){ .ms-ocasiones a:hover::before{opacity:1} }
 .ms-ocasion-icono{
   font-size:26px; color:var(--oro); line-height:1; position:relative;
   display:grid; place-items:center; width:60px; height:60px;
   border:1px solid var(--oro-claro); border-radius:50%; margin-bottom:6px;
   transition:transform .5s var(--ease), border-color .5s;
 }
-.ms-ocasiones a:hover .ms-ocasion-icono{transform:scale(1.08); border-color:var(--oro)}
+@media (hover:hover){ .ms-ocasiones a:hover .ms-ocasion-icono{transform:scale(1.08); border-color:var(--oro)} }
 .ms-ocasiones h3{font-size:20px; letter-spacing:.02em; position:relative}
 .ms-ocasiones p{
   margin:0; font-size:13px; line-height:1.6; color:var(--tinta-suave);
@@ -246,10 +265,10 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 .ms-acciones{display:flex; align-items:center; gap:6px}
 .ms-acciones.der{justify-content:flex-end}
 .ms-icono{
-  width:42px; height:42px; display:grid; place-items:center; position:relative;
+  width:44px; height:44px; display:grid; place-items:center; position:relative;
   border-radius:50%; transition:background .3s, color .3s;
 }
-.ms-icono:hover{background:var(--icono-hover); color:var(--oro-hondo)}
+@media (hover:hover){ .ms-icono:hover{background:var(--icono-hover); color:var(--oro-hondo)} }
 .ms-icono svg{width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.1; stroke-linecap:round; stroke-linejoin:round}
 .ms-contador{
   position:absolute; top:5px; right:4px; min-width:16px; height:16px; padding:0 4px;
@@ -266,7 +285,8 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--tinta-suave);
   padding-bottom:4px; border-bottom:1px solid transparent; transition:color .3s, border-color .3s;
 }
-.ms-nav a:hover,.ms-nav a[aria-current="page"]{color:var(--tinta); border-color:var(--oro)}
+.ms-nav a[aria-current="page"]{color:var(--tinta); border-color:var(--oro)}
+@media (hover:hover){ .ms-nav a:hover{color:var(--tinta); border-color:var(--oro)} }
 .ms-solo-movil{display:none}
 .ms-txt-corto{display:none}
 @media (max-width:820px){ .ms-txt-largo{display:none} .ms-txt-corto{display:inline} }
@@ -288,7 +308,7 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 .ms-menu ul{list-style:none; margin:26px 0 0; padding:0}
 .ms-menu li{border-bottom:1px solid var(--linea)}
 .ms-menu li a{display:block; padding:15px 0; font-size:13px; letter-spacing:.22em; text-transform:uppercase; transition:padding-left .3s, color .3s}
-.ms-menu li a:hover{padding-left:6px; color:var(--oro-hondo)}
+@media (hover:hover){ .ms-menu li a:hover{padding-left:6px; color:var(--oro-hondo)} }
 .ms-velo{
   position:fixed; inset:0; background:rgba(11,10,8,.5); z-index:80;
   opacity:0; pointer-events:none; transition:opacity .45s;
@@ -426,16 +446,16 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   .ms-btn:hover::before{transform:translateX(120%); opacity:1}
 }
 .ms-btn--linea{background:transparent; color:var(--tinta); border-color:var(--tinta)}
-.ms-btn--linea:hover{background:var(--tinta); color:var(--papel)}
+@media (hover:hover){ .ms-btn--linea:hover{background:var(--tinta); color:var(--papel)} }
 .ms-btn--sutil{background:transparent; color:var(--tinta-suave); border-color:var(--linea)}
-.ms-btn--sutil:hover{background:transparent; color:var(--tinta); border-color:var(--oro)}
+@media (hover:hover){ .ms-btn--sutil:hover{background:transparent; color:var(--tinta); border-color:var(--oro)} }
 .ms-btn--ancho{width:100%}
 .ms-btn[disabled]{opacity:.4; pointer-events:none}
 .ms-enlace{
   font-size:11px; letter-spacing:.26em; text-transform:uppercase;
   border-bottom:1px solid var(--oro); padding-bottom:4px; transition:color .3s, border-color .3s;
 }
-.ms-enlace:hover{color:var(--oro-hondo); border-color:var(--oro-hondo)}
+@media (hover:hover){ .ms-enlace:hover{color:var(--oro-hondo); border-color:var(--oro-hondo)} }
 
 /* ======================= SECCIONES ======================= */
 .ms-seccion{padding:clamp(60px,8.5vw,112px) 0}
@@ -598,15 +618,15 @@ html[data-tema="oscuro"] .ms-mini::after{
   background:var(--campo); border:1px solid var(--linea); text-align:center;
   overflow:hidden; transition:border-color .4s, box-shadow .4s;
 }
-.ms-mosaico a:hover{border-color:var(--oro-claro); box-shadow:var(--sombra-suave)}
+@media (hover:hover){ .ms-mosaico a:hover{border-color:var(--oro-claro); box-shadow:var(--sombra-suave)} }
 .ms-mosaico a::before{
   content:""; position:absolute; inset:0;
   background:radial-gradient(80% 70% at 50% 110%, rgba(169,138,75,.18), transparent 70%);
   opacity:0; transition:opacity .6s;
 }
-.ms-mosaico a:hover::before{opacity:1}
+@media (hover:hover){ .ms-mosaico a:hover::before{opacity:1} }
 .ms-mosaico h3{font-size:clamp(24px,3.4vw,34px); position:relative; transition:transform .5s var(--ease)}
-.ms-mosaico a:hover h3{transform:translateY(-3px)}
+@media (hover:hover){ .ms-mosaico a:hover h3{transform:translateY(-3px)} }
 .ms-mosaico small{
   display:block; margin-top:10px; font-size:10px; letter-spacing:.28em;
   text-transform:uppercase; color:var(--tinta-suave); position:relative;
@@ -672,7 +692,7 @@ html[data-tema="oscuro"] .ms-familia{
   background:var(--papel); padding:20px 18px; display:flex; flex-direction:column; gap:6px;
   transition:background .35s;
 }
-.ms-listado a:hover{background:var(--campo)}
+@media (hover:hover){ .ms-listado a:hover{background:var(--campo)} }
 .ms-listado strong{font-family:var(--display); font-weight:400; font-size:18px}
 .ms-listado small{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--tinta-suave)}
 .ms-fichas{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
@@ -681,7 +701,8 @@ html[data-tema="oscuro"] .ms-familia{
   font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--tinta-suave);
   transition:.35s;
 }
-.ms-ficha:hover,.ms-ficha[data-activa="true"]{border-color:var(--oro); color:var(--oro-hondo)}
+.ms-ficha[data-activa="true"]{border-color:var(--oro); color:var(--oro-hondo)}
+@media (hover:hover){ .ms-ficha:hover{border-color:var(--oro); color:var(--oro-hondo)} }
 
 /* ===================== COLECCIÓN ========================= */
 .ms-portada-int{padding:clamp(42px,6vw,84px) 0 clamp(28px,4vw,46px); text-align:center}
@@ -705,7 +726,7 @@ html[data-tema="oscuro"] .ms-familia{
 .ms-grupo:last-child{border-bottom:0}
 .ms-grupo h4{font-size:11px; letter-spacing:.26em; text-transform:uppercase; font-family:var(--texto); font-weight:400; margin-bottom:14px; color:var(--oro-hondo)}
 .ms-opcion{display:flex; align-items:center; gap:10px; padding:5px 0; cursor:pointer; font-size:13px; color:var(--tinta-suave)}
-.ms-opcion:hover{color:var(--tinta)}
+@media (hover:hover){ .ms-opcion:hover{color:var(--tinta)} }
 .ms-opcion input{appearance:none; width:13px; height:13px; border:1px solid var(--tinta-suave); border-radius:1px; flex:none; transition:.25s}
 .ms-opcion input:checked{background:var(--oro-hondo); border-color:var(--oro-hondo); box-shadow:inset 0 0 0 2px var(--campo)}
 .ms-opcion input:checked+span{color:var(--tinta)}
@@ -728,7 +749,7 @@ html[data-tema="oscuro"] .ms-familia{
 .ms-producto .ms-escena{aspect-ratio:1/1; border:1px solid var(--linea)}
 @media (max-width:900px){.ms-producto .ms-escena{aspect-ratio:4/5}}
 .ms-migas{font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--tinta-suave); padding:22px 0}
-.ms-migas a:hover{color:var(--oro-hondo)}
+@media (hover:hover){ .ms-migas a:hover{color:var(--oro-hondo)} }
 .ms-ficha-marca{font-size:10px; letter-spacing:.36em; text-transform:uppercase; color:var(--oro)}
 .ms-producto h1{font-size:clamp(32px,5vw,54px); margin:12px 0 18px}
 .ms-inspirado-bloque{
@@ -751,7 +772,7 @@ html[data-tema="oscuro"] .ms-familia{
 .ms-precio-grande{font-family:var(--display); font-size:32px; margin:8px 0 24px; color:var(--oro-hondo)}
 .ms-cantidad{display:flex; align-items:center; gap:0; border:1px solid var(--linea); width:fit-content; margin-bottom:16px}
 .ms-cantidad button{width:44px; height:46px; font-size:16px; color:var(--tinta-suave); transition:color .25s}
-.ms-cantidad button:hover{color:var(--oro-hondo)}
+@media (hover:hover){ .ms-cantidad button:hover{color:var(--oro-hondo)} }
 .ms-cantidad output{width:52px; text-align:center; font-size:15px}
 .ms-compra{display:flex; flex-direction:column; gap:10px}
 .ms-aviso{font-size:11px; letter-spacing:.14em; color:var(--tinta-suave); margin-top:18px; display:flex; gap:8px; align-items:flex-start}
@@ -783,9 +804,9 @@ html[data-tema="oscuro"] .ms-familia{
 .ms-linea small{display:block; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--tinta-suave)}
 .ms-linea-ctrl{display:flex; align-items:center; gap:10px; margin-top:10px}
 .ms-linea-ctrl button{width:26px; height:26px; border:1px solid var(--linea); font-size:13px; line-height:1; transition:border-color .25s}
-.ms-linea-ctrl button:hover{border-color:var(--oro-hondo)}
+@media (hover:hover){ .ms-linea-ctrl button:hover{border-color:var(--oro-hondo)} }
 .ms-quitar{font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--tinta-suave); border-bottom:1px solid var(--linea); margin-top:10px; display:inline-block; transition:color .25s, border-color .25s}
-.ms-quitar:hover{color:#9A5B3F; border-color:#9A5B3F}
+@media (hover:hover){ .ms-quitar:hover{color:#9A5B3F; border-color:#9A5B3F} }
 .ms-cajon-pie{border-top:1px solid var(--linea); padding:20px var(--gutter) calc(20px + env(safe-area-inset-bottom))}
 .ms-total{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px}
 .ms-total span:last-child{font-family:var(--display); font-size:23px; color:var(--oro-hondo)}
@@ -836,7 +857,7 @@ html[data-tema="oscuro"] .ms-familia{
 .ms-pie{background:var(--noche); color:#CFC5B4; padding:clamp(54px,7.5vw,90px) 0 36px; margin-top:clamp(54px,7.5vw,96px); position:relative}
 .ms-pie::before{content:""; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--oro-claro),transparent)}
 .ms-pie a{transition:color .3s}
-.ms-pie a:hover{color:var(--oro-claro)}
+@media (hover:hover){ .ms-pie a:hover{color:var(--oro-claro)} }
 .ms-pie-rejilla{display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:clamp(26px,4vw,50px)}
 @media (max-width:820px){.ms-pie-rejilla{grid-template-columns:1fr 1fr}}
 /* En el teléfono el pie no se apila en una tira: dos columnas,
@@ -935,8 +956,8 @@ html[data-tema="oscuro"] .ms-familia{
 }
 .ms-wa-flotante{ padding-bottom:env(safe-area-inset-bottom) }
 @media (max-width:600px){
-  .ms-wa-flotante{right:14px; bottom:calc(14px + env(safe-area-inset-bottom)); width:52px; height:52px}
-  .ms-wa-flotante svg{width:24px; height:24px}
+  .ms-wa-flotante{right:10px; bottom:calc(12px + env(safe-area-inset-bottom)); width:46px; height:46px}
+  .ms-wa-flotante svg{width:21px; height:21px}
 }
 /* ============================================================
    EL NARIZ — ASESOR DE FRAGANCIAS
@@ -964,8 +985,8 @@ html[data-tema="oscuro"] .ms-familia{
   .ms-asesor-flotante:hover{transform:translateY(-3px) scale(1.05); box-shadow:var(--sombra)}
 }
 @media (max-width:600px){
-  .ms-asesor-flotante{right:14px; bottom:calc(78px + env(safe-area-inset-bottom)); width:52px; height:52px}
-  .ms-asesor-flotante svg{width:23px; height:23px}
+  .ms-asesor-flotante{right:10px; bottom:calc(66px + env(safe-area-inset-bottom)); width:46px; height:46px}
+  .ms-asesor-flotante svg{width:21px; height:21px}
 }
 
 /* ---------- el susurro de bienvenida ----------
