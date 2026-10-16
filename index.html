@@ -3308,6 +3308,16 @@ function portadaAusente(img){
   mostrarLamina(0);
 }
 function pararCarrusel(){ if(relojPortada){ clearInterval(relojPortada); relojPortada = null; } }
+
+/* Turnos de seis segundos que se le regalan a un video que aun no ha
+   arrancado, antes de pasar de largo. */
+const TURNOS_DE_GRACIA = 2;
+
+function videoDeTurnoSinArrancar(){
+  const cont = $("#carrusel"); if(!cont) return false;
+  const l = $$(".ms-lamina", cont)[laminaActual];
+  return !!(l && l.tagName === "VIDEO" && !l.error && l.currentTime < 0.05);
+}
 /* En un tel\u00e9fono no cabe el video grande: la pantalla no da para
    1500 px y la conexi\u00f3n suele ser peor. Cuando una portada tiene copia
    de m\u00f3vil, a las pantallas chicas se les escribe esa y punto.
@@ -3321,7 +3331,10 @@ function pararCarrusel(){ if(relojPortada){ clearInterval(relojPortada); relojPo
    grande: WebM donde se puede y MP4 en el resto, sobre todo en iPhone. */
 function videoDe(portada){
   const chica = matchMedia("(max-width: 820px)").matches;
-  return (chica && portada.videoMovil) ? portada.videoMovil : portada.video;
+  const con = navigator.connection;
+  const lenta = !!(con && (con.saveData ||
+                  /(^|-)2g$|^3g$/.test(con.effectiveType || "")));
+  return ((chica || lenta) && portada.videoMovil) ? portada.videoMovil : portada.video;
 }
 
 /* El navegador puede negarse a reproducir, y lo hace a menudo: una
@@ -3410,8 +3423,20 @@ function arrancarCarrusel(){
   /* Con la pestaña de fondo no se pasa de lámina: si no, el visitante
      vuelve a mitad de la vuelta y además se habrían descargado videos
      que nunca vio. Al volver, se le da un empujón a la que esté. */
+  /* No se pasa de lamina mientras el video de turno todavia no ha
+     podido dar un solo fotograma. Se le conceden hasta dos turnos de
+     gracia —doce segundos— y despues se sigue igual: un video que no
+     puede no tiene derecho a congelar el carrusel. El tope tambien
+     cubre el caso de que el navegador bloquee el autoarranque, donde
+     currentTime se queda en cero para siempre. */
+  let turnosDeGracia = 0;
   relojPortada = setInterval(()=>{
     if(document.hidden) return;
+    if(videoDeTurnoSinArrancar() && turnosDeGracia < TURNOS_DE_GRACIA){
+      turnosDeGracia++;
+      return;
+    }
+    turnosDeGracia = 0;
     mostrarLamina(laminaActual + 1);
   }, SEGUNDOS_PORTADA * 1000);
 }
