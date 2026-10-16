@@ -34,15 +34,26 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316130F'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%23C9A84C' text-anchor='middle'%3EMS%3C/text%3E%3C/svg%3E">
 
 <script>
-/* se aplica antes del primer pintado para evitar el destello blanco.
-   La casa se ve de noche: quien llega por primera vez entra en oscuro,
-   venga del sistema que venga. Si cambia al claro con el bot\u00f3n, esa
-   decisi\u00f3n suya manda y se recuerda en las siguientes visitas. */
+/* se aplica antes del primer pintado para evitar el destello.
+
+   Quien llega por primera vez entra en CLARO, venga del sistema que
+   venga. El marfil de la p\u00e1gina es el mismo de la etiqueta y el de la
+   caja: #F8F5E7, medido sobre la etiqueta impresa. Que la tienda y lo
+   que llega a casa sean del mismo color importa m\u00e1s que el efecto de
+   entrar a oscuras.
+
+   El contraste no se pierde, se ordena: .ms-hero y .ms-pie pintan con
+   --noche, que NO cambia de tema, as\u00ed que la portada y el pie siguen
+   siendo de noche y el cuerpo se abre en marfil. Arriba y abajo
+   oscuro, el producto en claro, como la caja al abrirla.
+
+   Si el visitante cambia al oscuro con el bot\u00f3n, esa decisi\u00f3n suya
+   manda y se recuerda en las siguientes visitas. */
 (function(){
   try{
     var g = localStorage.getItem("ms-tema");
-    document.documentElement.dataset.tema = g || "oscuro";
-  }catch(e){ document.documentElement.dataset.tema = "oscuro"; }
+    document.documentElement.dataset.tema = g || "claro";
+  }catch(e){ document.documentElement.dataset.tema = "claro"; }
 })();
 </script>
 <style>
@@ -54,10 +65,10 @@
    consistente en toda la casa.
    ============================================================ */
 :root{
-  --papel:#F6F1E9;
+  --papel:#F8F5E7;        /* medido sobre la etiqueta impresa */
   --campo:#FAF6F2;          /* superficies claras de la página */
   --foto:#FAF6F2;           /* IGUAL al fondo de la fotografía del frasco: NO cambia en oscuro */
-  --velo-cabecera:rgba(246,241,233,.92);
+  --velo-cabecera:rgba(248,245,231,.92);
   --icono-hover:#ECE3D2;
   --tinta:#14110D;
   --tinta-suave:#6E6355;
@@ -298,7 +309,7 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
 .ms-hero::after{ /* el umbral: la penumbra cede al marfil */
   content:""; position:absolute; left:0; right:0; bottom:0; height:150px; z-index:2;
   pointer-events:none;
-  background:linear-gradient(180deg, rgba(11,10,8,0) 0%, rgba(246,241,233,.08) 55%, var(--papel) 100%);
+  background:linear-gradient(180deg, rgba(11,10,8,0) 0%, rgba(248,245,231,.08) 55%, var(--papel) 100%);
 }
 /* La caja no lleva tope de altura NI de ancho: solo proporción.
    Así es 16:9 exacta en cualquier pantalla, y como las cuatro portadas
@@ -844,7 +855,7 @@ html[data-tema="oscuro"] .ms-familia{
 }
 .ms-pie h4{font-size:10px; letter-spacing:.3em; text-transform:uppercase; font-family:var(--texto); font-weight:400; color:var(--oro-claro); margin-bottom:16px}
 .ms-pie ul{list-style:none; margin:0; padding:0; display:grid; gap:9px; font-size:13px}
-.ms-pie-marca strong{font-family:var(--display); font-weight:400; font-size:27px; letter-spacing:.16em; text-transform:uppercase; color:#F6F1E9; display:block}
+.ms-pie-marca strong{font-family:var(--display); font-weight:400; font-size:27px; letter-spacing:.16em; text-transform:uppercase; color:#F8F5E7; display:block}
 .ms-pie-marca em{font-style:normal; font-size:9px; letter-spacing:.32em; text-transform:uppercase; display:block; margin-top:8px; color:var(--oro-claro)}
 .ms-pie-marca p{font-size:13px; margin:18px 0 0; max-width:34ch; color:#A3998A}
 @media (max-width:520px){.ms-pie-marca p{margin-inline:auto}}
@@ -1168,7 +1179,7 @@ html[data-tema="oscuro"] .ms-familia{
   text-align:center;
 }
 .ms-arranque h1{
-  font-family:var(--display); font-weight:400; color:#F6F1E9;
+  font-family:var(--display); font-weight:400; color:#F8F5E7;
   font-size:clamp(28px,4.6vw,46px); line-height:1.12; margin:0 auto 26px;
   max-width:18ch;
 }
@@ -3479,7 +3490,7 @@ function pintarBotonTema(){
   icono.innerHTML = oscuro ? SOL : LUNA;
   btn.setAttribute("aria-label", oscuro ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
   const meta = document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.setAttribute("content", oscuro ? "#12100D" : "#F6F1E9");
+  if(meta) meta.setAttribute("content", oscuro ? "#12100D" : "#F8F5E7");
 }
 
 function alternarTema(){
