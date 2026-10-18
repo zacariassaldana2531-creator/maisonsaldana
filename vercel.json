@@ -1,5 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:ruta*",
+      "has": [
+        {
+          "type": "host",
+          "value": ".*\\.vercel\\.app"
+        }
+      ],
+      "destination": "https://maisonsaldana.com/:ruta*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:ruta*",
