@@ -286,6 +286,13 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   padding-bottom:4px; border-bottom:1px solid transparent; transition:color .3s, border-color .3s;
 }
 .ms-nav a[aria-current="page"]{color:var(--tinta); border-color:var(--oro)}
+/* Con nueve entradas el menú saltaba a dos filas entre 900 y 1200 px.
+   En vez de quitar una entrada se aprieta el espaciado en esa franja:
+   el ojo no nota 0,04 em menos de letra, y dos filas sí se notan. */
+@media (min-width:900px) and (max-width:1200px){
+  .ms-nav ul{gap:18px; padding-left:14px; padding-right:14px}
+  .ms-nav a{letter-spacing:.17em}
+}
 @media (hover:hover){ .ms-nav a:hover{color:var(--tinta); border-color:var(--oro)} }
 .ms-solo-movil{display:none}
 .ms-txt-corto{display:none}
@@ -406,8 +413,8 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
    un texto dentro, as\u00ed que el pie se queda debajo como estaba. */
 @media (min-width:900px){
   .ms-carrusel{
-    max-width:calc((100svh - 200px) * 1.78);
-    min-width:min(100%, 760px);
+    width:100%; max-width:none;
+    max-height:calc(100svh - 190px);
   }
   .ms-hero::after{display:none}
   .ms-hero-pie{
@@ -456,6 +463,38 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   border-bottom:1px solid var(--oro); padding-bottom:4px; transition:color .3s, border-color .3s;
 }
 @media (hover:hover){ .ms-enlace:hover{color:var(--oro-hondo); border-color:var(--oro-hondo)} }
+
+/* ================= LA ESCALA DE CONCENTRACIÓN ================= */
+.ms-escala{width:100%; border-collapse:collapse; font-size:15px; margin:4px 0}
+.ms-escala caption{
+  caption-side:top; text-align:left; padding-bottom:12px;
+  font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:var(--oro);
+}
+.ms-escala th, .ms-escala td{
+  text-align:left; padding:13px 14px; border-bottom:1px solid var(--linea); font-weight:400;
+}
+.ms-escala thead th{
+  font-size:9.5px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--tinta-suave); border-bottom-color:var(--oro);
+}
+.ms-escala tbody th{color:var(--tinta)}
+.ms-escala tbody td{color:var(--tinta-suave); font-variant-numeric:tabular-nums}
+/* La fila de la casa se marca con un filete de oro a la izquierda y un
+   fondo apenas insinuado: tiene que leerse como el final de la escala,
+   no como un cartel. */
+.ms-escala .ms-fila-casa th, .ms-escala .ms-fila-casa td{
+  background:rgba(169,132,60,.07); color:var(--tinta); font-weight:500;
+}
+.ms-escala .ms-fila-casa th{box-shadow:inset 3px 0 0 var(--oro)}
+.ms-nota-escala{font-size:13.5px; color:var(--tinta-suave); opacity:.85; margin:0}
+/* En la ficha, la concentración lleva a la página que la explica. */
+.ms-por-que{border-bottom:1px solid var(--oro); padding-bottom:1px}
+@media (hover:hover){ .ms-por-que:hover{color:var(--oro-hondo); border-color:var(--oro-hondo)} }
+/* En un teléfono la tabla no cabe a tres columnas sin apretarse. */
+@media (max-width:560px){
+  .ms-escala th, .ms-escala td{padding:11px 8px; font-size:14px}
+  .ms-escala thead th{font-size:8.5px; letter-spacing:.12em}
+}
 
 /* ======================= SECCIONES ======================= */
 .ms-seccion{padding:clamp(60px,8.5vw,112px) 0}
@@ -1291,6 +1330,7 @@ html[data-tema="oscuro"] .ms-familia{
       <li><a href="/coleccion?genero=Unisex">Perfumes unisex</a></li>
       <li><a href="/inspiraciones">Inspiraciones de perfumes</a></li>
       <li><a href="/notas">Buscar por nota olfativa</a></li>
+      <li><a href="/concentracion">Por qu&eacute; extrait de parfum y no eau de parfum</a></li>
       <li><a href="/casa">La casa</a></li>
     </ul>
   </section>
@@ -1322,6 +1362,7 @@ html[data-tema="oscuro"] .ms-familia{
         <ul>
           <li><a href="/inspiraciones">Inspiraciones</a></li>
           <li><a href="/notas">Notas olfativas</a></li>
+          <li><a href="/concentracion">Concentraci&oacute;n</a></li>
           <li><a href="/casa">La casa</a></li>
         </ul>
       </div>
@@ -2101,6 +2142,7 @@ const RUTAS = [
   {href:"/coleccion?genero=Unisex", texto:"Unisex"},
   {href:"/inspiraciones", texto:"Inspiraciones"},
   {href:"/notas", texto:"Notas olfativas"},
+  {href:"/concentracion", texto:"Concentración"},
   {href:"/casa", texto:"La casa"}
 ];
 
@@ -2669,7 +2711,7 @@ function vistaProducto(slug){
           <div><dt>Ideal para</dt><dd>${ocasionesDe(p).map(o=>esc(o.replace("Para ",""))).join(" · ")}</dd></div>
           <div><dt>Familia olfativa</dt><dd>${esc(p.familiaOlfativa)}</dd></div>
           <div><dt>Género</dt><dd>${esc(p.genero)}</dd></div>
-          <div><dt>Concentración</dt><dd>${esc(p.concentracion)}</dd></div>
+          <div><dt>Concentración</dt><dd><a class="ms-por-que" href="/concentracion">${esc(p.concentracion)}</a></dd></div>
           <div><dt>Tamaño</dt><dd>${esc(p.tamano)}</dd></div>
         </dl>
         <p class="ms-precio-grande">${dinero(p.precio)}</p>
@@ -2809,6 +2851,127 @@ function vistaCasa(){
       </p>
       <p style="text-align:center;font-size:14px">
         <a href="${enlaceWhatsApp("Hola, quisiera orientación para elegir una fragancia de Maison Saldana.")}" target="_blank" rel="noopener" style="color:var(--oro-hondo)">O escr&iacute;banos y le orientamos por WhatsApp</a>
+      </p>
+    </div>
+  </div>`;
+}
+
+/* ================================================================
+   LA CONCENTRACIÓN
+   ----------------------------------------------------------------
+   Por qué la casa declara Extrait de Parfum. La receta de la casa
+   son ~30 g de concentrado puro en 60 ml. Los aceites de perfumería
+   pesan entre 0,85 y 1,05 g/ml, así que eso da entre 29 y 35 ml de
+   concentrado: del 48 % al 59 % del frasco. Por eso la página habla
+   de "cerca de la mitad" y no de una cifra exacta: la cifra exacta
+   depende de la densidad del aceite de cada fórmula.
+
+   Si algún día cambia la receta, se cambia aquí y en CARGA_CASA.
+   ================================================================ */
+const CARGA_CASA = "cerca de la mitad del frasco";
+
+const ESCALA_CONCENTRACION = [
+  {nombre:"Eau de Cologne",   rango:"2 – 5 %",   dura:"1 a 2 horas",   nuestro:false},
+  {nombre:"Eau de Toilette",  rango:"5 – 15 %",  dura:"2 a 4 horas",   nuestro:false},
+  {nombre:"Eau de Parfum",    rango:"15 – 20 %", dura:"4 a 6 horas",   nuestro:false},
+  {nombre:"Extrait de Parfum",rango:"20 – 40 %", dura:"8 horas o más", nuestro:false},
+  {nombre:"Maison Saldana",   rango:"≈ 50 %",    dura:"la jornada entera", nuestro:true}
+];
+
+function vistaConcentracion(){
+  const filas = ESCALA_CONCENTRACION.map(e=>`
+    <tr${e.nuestro ? ' class="ms-fila-casa"' : ''}>
+      <th scope="row">${esc(e.nombre)}</th>
+      <td>${esc(e.rango)}</td>
+      <td>${esc(e.dura)}</td>
+    </tr>`).join("");
+
+  return `<div class="ms-contenedor" style="max-width:820px">
+    <div class="ms-portada-int">
+      <p class="ms-eyebrow">La concentración</p>
+      <h1>Por qué extrait</h1>
+    </div>
+    <div style="color:var(--tinta-suave);font-size:16px;display:grid;gap:22px">
+
+      <p style="font-family:var(--display);font-size:22px;line-height:1.5;color:var(--tinta)">
+      Lo que separa un perfume de otro no es el frasco ni el nombre: es cuánta
+      materia aromática lleva dentro y cuánta de la botella es alcohol.</p>
+
+      <p>Cuando lees <em>Eau de Toilette</em> o <em>Eau de Parfum</em> en una etiqueta, no estás
+      leyendo una familia de olor ni una calidad. Estás leyendo una proporción: qué parte
+      del líquido es concentrado perfumado y qué parte es el alcohol que lo transporta.
+      Cuanto más concentrado, más tarda en irse y más despacio evoluciona en la piel.</p>
+
+      <div class="ms-fleuron" style="margin:6px 0"><span>&#10022;</span></div>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">La escala, de menos a más</h2>
+
+      <table class="ms-escala">
+        <caption>Proporción de concentrado sobre el total del líquido</caption>
+        <thead><tr><th scope="col">Lo que dice la etiqueta</th><th scope="col">Concentrado</th><th scope="col">Duración típica</th></tr></thead>
+        <tbody>${filas}</tbody>
+      </table>
+
+      <p class="ms-nota-escala">Los rangos son los que usa la industria y se solapan entre sí.
+      La duración depende además de la piel de cada quien, de la fórmula y, en el trópico,
+      del calor: son una guía, no una promesa.</p>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">Estos nombres no los regula nadie</h2>
+      <p>Conviene decirlo claro, porque casi ninguna marca lo dice: <strong>«Eau de Parfum»
+      y «Extrait de Parfum» no son categorías legales</strong>. Ningún organismo las define ni
+      las verifica. Son convenciones de oficio, heredadas de los siglos XIX y XX, y cada casa
+      las aplica como quiere. Un jugo al 15 % puede salir como eau de toilette en una casa
+      y como eau de parfum en la de al lado, y las dos tienen razón, porque no hay vara
+      de medir.</p>
+      <p>Por eso en esta casa la etiqueta va acompañada del número. El nombre lo puede
+      escribir cualquiera; la proporción es la que manda.</p>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">Dónde está Maison Saldana</h2>
+      <p>Nuestras fórmulas se montan con concentrado puro, sin rebajar previamente, y la carga
+      llega a ${CARGA_CASA}. Eso queda <strong>por encima de lo que la industria llama extrait</strong>,
+      que rara vez pasa del 30 % y casi nunca del 40.</p>
+      <p>Declaramos <em>Extrait de Parfum</em> porque es el peldaño más alto que la convención
+      reconoce y porque es un término que la gente entiende. Pero la cifra de la casa va
+      por encima de ese peldaño. Preferimos quedarnos cortos en la etiqueta y largos en
+      el frasco que al revés.</p>
+
+      <div class="ms-fleuron" style="margin:6px 0"><span>&#10022;</span></div>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">Qué cambia de verdad, y qué no</h2>
+      <p><strong>Cambia la duración.</strong> Más materia aromática tarda más en evaporarse.
+      Es la diferencia entre reaplicar a media tarde y no tener que pensar en ello.</p>
+      <p><strong>Cambia la evolución.</strong> Un perfume cargado abre, se abre otra vez a las
+      dos horas y vuelve a cambiar al final del día. Uno flojo enseña todo lo que tiene
+      en los primeros veinte minutos.</p>
+      <p><strong>Cambia el fondo.</strong> Las maderas, las resinas y los ámbares pesan: necesitan
+      concentración para llegar. En una fórmula ligera se quedan por el camino.</p>
+      <p><strong>No cambia la proyección de forma automática</strong>, y esto casi nadie lo cuenta.
+      El alcohol es lo que levanta el perfume y lo lanza al aire. Un jugo muy cargado se
+      queda más pegado a la piel: huele intensamente de cerca y durante mucho tiempo, pero
+      no necesariamente se anuncia desde el otro lado de la sala. Es una estela de
+      proximidad, no un megáfono. A nosotros nos parece la forma correcta de oler.</p>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">Y por qué aquí importa el doble</h2>
+      <p>En Santo Domingo hay treinta y dos grados y humedad. El calor abre la salida de golpe,
+      quema los cítricos y acorta la vida de todo lo fresco. Una fórmula pensada para
+      un otoño europeo aquí dura la mitad. La concentración alta no es un lujo en el
+      Caribe: es lo que hace que el perfume siga ahí a las seis de la tarde.</p>
+
+      <div class="ms-fleuron" style="margin:6px 0"><span>&#10022;</span></div>
+
+      <h2 style="font-family:var(--display);font-size:26px;color:var(--tinta);margin:0">Cómo se lleva un extrait</h2>
+      <p><strong>Menos de lo que crees.</strong> Uno o dos toques bastan. Quien venga de un eau de
+      toilette está acostumbrado a cinco o seis pulsaciones; con esto sobran.</p>
+      <p><strong>En piel limpia y, si puede ser, hidratada.</strong> La piel seca se bebe el perfume
+      y lo suelta antes.</p>
+      <p><strong>En el pulso y en la ropa no.</strong> Cuello, muñecas, detrás de la oreja. Una carga
+      alta puede dejar marca en telas claras.</p>
+      <p>Si tienes la piel sensible, prueba primero una gota en el pliegue del codo y espera
+      un día. Es lo razonable con cualquier perfume, y más con uno cargado.</p>
+
+      <div class="ms-fleuron" style="margin:6px 0"><span>&#10022;</span></div>
+      <p style="text-align:center">
+        <a class="ms-enlace" href="/coleccion">Ver las ${PRODUCTOS.length} fragancias</a>
       </p>
     </div>
   </div>`;
@@ -2984,6 +3147,10 @@ function enrutar(){
   } else if(raiz === "notas"){
     html = vistaNotas(); titulo = "Perfumes por nota olfativa — Maison Saldana";
     descripcion = "Busca tu perfume por familia olfativa: floral, amaderado, gourmand, ámbar, cítrico, oud y ocho más. 387 fragancias con envío a todo el país.";
+  } else if(raiz === "concentracion"){
+    html = vistaConcentracion();
+    titulo = "Extrait de Parfum: por qué nuestra concentración — Maison Saldana";
+    descripcion = "Qué significan eau de toilette, eau de parfum y extrait de parfum, cuánto concentrado lleva cada uno y por qué Maison Saldana trabaja por encima del extrait.";
   } else if(raiz === "casa"){
     html = vistaCasa(); titulo = "La casa — Maison Saldana, perfumería en Santo Domingo";
     descripcion = "Casa de perfumería independiente fundada en Santo Domingo. Un solo frasco de autor y 387 perfumes de inspiración en las grandes fragancias del mundo.";
