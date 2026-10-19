@@ -419,13 +419,25 @@ h1,h2,h3,h4{font-family:var(--display); font-weight:400; margin:0; line-height:1
   .ms-hero::after{display:none}
   .ms-hero-pie{
     position:absolute; left:0; right:0; bottom:0; z-index:4;
-    max-width:none; padding:150px var(--gutter) 54px;
+    max-width:none; padding:150px var(--gutter) 76px;
     background:linear-gradient(180deg,
       rgba(11,10,8,0) 0%, rgba(11,10,8,.42) 38%,
       rgba(11,10,8,.80) 76%, var(--papel) 100%);
   }
   .ms-hero-pie p{margin:20px auto 26px; max-width:52ch; color:#E6DFD2}
-  .ms-puntos{top:26px; bottom:auto}
+  /* El pie de la portada es una capa con z-index:4 que cubre todo el
+     bajo del carrusel. Con los puntos arriba daba igual, pero abajo
+     quedaban DEBAJO del degradado: medido, 1,02:1 de contraste, o sea
+     invisibles. Suben al 5. */
+  .ms-puntos{bottom:20px; top:auto; z-index:5}
+  /* --linea es casi el color del fondo en ese punto del degradado y los
+     puntos quedaban invisibles. --tinta-suave contrasta en los dos
+     temas: es gris oscuro sobre el marfil y gris claro sobre la noche. */
+  .ms-puntos button{background:var(--tinta-suave); opacity:.65}
+  /* --oro sobre el marfil daba 2,11:1 y a un indicador se le piden 3.
+     --oro-hondo es oro oscuro en claro y oro pálido en oscuro, así que
+     contrasta en los dos sin tocar nada más. */
+  .ms-puntos button[aria-selected="true"]{background:var(--oro-hondo); opacity:1}
 }
 
 @media (prefers-reduced-motion:reduce){
