@@ -157,6 +157,16 @@ button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
    responde al toque con un gesto propio, que si no la tienda parece
    muerta al tocarla. */
 html{-webkit-tap-highlight-color:transparent}
+/* El doble toque de iOS hacía zoom al pulsar dos veces seguidas el
+   mismo botón —pasaba al añadir varias unidades al carrito—. Con
+   manipulation el navegador sabe que aquí el doble toque no significa
+   acercar: pulsa y ya. El pellizco para acercar la página sigue
+   funcionando; eso no se toca nunca. */
+button, a, [role="button"], input, select, label, summary,
+.ms-ficha, .ms-opcion, .ms-puntos button, .ms-cantidad button,
+.ms-linea-ctrl button, .ms-tarjeta{
+  touch-action:manipulation;
+}
 @media (hover:none){
   .ms-tarjeta:active .ms-escena{transform:scale(.985); border-color:var(--oro-claro)}
   .ms-tarjeta .ms-escena{transition:transform .18s var(--ease), border-color .18s var(--ease)}
